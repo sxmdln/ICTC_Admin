@@ -26,6 +26,7 @@ dev_dependencies:
   responsive_builder: ^0.7.0
   flutter_svg: ^2.0.9
   flutter_lints: ^2.0.0
+  data_table_2: ^2.5.10
 
 flutter:
   fonts:
