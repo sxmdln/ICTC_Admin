@@ -11,8 +11,7 @@ class ProgramsPage extends StatefulWidget {
 class _ProgramsPageState extends State<ProgramsPage> {
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: Container(
+    return Container(
           child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
@@ -99,7 +98,7 @@ class _ProgramsPageState extends State<ProgramsPage> {
             ],
           )
         ],
-      )),
+      ),
     );
   }
 }
