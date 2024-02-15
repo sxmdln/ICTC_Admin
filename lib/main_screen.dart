@@ -3,7 +3,7 @@
 import 'package:flutter/material.dart';
 import 'package:ictc_admin/pages/auth/login_page.dart';
 import 'package:ictc_admin/pages/courses_page.dart';
-import 'package:ictc_admin/pages/dashboard.dart';
+import 'package:ictc_admin/pages/programs_page.dart';
 import 'package:ictc_admin/pages/trainers_page.dart';
 import 'package:ictc_admin/trainees_page.dart';
 
@@ -20,7 +20,7 @@ class _MainScreenState extends State<MainScreen> {
     super.initState();
   }
 
-  int selectedIndex = 0;
+  int _selectedIndex = 0;
   PageController pageController = PageController(
     keepPage: true,
   );
@@ -28,7 +28,7 @@ class _MainScreenState extends State<MainScreen> {
 
   void onDestinationChanged(int value) {
     setState(() {
-      selectedIndex = value;
+      _selectedIndex = value;
       pageController.animateToPage(value,
           duration: const Duration(milliseconds: 400), curve: Curves.ease);
     });
@@ -38,23 +38,24 @@ class _MainScreenState extends State<MainScreen> {
   //   await FirebaseAuth.instance.signOut();
   // }
 
-  String getSearchName() {
-    List<String> pageNames = const [
-      "Dashboard",
-      "Teachers",
-      "Students",
-      "Classes"
-    ];
+  // String getSearchName() {
+  //   List<String> pageNames = const [
+  //     "Dashboard",
+  //     "Trainers",
+  //     "Trainees",
+  //     "Courses"
+  //   ];
 
-    return pageNames[selectedIndex];
-  }
-    @override
+  //   return pageNames[_selectedIndex];
+  // }
+
+  @override
   Widget build(BuildContext context) {
     List<Widget> views = [
-      const DashboardPage(),
-      TrainersPage(),
-      TraineesPage(),
-      CoursesPage(),
+      const ProgramsPage(),
+     TrainersPage(),
+      const TraineesPage(),
+      const CoursesPage(),
     ];
 
     List<NavigationRailDestination> destinations = const [
@@ -86,7 +87,7 @@ class _MainScreenState extends State<MainScreen> {
           size: 30,
         ),
         label: Text(
-          "Teachers",
+          "Trainers",
           style: TextStyle(fontSize: 16, fontWeight: FontWeight.w500),
         ),
       ),
@@ -102,7 +103,7 @@ class _MainScreenState extends State<MainScreen> {
           size: 30,
         ),
         label: Text(
-          "Students",
+          "Trainees",
           style: TextStyle(fontSize: 16, fontWeight: FontWeight.w500),
         ),
       ),
@@ -118,7 +119,7 @@ class _MainScreenState extends State<MainScreen> {
           size: 30,
         ),
         label: Text(
-          "Classes",
+          "Courses",
           style: TextStyle(fontSize: 16, fontWeight: FontWeight.w500),
         ),
       ),
@@ -166,7 +167,6 @@ class _MainScreenState extends State<MainScreen> {
               style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
             ),
           ),
-
         ]));
   }
 
@@ -175,7 +175,7 @@ class _MainScreenState extends State<MainScreen> {
   //   return AnimatedSwitcher(
   //     key: key,
   //     duration: const Duration(milliseconds: 350),
-  //     child: state.selectedIndex != 0
+  //     child: state._selectedIndex != 0
   //         ? SearchBar(
   //             constraints: const BoxConstraints(
   //                 minWidth: 100.0,
@@ -199,8 +199,14 @@ class _MainScreenState extends State<MainScreen> {
     return NavigationRail(
       backgroundColor: Colors.white,
       destinations: destinations,
-      selectedIndex: selectedIndex,
-      onDestinationSelected: onDestinationChanged,
+      selectedIndex: _selectedIndex,
+      onDestinationSelected: (int value) {
+        setState(() {
+          _selectedIndex = value;
+          pageController.animateToPage(value,
+              duration: const Duration(milliseconds: 400), curve: Curves.ease);
+        });
+      },
       useIndicator: false,
       extended: true,
       leading: buildLeading(),
@@ -215,8 +221,7 @@ class _MainScreenState extends State<MainScreen> {
         Padding(
           padding: EdgeInsets.only(top: 40.0, bottom: 30),
           child: Image(
-              image: AssetImage("assets/images/logo_ictc.png"),
-              height: 60),
+              image: AssetImage("assets/images/logo_ictc.png"), height: 60),
         ),
         Padding(
             padding: EdgeInsets.only(left: 4, top: 30, bottom: 30),
@@ -249,12 +254,12 @@ class _MainScreenState extends State<MainScreen> {
           child: TextButton.icon(
             icon: const Icon(
               Icons.logout_outlined,
-              size: 30,
+              size: 25,
             ),
             label: const Text(
               "Log out",
               style: TextStyle(
-                  letterSpacing: 2,
+                  letterSpacing: 0,
                   fontSize: 16,
                   fontWeight: FontWeight.w500,
                   color: Color(0xff353535)),
@@ -262,10 +267,10 @@ class _MainScreenState extends State<MainScreen> {
             // onPressed: state.logout,
             onPressed: () {
               Navigator.of(context).push(
-            MaterialPageRoute(
-              builder: (context) => const LoginPage(),
-            ),
-          );
+                MaterialPageRoute(
+                  builder: (context) => const LoginPage(),
+                ),
+              );
             },
           ),
         ),
@@ -276,7 +281,7 @@ class _MainScreenState extends State<MainScreen> {
   Expanded buildPageView(List<Widget> views) {
     return Expanded(
       child: PageView(
-        // controller: state.pageController,
+        controller: pageController,
         physics: const NeverScrollableScrollPhysics(),
         scrollDirection: Axis.vertical,
         children: views,
@@ -298,7 +303,6 @@ class ProfileDropdown extends StatefulWidget {
 }
 
 class _ProfileDropdownState extends State<ProfileDropdown> {
-
   @override
   void initState() {
     super.initState();
