@@ -1,7 +1,9 @@
 import 'package:ictc_admin/main_screen.dart';
 import 'package:ictc_admin/pages/auth/login_page.dart';
+import 'package:ictc_admin/pages/courses_page.dart';
 import 'package:ictc_admin/pages/dashboard.dart';
 import 'package:flutter/material.dart';
+import 'package:ictc_admin/pages/programs_page.dart';
 // import 'package:responsive_builder/responsive_builder.dart';
 // import 'package:firebase_core/firebase_core.dart';
 // import 'firebase_options.dart';
@@ -56,10 +58,12 @@ class MyApp extends StatelessWidget {
             bodyMedium: TextStyle(
                 fontSize: 14, fontWeight: FontWeight.w400, color: Colors.black),
             ),
-          useMaterial3: true,
+          useMaterial3: false,
         ),
         routes: {
           '/dashboard': (context) => const DashboardPage(),
+          '/programs': (context) => const ProgramsPage(),
+          '/courses': (context) => const CoursesPage(),
           '/home': (context) => const MainScreen(),
           '/login': (context) => const LoginPage(),
         },
@@ -75,7 +79,7 @@ class MainApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return const Scaffold(
-      body: LoginPage(),
+      body: MainScreen(),
     );
   }
 }
