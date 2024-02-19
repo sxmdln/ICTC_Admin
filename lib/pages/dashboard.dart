@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:ictc_admin/pages/card_button.dart';
 
 class DashboardPage extends StatefulWidget {
   const DashboardPage({super.key});
@@ -10,6 +11,25 @@ class DashboardPage extends StatefulWidget {
 class _DashboardPageState extends State<DashboardPage> {
   @override
   Widget build(BuildContext context) {
-    return const Center(child: Text("Dashboard"));
+    return Container(
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          const SizedBox(
+            width: 1350,
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                CardButton(),
+                CardButton(),
+                CardButton(),
+                CardButton(),
+              ],
+            ),
+          ),
+        ],
+      ),
+    );
   }
 }

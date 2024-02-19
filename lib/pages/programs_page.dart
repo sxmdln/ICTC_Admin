@@ -12,9 +12,8 @@ class ProgramsPage extends StatefulWidget {
 class _ProgramsPageState extends State<ProgramsPage> {
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: Container(
-        child: Column(
+    return Container(
+      child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
           const SizedBox(
@@ -26,10 +25,11 @@ class _ProgramsPageState extends State<ProgramsPage> {
                 CardButton(),
                 CardButton(),
                 CardButton(),
+                CardButton(),
               ],
             ),
           ),
-          Padding(padding: EdgeInsets.all(20)),
+          const Padding(padding: EdgeInsets.all(20)),
           Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
@@ -113,7 +113,7 @@ class _ProgramsPageState extends State<ProgramsPage> {
             ],
           )
         ],
-      )),
+      ),
     );
   }
 }

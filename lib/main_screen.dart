@@ -6,7 +6,7 @@ import 'package:ictc_admin/pages/courses_page.dart';
 import 'package:ictc_admin/pages/dashboard.dart';
 import 'package:ictc_admin/pages/programs_page.dart';
 import 'package:ictc_admin/pages/trainers_page.dart';
-import 'package:ictc_admin/trainees_page.dart';
+import 'package:ictc_admin/pages/trainees_page.dart';
 
 class MainScreen extends StatefulWidget {
   const MainScreen({super.key});
