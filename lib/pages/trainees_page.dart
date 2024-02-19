@@ -1,19 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:data_table_2/data_table_2.dart';
 import 'package:ictc_admin/pages/card_button.dart';
-import 'package:ictc_admin/pages/card_courses.dart';
-import 'package:ictc_admin/pages/card_programs.dart';
-import 'package:ictc_admin/pages/card_student.dart';
-import 'package:ictc_admin/pages/dialog_forms.dart';
 
-class ProgramsPage extends StatefulWidget {
-  const ProgramsPage({super.key});
+class TraineesPage extends StatefulWidget {
+  const TraineesPage({super.key});
 
   @override
-  State<ProgramsPage> createState() => _ProgramsPageState();
+  State<TraineesPage> createState() => _TraineesPageState();
 }
 
-class _ProgramsPageState extends State<ProgramsPage> {
+class _TraineesPageState extends State<TraineesPage> {
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -28,9 +24,8 @@ class _ProgramsPageState extends State<ProgramsPage> {
               children: [
                 CardButton(),
                 CardButton(),
-                CardPrograms(),
-                CardCourses(),
-                CardStudent(),
+                CardButton(),
+                CardButton(),
               ],
             ),
           ),
@@ -81,7 +76,12 @@ class _ProgramsPageState extends State<ProgramsPage> {
                           const DataCell(Text('')),
                           DataCell(Row(
                             children: [
-                              EditForm(),
+                              FilledButton(
+                                  onPressed: () {},
+                                  child: const Icon(
+                                    Icons.edit,
+                                    color: Colors.white,
+                                  )),
                               const Padding(padding: EdgeInsets.all(5)),
                               FilledButton(
                                 style: ButtonStyle(
@@ -117,4 +117,3 @@ class _ProgramsPageState extends State<ProgramsPage> {
     );
   }
 }
-
