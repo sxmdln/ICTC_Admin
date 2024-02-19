@@ -1,6 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:data_table_2/data_table_2.dart';
 import 'package:ictc_admin/pages/card_button.dart';
+import 'package:ictc_admin/pages/card_courses.dart';
+import 'package:ictc_admin/pages/card_programs.dart';
+import 'package:ictc_admin/pages/card_student.dart';
+import 'package:ictc_admin/pages/dialog_forms.dart';
 
 class ProgramsPage extends StatefulWidget {
   const ProgramsPage({super.key});
@@ -24,8 +28,9 @@ class _ProgramsPageState extends State<ProgramsPage> {
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
                 CardButton(),
-                CardButton(),
-                CardButton(),
+                CardPrograms(),
+                CardCourses(),
+                CardStudent(),
               ],
             ),
           ),
@@ -76,12 +81,7 @@ class _ProgramsPageState extends State<ProgramsPage> {
                           const DataCell(Text('')),
                           DataCell(Row(
                             children: [
-                              FilledButton(
-                                  onPressed: () {},
-                                  child: const Icon(
-                                    Icons.edit,
-                                    color: Colors.white,
-                                  )),
+                              EditForm(),
                               const Padding(padding: EdgeInsets.all(5)),
                               FilledButton(
                                 style: ButtonStyle(
@@ -117,3 +117,4 @@ class _ProgramsPageState extends State<ProgramsPage> {
     );
   }
 }
+
