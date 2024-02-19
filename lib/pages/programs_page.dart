@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:data_table_2/data_table_2.dart';
+import 'package:ictc_admin/pages/card_button.dart';
 
 class ProgramsPage extends StatefulWidget {
   const ProgramsPage({super.key});
@@ -13,9 +14,22 @@ class _ProgramsPageState extends State<ProgramsPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       body: Container(
-          child: Column(
+        child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
+          const SizedBox(
+            width: 1350,
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                CardButton(),
+                CardButton(),
+                CardButton(),
+              ],
+            ),
+          ),
+          Padding(padding: EdgeInsets.all(20)),
           Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
