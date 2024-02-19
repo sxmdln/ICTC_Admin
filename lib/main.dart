@@ -27,49 +27,51 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-        title: 'Ateneo ICTC',
-        theme: ThemeData(
-          fontFamily: "Montserrat",
-          colorScheme: ColorScheme.fromSeed(
-              seedColor: const Color(0xff153faa),
-              onPrimary: const Color(0xff153faa),
-              onSecondary: Colors.white,
-              onPrimaryContainer: const Color(0xff153faa),
-              onSecondaryContainer: Colors.white),
-          textTheme: const TextTheme(
-            displayLarge: TextStyle(
-                fontSize: 64, fontWeight: FontWeight.w800, color: Colors.white),
-            titleLarge: TextStyle(
-                fontSize: 64,
-                fontWeight: FontWeight.w800,
-                color: Color(0xffF9CE69)),
-            labelMedium: TextStyle(
-                fontSize: 20, fontWeight: FontWeight.w300, color: Colors.white),
-            displayMedium: TextStyle(
-                fontSize: 40, fontWeight: FontWeight.w800, color: Colors.white),
-            titleMedium: TextStyle(
-                fontSize: 40,
-                fontWeight: FontWeight.w800,
-                color: Color(0xffF9CE69)),
-            labelSmall: TextStyle(
-                fontSize: 12, fontWeight: FontWeight.w300, color: Colors.white),
-            bodyLarge: TextStyle(
-                fontSize: 64, fontWeight: FontWeight.w600, color: Color(0xff153faa)),
-            bodyMedium: TextStyle(
-                fontSize: 14, fontWeight: FontWeight.w400, color: Colors.black),
-            ),
-          useMaterial3: false,
+      title: 'Ateneo ICTC',
+      theme: ThemeData(
+        fontFamily: "Montserrat",
+        colorScheme: ColorScheme.fromSeed(
+            seedColor: const Color(0xff153faa),
+            onPrimary: const Color(0xff153faa),
+            onSecondary: Colors.white,
+            onPrimaryContainer: const Color(0xff153faa),
+            onSecondaryContainer: Colors.white),
+        textTheme: const TextTheme(
+          displayLarge: TextStyle(
+              fontSize: 64, fontWeight: FontWeight.w800, color: Colors.white),
+          titleLarge: TextStyle(
+              fontSize: 64,
+              fontWeight: FontWeight.w800,
+              color: Color(0xffF9CE69)),
+          labelMedium: TextStyle(
+              fontSize: 20, fontWeight: FontWeight.w300, color: Colors.white),
+          displayMedium: TextStyle(
+              fontSize: 40, fontWeight: FontWeight.w800, color: Colors.white),
+          titleMedium: TextStyle(
+              fontSize: 40,
+              fontWeight: FontWeight.w800,
+              color: Color(0xffF9CE69)),
+          labelSmall: TextStyle(
+              fontSize: 12, fontWeight: FontWeight.w300, color: Colors.white),
+          bodyLarge: TextStyle(
+              fontSize: 12,
+              fontWeight: FontWeight.w600,
+              color: Color(0xff153faa)),
+          bodyMedium: TextStyle(
+              fontSize: 14, fontWeight: FontWeight.w400, color: Colors.black),
         ),
-        routes: {
-          '/dashboard': (context) => const DashboardPage(),
-          '/programs': (context) => const ProgramsPage(),
-          '/courses': (context) => const CoursesPage(),
-          '/home': (context) => const MainScreen(),
-          '/login': (context) => const LoginPage(),
-        },
-        home: const MainApp(),
-        debugShowCheckedModeBanner: false,
-        );
+        useMaterial3: false,
+      ),
+      routes: {
+        '/dashboard': (context) => const DashboardPage(),
+        '/programs': (context) => const ProgramsPage(),
+        '/courses': (context) => const CoursesPage(),
+        '/home': (context) => const MainScreen(),
+        '/login': (context) => const LoginPage(),
+      },
+      home: const MainApp(),
+      debugShowCheckedModeBanner: false,
+    );
   }
 }
 
