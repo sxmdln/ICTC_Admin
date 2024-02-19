@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:ictc_admin/pages/auth/login_page.dart';
 import 'package:ictc_admin/pages/courses_page.dart';
 import 'package:ictc_admin/pages/dashboard.dart';
+import 'package:ictc_admin/pages/programs_page.dart';
 import 'package:ictc_admin/pages/trainers_page.dart';
 import 'package:ictc_admin/trainees_page.dart';
 
@@ -20,15 +21,15 @@ class _MainScreenState extends State<MainScreen> {
     super.initState();
   }
 
-  int selectedIndex = 0;
+  int _selectedIndex = 0;
   PageController pageController = PageController(
     keepPage: true,
   );
-  // SearchController searchController = SearchController();
+  SearchController searchController = SearchController();
 
   void onDestinationChanged(int value) {
     setState(() {
-      selectedIndex = value;
+      _selectedIndex = value;
       pageController.animateToPage(value,
           duration: const Duration(milliseconds: 400), curve: Curves.ease);
     });
@@ -41,90 +42,108 @@ class _MainScreenState extends State<MainScreen> {
   String getSearchName() {
     List<String> pageNames = const [
       "Dashboard",
-      "Teachers",
-      "Students",
-      "Classes"
+      "Trainers",
+      "Trainees",
+      "Programs"
     ];
 
-    return pageNames[selectedIndex];
+    return pageNames[_selectedIndex];
   }
-    @override
+
+  @override
   Widget build(BuildContext context) {
     List<Widget> views = [
       const DashboardPage(),
       TrainersPage(),
-      TraineesPage(),
-      CoursesPage(),
+      const TraineesPage(),
+      const ProgramsPage(),
     ];
 
     List<NavigationRailDestination> destinations = const [
       NavigationRailDestination(
         icon: Icon(
           Icons.home_outlined,
-          color: Color(0xff353535),
+          color: Colors.white,
           size: 30,
         ),
         selectedIcon: Icon(
-          Icons.home,
-          color: Color(0xff153faa),
+          Icons.home_rounded,
+          color: Colors.white,
           size: 30,
         ),
         label: Text(
           "Dashboard",
-          style: TextStyle(fontSize: 16, fontWeight: FontWeight.w500),
+          style: TextStyle(
+            fontSize: 16,
+            fontWeight: FontWeight.w500,
+            color: Colors.white,
+          ),
         ),
       ),
       NavigationRailDestination(
         icon: Icon(
           Icons.person_outline,
-          color: Color(0xff353535),
+          color: Colors.white,
           size: 30,
         ),
         selectedIcon: Icon(
           Icons.person,
-          color: Color(0xff153faa),
+          color: Colors.white,
           size: 30,
         ),
         label: Text(
-          "Teachers",
-          style: TextStyle(fontSize: 16, fontWeight: FontWeight.w500),
+          "Trainers",
+          style: TextStyle(
+            fontSize: 16,
+            fontWeight: FontWeight.w500,
+            color: Colors.white,
+          ),
         ),
       ),
       NavigationRailDestination(
         icon: Icon(
           Icons.group_outlined,
-          color: Color(0xff353535),
+          color: Colors.white,
           size: 30,
         ),
         selectedIcon: Icon(
           Icons.group,
-          color: Color(0xff153faa),
+          color: Colors.white,
           size: 30,
         ),
         label: Text(
-          "Students",
-          style: TextStyle(fontSize: 16, fontWeight: FontWeight.w500),
+          "Trainees",
+          style: TextStyle(
+            fontSize: 16,
+            fontWeight: FontWeight.w500,
+            color: Colors.white,
+          ),
         ),
       ),
       NavigationRailDestination(
         icon: Icon(
           Icons.grid_view_outlined,
-          color: Color(0xff353535),
+          color: Colors.white,
           size: 30,
         ),
         selectedIcon: Icon(
           Icons.grid_view_rounded,
-          color: Color(0xff153faa),
+          color: Colors.white,
           size: 30,
         ),
         label: Text(
-          "Classes",
-          style: TextStyle(fontSize: 16, fontWeight: FontWeight.w500),
+          "Programs",
+          style: TextStyle(
+            fontSize: 16,
+            fontWeight: FontWeight.w500,
+            color: Colors.white,
+          ),
         ),
       ),
     ];
 
     return Scaffold(
+      backgroundColor: Color(0xfff1f5fb),
       body: Row(
         children: [
           Container(
@@ -146,7 +165,7 @@ class _MainScreenState extends State<MainScreen> {
 
   Container buildBar(BuildContext context) {
     return Container(
-        color: Colors.white,
+        color: const Color(0xfff1f5fb),
         padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
         height: 64,
         child:
@@ -159,48 +178,72 @@ class _MainScreenState extends State<MainScreen> {
                         end: const Offset(0.0, 0.0))
                     .animate(animation),
                 child: child),
-            child: const Text(
-              "Name",
-              // state.getSearchName(),
-              // key: ValueKey<String>(state.getSearchName()),
-              style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
+            child: Text(
+              getSearchName(),
+              key: ValueKey<String>(getSearchName()),
+              style: const TextStyle(
+                  fontSize: 24,
+                  fontWeight: FontWeight.bold,
+                  color: Colors.black),
             ),
           ),
-
+          Row(
+            mainAxisSize: MainAxisSize.min,
+            mainAxisAlignment: MainAxisAlignment.center,
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              buildSearchBar(context),
+              const SizedBox(width: 0),
+              // ProfileDropdown(
+              //   onSettingsTap: state.openSettings,
+              // )
+            ],
+          )
         ]));
   }
 
-  // Widget buildSearchBar(BuildContext context) {
-  //   const key = ValueKey("searchbar");
-  //   return AnimatedSwitcher(
-  //     key: key,
-  //     duration: const Duration(milliseconds: 350),
-  //     child: state.selectedIndex != 0
-  //         ? SearchBar(
-  //             constraints: const BoxConstraints(
-  //                 minWidth: 100.0,
-  //                 maxWidth: 300,
-  //                 maxHeight: 100,
-  //                 minHeight: 100),
-  //             controller: state.searchController,
-  //             elevation: const MaterialStatePropertyAll(1),
-  //             leading: const Icon(Icons.search),
-  //             hintText: "Search ${state.getSearchName()}...",
-  //             trailing: [
-  //               IconButton(
-  //                   onPressed: state.clearSearch, icon: const Icon(Icons.clear))
-  //             ],
-  //           )
-  //         : Container(key: key),
-  //   );
-  // }
+  Widget buildSearchBar(BuildContext context) {
+    const key = ValueKey("searchbar");
+    return AnimatedSwitcher(
+      key: key,
+      duration: const Duration(milliseconds: 350),
+      child: _selectedIndex != 0
+          ? SearchBar(
+              constraints: const BoxConstraints(
+                  minWidth: 80.0,
+                  maxWidth: 250,
+                  maxHeight: 100,
+                  minHeight: 100),
+              controller: searchController,
+              elevation: const MaterialStatePropertyAll(1),
+              leading: const Icon(Icons.search),
+              hintText: "Search ${getSearchName()}...",
+              textStyle: MaterialStatePropertyAll(
+                  Theme.of(context).textTheme.bodyMedium),
+              trailing: [
+                IconButton(
+                    onPressed: () {
+                      searchController.clear();
+                    },
+                    icon: const Icon(Icons.clear))
+              ],
+            )
+          : Container(key: key),
+    );
+  }
 
   NavigationRail buildNavRail(List<NavigationRailDestination> destinations) {
     return NavigationRail(
-      backgroundColor: Colors.white,
+      backgroundColor: Color(0xff19306B),
       destinations: destinations,
-      selectedIndex: selectedIndex,
-      onDestinationSelected: onDestinationChanged,
+      selectedIndex: _selectedIndex,
+      onDestinationSelected: (int value) {
+        setState(() {
+          _selectedIndex = value;
+          pageController.animateToPage(value,
+              duration: const Duration(milliseconds: 400), curve: Curves.ease);
+        });
+      },
       useIndicator: false,
       extended: true,
       leading: buildLeading(),
@@ -215,11 +258,10 @@ class _MainScreenState extends State<MainScreen> {
         Padding(
           padding: EdgeInsets.only(top: 40.0, bottom: 30),
           child: Image(
-              image: AssetImage("assets/images/logo_ictc.png"),
-              height: 60),
+              image: AssetImage("assets/images/logo_ictc.png"), height: 60),
         ),
         Padding(
-            padding: EdgeInsets.only(left: 4, top: 30, bottom: 30),
+            padding: EdgeInsets.only(left: 10, top: 30, bottom: 30),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
@@ -228,9 +270,13 @@ class _MainScreenState extends State<MainScreen> {
                   style: TextStyle(
                       fontSize: 24,
                       fontWeight: FontWeight.w600,
-                      color: Color(0xff153faa)),
+                      color: Colors.white),
                 ),
-                Text("Web Admin", style: TextStyle(fontSize: 10))
+                Text("Web Admin",
+                    style: TextStyle(
+                        fontSize: 12,
+                        fontWeight: FontWeight.w400,
+                        color: Color(0xffffc947)))
               ],
             ))
       ],
@@ -249,23 +295,25 @@ class _MainScreenState extends State<MainScreen> {
           child: TextButton.icon(
             icon: const Icon(
               Icons.logout_outlined,
-              size: 30,
+              size: 25,
+              color: Colors.white,
             ),
             label: const Text(
               "Log out",
               style: TextStyle(
-                  letterSpacing: 2,
-                  fontSize: 16,
-                  fontWeight: FontWeight.w500,
-                  color: Color(0xff353535)),
+                letterSpacing: 0,
+                fontSize: 16,
+                fontWeight: FontWeight.w500,
+                color: Colors.white,
+              ),
             ),
             // onPressed: state.logout,
             onPressed: () {
               Navigator.of(context).push(
-            MaterialPageRoute(
-              builder: (context) => const LoginPage(),
-            ),
-          );
+                MaterialPageRoute(
+                  builder: (context) => const LoginPage(),
+                ),
+              );
             },
           ),
         ),
@@ -276,7 +324,7 @@ class _MainScreenState extends State<MainScreen> {
   Expanded buildPageView(List<Widget> views) {
     return Expanded(
       child: PageView(
-        // controller: state.pageController,
+        controller: pageController,
         physics: const NeverScrollableScrollPhysics(),
         scrollDirection: Axis.vertical,
         children: views,
@@ -298,7 +346,6 @@ class ProfileDropdown extends StatefulWidget {
 }
 
 class _ProfileDropdownState extends State<ProfileDropdown> {
-
   @override
   void initState() {
     super.initState();

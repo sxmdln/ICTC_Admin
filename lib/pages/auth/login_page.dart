@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:ictc_admin/main_screen.dart';
-import 'package:ictc_admin/pages/dashboard.dart';
 
 class LoginPage extends StatelessWidget {
   const LoginPage({super.key});
@@ -8,166 +7,51 @@ class LoginPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        automaticallyImplyLeading: false,
-        toolbarHeight: 70,
-        backgroundColor: Colors.transparent,
-        surfaceTintColor: Colors.white,
-        elevation: 0.5,
-        title: Padding(
-          padding: const EdgeInsets.only(left: 155.0),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.start,
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: <Widget>[
-              IconButton(
-                hoverColor: Colors.transparent,
-                splashColor: Colors.transparent,
-                splashRadius: null,
-                onPressed: () {
-                  Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) => const MainScreen(),
-                      ));
-                },
-                icon: Image.asset('assets/images/logo_ictc.png',
-                    width: 60, height: 70),
-              ),
-              const Text("Ateneo ICTC",
-                  style: TextStyle(fontSize: 20, color: Color(0xff153faa)))
-              // Your widgets here
-            ],
-          ),
-        ),
-      ),
       body: SingleChildScrollView(
-          child: Row(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        mainAxisAlignment: MainAxisAlignment.center,
+          child: Column(
+        // crossAxisAlignment: CrossAxisAlignment.center,
+        // mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          // Ads
-          Column(
-            children: [
-              buildAds(context),
-            ],
-          ),
-          // Signin
-          Column(
-            children: [
-              buildBody(context),
-            ],
-          ),
+          Center(child: buildBody(context)),
         ],
       )),
     );
   }
 }
 
-Widget buildAds(context) {
-  return Card(
-    color: Colors.white,
-    elevation: 2,
-    surfaceTintColor: Colors.white,
-    child: Padding(
-      padding: const EdgeInsets.all(30.0),
-      child: SizedBox(
-        width: MediaQuery.sizeOf(context).width * 0.4,
-        height: MediaQuery.sizeOf(context).height * 0.8,
-        child: Row(
-          mainAxisSize: MainAxisSize.max,
-          children: [
-            Flexible(
-              flex: 1,
-              fit: FlexFit.tight,
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                mainAxisSize: MainAxisSize.max,
-                children: [
-                  SizedBox(
-                    width: MediaQuery.sizeOf(context).width * 0.4,
-                    height: MediaQuery.sizeOf(context).height * 0.8,
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        ClipRect(
-                          child: Align(
-                            alignment: Alignment.topCenter,
-                            heightFactor: 0.98,
-                            child: Image.asset(
-                              'assets/images/ads1.jpg',
-                              fit: BoxFit.fill,
-                            ),
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                ],
-              ),
-            ),
-          ],
-        ),
-      ),
-    ),
-  );
-}
-
 Widget buildBody(context) {
-  return Center(
-    child: Card(
-      clipBehavior: Clip.antiAliasWithSaveLayer,
-      color: Colors.white,
-      elevation: 2,
-      surfaceTintColor: Colors.white,
-      child: Padding(
-        padding: const EdgeInsets.all(30.0),
-        child: SizedBox(
-          width: MediaQuery.sizeOf(context).width * 0.3,
-          height: MediaQuery.sizeOf(context).width * 0.4,
-          child: Row(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              Flexible(
-                flex: 3,
-                fit: FlexFit.tight,
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    SizedBox(
-                      width: MediaQuery.sizeOf(context).width * 0.3,
-                      height: MediaQuery.sizeOf(context).width * 0.4,
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.center,
-                        children: [
-                          const Padding(
-                            padding: EdgeInsets.only(top: 35, bottom: 30),
-                            child: Image(
-                                image:
-                                    AssetImage("assets/images/logo_ictc.png"),
-                                height: 100),
-                          ),
-                          const Text(
-                            "Log in to Ateneo ICTC",
-                            style: TextStyle(
-                                fontWeight: FontWeight.w600, fontSize: 24),
-                          ),
-                          const SizedBox(
-                            height: 20,
-                          ),
-                          Container(
-                              margin:
-                                  const EdgeInsets.symmetric(horizontal: 25),
-                              child: buildForm(context)),
-                        ],
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-            ],
-          ),
+  return Card(
+    margin: EdgeInsets.only(top: MediaQuery.sizeOf(context).height * 0.2,),
+    // clipBehavior: Clip.antiAliasWithSaveLayer,
+    color: Colors.white,
+    elevation: 0.5,
+    // surfaceTintColor: Colors.white,
+    child: Padding(
+      padding: const EdgeInsets.symmetric(horizontal:30.0),
+      child: SizedBox(
+        width: 400,
+        height: 600,
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.center,
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            const Padding(
+              padding: EdgeInsets.only(top:0, bottom: 30),
+              child: Image(
+                  image: AssetImage("assets/images/logo_ictc.png"),
+                  height: 100),
+            ),
+            const Text(
+              "Log in to Ateneo ICTC",
+              style: TextStyle(fontWeight: FontWeight.w600, fontSize: 24),
+            ),
+            const SizedBox(
+              height: 20,
+            ),
+            Container(
+                margin: const EdgeInsets.symmetric(horizontal: 25),
+                child: buildForm(context)),
+          ],
         ),
       ),
     ),
@@ -241,6 +125,7 @@ Form buildForm(context) {
         onTap: () {
           Navigator.of(context).push(
             MaterialPageRoute(
+              //TODO: Add authentication
               builder: (context) => const MainScreen(),
             ),
           );
@@ -248,7 +133,7 @@ Form buildForm(context) {
         child: Container(
           alignment: Alignment.center,
           padding: const EdgeInsets.symmetric(vertical: 8),
-          width: 350,
+          width: 400,
           decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(15),
             // adding color will hide the splash effect
@@ -257,7 +142,7 @@ Form buildForm(context) {
           child: const Text(
             "Log in",
             style: TextStyle(
-                fontSize: 16, fontWeight: FontWeight.w600, color: Colors.white),
+                fontSize: 18, fontWeight: FontWeight.w600, color: Colors.white),
           ),
         ),
       ),

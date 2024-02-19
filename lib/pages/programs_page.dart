@@ -34,8 +34,8 @@ class _ProgramsPageState extends State<ProgramsPage> {
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               SizedBox(
-                width: 1350,
-                height: 728,
+                width: MediaQuery.of(context).size.width * 0.7,
+                height: MediaQuery.of(context).size.height * 0.6,
                 child: Card(
                     child: Column(
                   mainAxisAlignment: MainAxisAlignment.start,
