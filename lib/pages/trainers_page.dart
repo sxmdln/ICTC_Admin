@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:data_table_2/data_table_2.dart';
-import 'package:ictc_admin/pages/card_button.dart';
+import 'package:ictc_admin/pages/widgets/card_button.dart';
 
 class TrainersPage extends StatefulWidget {
-  TrainersPage({super.key});
+  const TrainersPage({super.key});
 
   @override
   State<TrainersPage> createState() => _TrainersPageState();
