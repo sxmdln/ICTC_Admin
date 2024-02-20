@@ -4,7 +4,7 @@ import 'package:ictc_admin/pages/card_button.dart';
 import 'package:ictc_admin/pages/card_courses.dart';
 import 'package:ictc_admin/pages/card_programs.dart';
 import 'package:ictc_admin/pages/card_student.dart';
-import 'package:ictc_admin/pages/dialog_forms.dart';
+import 'package:ictc_admin/pages/forms.dart';
 
 class ProgramsPage extends StatefulWidget {
   const ProgramsPage({super.key});
@@ -26,7 +26,6 @@ class _ProgramsPageState extends State<ProgramsPage> {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
-                CardButton(),
                 CardButton(),
                 CardPrograms(),
                 CardCourses(),
@@ -81,7 +80,7 @@ class _ProgramsPageState extends State<ProgramsPage> {
                           const DataCell(Text('')),
                           DataCell(Row(
                             children: [
-                              EditForm(),
+                              FormsLayout(),
                               const Padding(padding: EdgeInsets.all(5)),
                               FilledButton(
                                 style: ButtonStyle(
