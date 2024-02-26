@@ -4,9 +4,9 @@ import 'package:flutter/material.dart';
 import 'package:ictc_admin/pages/auth/login_page.dart';
 import 'package:ictc_admin/pages/courses_page.dart';
 import 'package:ictc_admin/pages/dashboard.dart';
-import 'package:ictc_admin/pages/programs_page.dart';
-import 'package:ictc_admin/pages/trainers_page.dart';
-import 'package:ictc_admin/pages/trainees_page.dart';
+import 'package:ictc_admin/pages/Programs/programs_page.dart';
+import 'package:ictc_admin/pages/Trainers/trainers_page.dart';
+import 'package:ictc_admin/pages/Trainees/trainees_page.dart';
 
 class MainScreen extends StatefulWidget {
   const MainScreen({super.key});

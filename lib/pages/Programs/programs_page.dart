@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:data_table_2/data_table_2.dart';
-import 'package:ictc_admin/pages/card_button.dart';
-import 'package:ictc_admin/pages/card_courses.dart';
-import 'package:ictc_admin/pages/card_programs.dart';
-import 'package:ictc_admin/pages/card_student.dart';
-import 'package:ictc_admin/pages/forms.dart';
+import 'package:ictc_admin/pages/Programs/card_button.dart';
+import 'package:ictc_admin/pages/Programs/card_courses.dart';
+import 'package:ictc_admin/pages/Programs/card_programs.dart';
+import 'package:ictc_admin/pages/Programs/card_student.dart';
+import 'package:ictc_admin/pages/Programs/program_forms.dart';
 
 class ProgramsPage extends StatefulWidget {
   const ProgramsPage({super.key});
@@ -53,14 +53,7 @@ class _ProgramsPageState extends State<ProgramsPage> {
                           padding: const EdgeInsets.fromLTRB(26, 19, 26, 19),
                           child: Row(
                             mainAxisAlignment: MainAxisAlignment.end,
-                            children: [
-                              FilledButton(
-                                  onPressed: () {},
-                                  child: const Text(
-                                    'Add Program',
-                                    style: TextStyle(color: Colors.white),
-                                  ))
-                            ],
+                            children: [addButton()],
                           ),
                         )),
                     Expanded(
@@ -80,27 +73,8 @@ class _ProgramsPageState extends State<ProgramsPage> {
                           const DataCell(Text('')),
                           DataCell(Row(
                             children: [
-                              FormsLayout(),
+                              editButton(),
                               const Padding(padding: EdgeInsets.all(5)),
-                              FilledButton(
-                                style: ButtonStyle(
-                                  backgroundColor:
-                                      MaterialStateProperty.resolveWith(
-                                          (states) {
-                                    // If the button is pressed, return green, otherwise blue
-                                    if (states
-                                        .contains(MaterialState.pressed)) {
-                                      return Colors.red;
-                                    }
-                                    return Colors.red;
-                                  }),
-                                ),
-                                onPressed: () {},
-                                child: const Icon(
-                                  Icons.delete,
-                                  color: Colors.white,
-                                ),
-                              )
                             ],
                           )),
                         ]),
@@ -115,5 +89,83 @@ class _ProgramsPageState extends State<ProgramsPage> {
       ),
     );
   }
-}
+  
+  Widget addButton() {
+    return FilledButton(
+      onPressed: () {
+        showDialog(
+          context: context,
+          builder: (context) {
+            return const AlertDialog(
+              content: SizedBox(
+                width: 406,
+                height: 498,
+                child: Padding(
+                  padding: EdgeInsets.fromLTRB(27, 25, 27, 25),
+                  child: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      CircleAvatar(
+                        radius: 80,
+                      ),
+                      SizedBox(height: 20),
+                      Expanded(
+                        child: ProgramForm(),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+            );
+          },
+        );
+      },
+      child: const Text(
+        "Add Program",
+        style: TextStyle(
+          color: Colors.white,
+        ),
+      )
+    );
+  }
 
+  Widget editButton() {
+    return FilledButton(
+      onPressed: () {
+        showDialog(
+          context: context,
+          builder: (context) {
+            return const AlertDialog(
+              content: SizedBox(
+                width: 406,
+                height: 498,
+                child: Padding(
+                  padding: EdgeInsets.fromLTRB(27, 25, 27, 25),
+                  child: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      CircleAvatar(
+                        radius: 80,
+                      ),
+                      SizedBox(height: 20),
+                      Expanded(
+                        // TODO: Pass Program object to form
+                        child: ProgramForm(program: true,),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+            );
+          },
+        );
+      },
+      child: const Icon(
+        Icons.edit,
+        color: Colors.white,
+      ),
+    );
+  }
+}

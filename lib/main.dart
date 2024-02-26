@@ -3,7 +3,7 @@ import 'package:ictc_admin/pages/auth/login_page.dart';
 import 'package:ictc_admin/pages/courses_page.dart';
 import 'package:ictc_admin/pages/dashboard.dart';
 import 'package:flutter/material.dart';
-import 'package:ictc_admin/pages/programs_page.dart';
+import 'package:ictc_admin/pages/Programs/programs_page.dart';
 // import 'package:responsive_builder/responsive_builder.dart';
 // import 'package:firebase_core/firebase_core.dart';
 // import 'firebase_options.dart';
