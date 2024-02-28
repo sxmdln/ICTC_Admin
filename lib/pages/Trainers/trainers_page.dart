@@ -119,44 +119,39 @@ class _TrainersPageState extends State<TrainersPage> {
   }
 
   Widget addButton() {
-    return FilledButton(
-      onPressed: () {
-        showDialog(
-          context: context,
-          builder: (context) {
-            return const AlertDialog(
-              content: SizedBox(
-                width: 406,
-                height: 498,
-                child: Padding(
-                  padding: EdgeInsets.fromLTRB(27, 25, 27, 25),
-                  child: Column(
-                    mainAxisSize: MainAxisSize.min,
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: [
-                      CircleAvatar(
-                        radius: 80,
-                      ),
-                      SizedBox(height: 20),
-                      Expanded(
-                        child: TrainerForm(),
-                      ),
-                    ],
+  return FilledButton(
+    onPressed: () {
+      showDialog(
+        context: context,
+        builder: (context) {
+          return const AlertDialog(
+            content: Padding(
+              padding: EdgeInsets.fromLTRB(27, 25, 27, 25),
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  CircleAvatar(
+                    radius: 80,
                   ),
-                ),
+                  SizedBox(height: 20),
+                  TrainerForm(),
+                ],
               ),
-            );
-          },
-        );
-      },
-      child: const Text(
-        "Add Trainee",
-        style: TextStyle(
-          color: Colors.white,
-        ),
-      )
-    );
-  }
+            ),
+          );
+        },
+      );
+    },
+    child: const Text(
+      "Add Trainee",
+      style: TextStyle(
+        color: Colors.white,
+      ),
+    ),
+  );
+}
+
 
   Widget editButton() {
     return FilledButton(
