@@ -2,8 +2,8 @@
 // import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:ictc_admin/pages/auth/login_page.dart';
-import 'package:ictc_admin/pages/courses_page.dart';
-import 'package:ictc_admin/pages/dashboard.dart';
+import 'package:ictc_admin/pages/Courses/courses_page.dart';
+import 'package:ictc_admin/pages/Dashboard/dashboard.dart';
 import 'package:ictc_admin/pages/Programs/programs_page.dart';
 import 'package:ictc_admin/pages/Trainers/trainers_page.dart';
 import 'package:ictc_admin/pages/Trainees/trainees_page.dart';
@@ -44,7 +44,8 @@ class _MainScreenState extends State<MainScreen> {
       "Dashboard",
       "Trainers",
       "Trainees",
-      "Programs"
+      "Programs",
+      "Courses",
     ];
 
     return pageNames[_selectedIndex];
@@ -57,6 +58,7 @@ class _MainScreenState extends State<MainScreen> {
       TrainersPage(),
       const TraineesPage(),
       const ProgramsPage(),
+      const CoursesPage(),
     ];
 
     List<NavigationRailDestination> destinations = const [
@@ -140,10 +142,30 @@ class _MainScreenState extends State<MainScreen> {
           ),
         ),
       ),
+      NavigationRailDestination(
+        icon: Icon(
+          Icons.book_outlined,
+          color: Colors.white,
+          size: 30,
+        ),
+        selectedIcon: Icon(
+          Icons.book_rounded,
+          color: Colors.white,
+          size: 30,
+        ),
+        label: Text(
+          "Courses",
+          style: TextStyle(
+            fontSize: 16,
+            fontWeight: FontWeight.w500,
+            color: Colors.white,
+          ),
+        ),
+      ),
     ];
 
     return Scaffold(
-      backgroundColor: Color(0xfff1f5fb),
+      backgroundColor: const Color(0xfff1f5fb),
       body: Row(
         children: [
           Container(

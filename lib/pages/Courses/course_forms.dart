@@ -1,15 +1,15 @@
 import 'package:flutter/material.dart';
 
-class ProgramForm extends StatefulWidget {
-  const ProgramForm({super.key, this.program});
+class CourseForm extends StatefulWidget {
+  const CourseForm({super.key, this.course});
 
-  final Object? program;
+  final Object? course;
 
   @override
-  State<ProgramForm> createState() => _ProgramFormState();
+  State<CourseForm> createState() => _CourseFormState();
 }
 
-class _ProgramFormState extends State<ProgramForm> {
+class _CourseFormState extends State<CourseForm> {
   @override
   Widget build(BuildContext context) {
     return Form(
@@ -55,7 +55,7 @@ class _ProgramFormState extends State<ProgramForm> {
                 ),
               ),
               const SizedBox(width: 10,),
-              if (widget.program != null) 
+              if (widget.course != null) 
               Expanded(
                 child: SizedBox(
                   child: deleteButton()
@@ -70,12 +70,12 @@ class _ProgramFormState extends State<ProgramForm> {
 
   Widget saveButton() {
     return OutlinedButton(
-      onPressed: () {},
+      onPressed: () {}, 
       style: OutlinedButton.styleFrom(
         side: const BorderSide(color: Colors.blue)
       ), 
       child: const Text(
-        "Save",
+        "Save"
       )
     );
   }

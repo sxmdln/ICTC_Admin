@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:data_table_2/data_table_2.dart';
-import 'package:ictc_admin/pages/Programs/card_button.dart';
 import 'package:ictc_admin/pages/Trainers/trainers_forms.dart';
 
 class TrainersPage extends StatefulWidget {
@@ -39,26 +38,13 @@ class _TrainersPageState extends State<TrainersPage> {
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          const SizedBox(
-            width: 1350,
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: [
-                CardButton(),
-                CardButton(),
-                CardButton(),
-                CardButton(),
-              ],
-            ),
-          ),
           const Padding(padding: EdgeInsets.all(20)),
           Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               SizedBox(
                 width: MediaQuery.of(context).size.width * 0.7,
-                height: MediaQuery.of(context).size.height * 0.6,
+                height: MediaQuery.of(context).size.height * 0.8,
                 child: Card(
                     child: Column(
                   mainAxisAlignment: MainAxisAlignment.start,
@@ -71,8 +57,10 @@ class _TrainersPageState extends State<TrainersPage> {
                         child: Padding(
                           padding: const EdgeInsets.fromLTRB(26, 19, 26, 19),
                           child: Row(
-                            mainAxisAlignment: MainAxisAlignment.end,
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            crossAxisAlignment: CrossAxisAlignment.end,
                             children: [
+                              trainersCounter(),
                               addButton()
                             ],
                           ),
@@ -206,6 +194,17 @@ class _TrainersPageState extends State<TrainersPage> {
         Icons.edit,
         color: Colors.white,
       ),
+    );
+  }
+
+  Widget trainersCounter(){
+    return const Row(
+      children: [
+        Text('Total Trainers: '),
+        
+        //TODO: sa baba neto is yung code sa counter ng total course
+        Text('1')
+      ],
     );
   }
 }

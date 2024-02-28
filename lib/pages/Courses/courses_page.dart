@@ -1,22 +1,22 @@
 import 'package:flutter/material.dart';
 import 'package:data_table_2/data_table_2.dart';
-import 'package:ictc_admin/pages/Trainees/trainee_forms.dart';
+import 'package:ictc_admin/pages/Courses/course_viewMore.dart';
+import 'package:ictc_admin/pages/Courses/course_forms.dart';
 
-class TraineesPage extends StatefulWidget {
-  const TraineesPage({super.key});
+class CoursesPage extends StatefulWidget {
+  const CoursesPage({super.key});
 
   @override
-  State<TraineesPage> createState() => _TraineesPageState();
+  State<CoursesPage> createState() => _CoursesPageState();
 }
 
-class _TraineesPageState extends State<TraineesPage> {
+class _CoursesPageState extends State<CoursesPage> {
   @override
   Widget build(BuildContext context) {
     return Container(
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          const Padding(padding: EdgeInsets.all(20)),
           Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
@@ -38,8 +38,8 @@ class _TraineesPageState extends State<TraineesPage> {
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             crossAxisAlignment: CrossAxisAlignment.end,
                             children: [
-                              traineesCounter(),
-                              addButton(),
+                              courseCounter(),
+                              addButton()
                             ],
                           ),
                         )),
@@ -47,40 +47,19 @@ class _TraineesPageState extends State<TraineesPage> {
                         child: DataTable2(
                       horizontalMargin: 12,
                       columns: const [
-                        DataColumn2(label: Text('Name')),
-                        DataColumn2(label: Text('Attended Programs')),
+                        DataColumn2(label: Text('Title')),
                         DataColumn2(label: Text('')),
                         DataColumn2(label: Text('Option')),
                       ],
                       rows: [
                         DataRow2(cells: [
-                          const DataCell(Text('Taylor Batumbakal Swift')),
-                          const DataCell(
-                              Text('Advance Figma')),
+                          const DataCell(Text('Advance Figma')),
                           const DataCell(Text('')),
                           DataCell(Row(
                             children: [
                               editButton(),
                               const Padding(padding: EdgeInsets.all(5)),
-                              // FilledButton(
-                              //   style: ButtonStyle(
-                              //     backgroundColor:
-                              //         MaterialStateProperty.resolveWith(
-                              //             (states) {
-                              //       // If the button is pressed, return green, otherwise blue
-                              //       if (states
-                              //           .contains(MaterialState.pressed)) {
-                              //         return Colors.red;
-                              //       }
-                              //       return Colors.red;
-                              //     }),
-                              //   ),
-                              //   onPressed: () {},
-                              //   child: const Icon(
-                              //     Icons.delete,
-                              //     color: Colors.white,
-                              //   ),
-                              // )
+                              viewMore()
                             ],
                           )),
                         ]),
@@ -98,42 +77,41 @@ class _TraineesPageState extends State<TraineesPage> {
 
   Widget addButton() {
     return FilledButton(
-      onPressed: () {
-        showDialog(
-          context: context,
-          builder: (context) {
-            return const AlertDialog(
-              content: SizedBox(
-                width: 406,
-                height: 498,
-                child: Padding(
-                  padding: EdgeInsets.fromLTRB(27, 25, 27, 25),
-                  child: Column(
-                    mainAxisSize: MainAxisSize.min,
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: [
-                      CircleAvatar(
-                        radius: 80,
-                      ),
-                      SizedBox(height: 20),
-                      Expanded(
-                        child: TraineeForm(),
-                      ),
-                    ],
+        onPressed: () {
+          showDialog(
+            context: context,
+            builder: (context) {
+              return const AlertDialog(
+                content: SizedBox(
+                  width: 406,
+                  height: 498,
+                  child: Padding(
+                    padding: EdgeInsets.fromLTRB(27, 25, 27, 25),
+                    child: Column(
+                      mainAxisSize: MainAxisSize.min,
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: [
+                        CircleAvatar(
+                          radius: 80,
+                        ),
+                        SizedBox(height: 20),
+                        Expanded(
+                          child: CourseForm(),
+                        ),
+                      ],
+                    ),
                   ),
                 ),
-              ),
-            );
-          },
-        );
-      },
-      child: const Text(
-        "Add Trainee",
-        style: TextStyle(
-          color: Colors.white,
-        ),
-      )
-    );
+              );
+            },
+          );
+        },
+        child: const Text(
+          "Add Course",
+          style: TextStyle(
+            color: Colors.white,
+          ),
+        ));
   }
 
   Widget editButton() {
@@ -158,7 +136,9 @@ class _TraineesPageState extends State<TraineesPage> {
                       SizedBox(height: 20),
                       Expanded(
                         // TODO: Pass Program object to form
-                        child: TraineeForm(trainee: true,),
+                        child: CourseForm(
+                          course: true,
+                        ),
                       ),
                     ],
                   ),
@@ -175,10 +155,33 @@ class _TraineesPageState extends State<TraineesPage> {
     );
   }
 
-  Widget traineesCounter(){
+  Widget viewMore() {
+    return FilledButton(
+        onPressed: () {
+          showDialog(
+              context: context,
+              builder: (context) {
+                return const AlertDialog(
+                  content: SizedBox(
+                    width: 406,
+                    height: 498,
+                    child: Padding(
+                        padding: EdgeInsets.fromLTRB(27, 25, 27, 25),
+                        child: CourseViewMore()),
+                  ),
+                );
+              });
+        },
+        child: const Icon(
+          Icons.remove_red_eye,
+          color: Colors.white,
+        ));
+  }
+
+  Widget courseCounter(){
     return const Row(
       children: [
-        Text('Total Trainees: '),
+        Text('Total Courses: '),
         
         //TODO: sa baba neto is yung code sa counter ng total course
         Text('1')
