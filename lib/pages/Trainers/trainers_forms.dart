@@ -41,7 +41,49 @@ class _TrainerFormState extends State<TrainerForm> {
               color: Colors.black,
             ),
             decoration: const InputDecoration(
-              hintText: "Enter Handled Courses",
+              hintText: "Enter Handled Programs",
+              hintStyle: TextStyle(fontSize: 18, fontFamily: "Monsterrat"),
+              border: OutlineInputBorder(),
+            ),
+          ),
+          const SizedBox(height: 20),
+          TextFormField(
+            style: const TextStyle(
+              fontSize: 18,
+              fontFamily: "Monsterrat",
+              fontWeight: FontWeight.w300,
+              color: Colors.black,
+            ),
+            decoration: const InputDecoration(
+              hintText: "Enter Handled Course",
+              hintStyle: TextStyle(fontSize: 18, fontFamily: "Monsterrat"),
+              border: OutlineInputBorder(),
+            ),
+          ),
+          const SizedBox(height: 20),
+          TextFormField(
+            style: const TextStyle(
+              fontSize: 18,
+              fontFamily: "Monsterrat",
+              fontWeight: FontWeight.w300,
+              color: Colors.black,
+            ),
+            decoration: const InputDecoration(
+              hintText: "Enter Description",
+              hintStyle: TextStyle(fontSize: 18, fontFamily: "Monsterrat"),
+              border: OutlineInputBorder(),
+            ),
+          ),
+          const SizedBox(height: 20),
+          TextFormField(
+            style: const TextStyle(
+              fontSize: 18,
+              fontFamily: "Monsterrat",
+              fontWeight: FontWeight.w300,
+              color: Colors.black,
+            ),
+            decoration: const InputDecoration(
+              hintText: "Enter Date",
               hintStyle: TextStyle(fontSize: 18, fontFamily: "Monsterrat"),
               border: OutlineInputBorder(),
             ),
