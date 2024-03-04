@@ -1,6 +1,7 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:data_table_2/data_table_2.dart';
-import 'package:ictc_admin/pages/Trainers/trainers_forms.dart';
+import 'package:ictc_admin/pages/trainers/trainers_forms.dart';
 
 class TrainersPage extends StatefulWidget {
   const TrainersPage({super.key});
@@ -29,82 +30,155 @@ class _TrainersPageState extends State<TrainersPage> {
     return Column(
       mainAxisAlignment: MainAxisAlignment.start,
       children: [
-        // const Padding(padding: EdgeInsets.all(20)),
-        Column(
-          mainAxisAlignment: MainAxisAlignment.start,
-          children: [
-            buildDataTable(),
-          ],
-        )
+        Container(
+          // margin: EdgeInsets.symmetric(horizontal: 100),
+          padding: EdgeInsets.only(right: MediaQuery.of(context).size.width * 0.1,
+),
+          child: SizedBox(
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.end,
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [addButton()],
+            ),
+          ),
+        ),
+        buildDataTable(),
       ],
     );
   }
 
-
   Widget buildDataTable() {
     return SizedBox(
-      width: MediaQuery.of(context).size.width * 0.9,
-      height: MediaQuery.of(context).size.height * 0.9,
+      width: MediaQuery.of(context).size.width * 0.67,
+      height: MediaQuery.of(context).size.height * 0.8,
       child: Card(
+          elevation: 0,
           child: Column(
-        mainAxisAlignment: MainAxisAlignment.start,
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: [
-                trainersCounter(),
-                addButton()
-              ],
-            ),
-          ),
-          Expanded(
-              child: DataTable2(
-            horizontalMargin: 12,
-            columns: const [
-              DataColumn2(label: Text('Name')),
-              DataColumn2(label: Text('Handled Courses')),
-              DataColumn2(label: Text('')),
-              DataColumn2(label: Text('Option')),
+            mainAxisAlignment: MainAxisAlignment.center,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Expanded(
+                  child: DataTable2(
+                showCheckboxColumn: false,
+                showBottomBorder: true,
+                horizontalMargin: 30,
+                isVerticalScrollBarVisible: true,
+                columns: const [
+                  DataColumn2(
+                      label: Text(
+                    'Name of Trainer',
+                  )),
+                  // DataColumn2(
+                  //     label: Text(
+                  //   'Handled Courses',
+                  //   style: TextStyle(fontSize: 20, fontWeight: FontWeight.w500),
+                  // )),
+                  // DataColumn2(label: Text('')),
+                  DataColumn2(
+                      label: Text(
+                    'Actions',
+                  )),
+                ],
+                rows: [
+                  DataRow2(onSelectChanged: (selected) {}, cells: [
+                    const DataCell(Text('John Doe')),
+                    // const DataCell(Text('Intro to Cybersecurity')),
+                    // const DataCell(Text('')),
+                    DataCell(Row(
+                      children: [
+                        editButton(),
+                        viewButton(),
+                      ],
+                    )),
+                  ]),
+                ],
+              ))
             ],
-            rows: [
-              DataRow2(cells: [
-                const DataCell(Text('Bananakin Skywalker')),
-                const DataCell(Text('Intro to Cybersecurity')),
-                const DataCell(Text('')),
-                DataCell(Row(
-                  children: [
-                    editButton(),
-                    const Padding(padding: EdgeInsets.all(5)),
-                  ],
-                )),
-              ]),
-            ],
-          ))
-        ],
-      )),
+          )),
     );
   }
-      
-
 
   Widget addButton() {
-    return IconButton(
-          icon: const Icon(
-            Icons.add,
-            color: Color(0xff153faa),
+    return ElevatedButton(
+      onPressed: () {
+        showDialog(
+          context: context,
+          builder: (context) {
+            return const AlertDialog(
+              content: Column(
+                mainAxisSize: MainAxisSize.min,
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  CircleAvatar(
+                    radius: 80,
+                  ),
+                  SizedBox(height: 20),
+                  TrainersForm(),
+                ],
+              ),
+            );
+          },
+        );
+      },
+      // materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
+      // shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10.0)),
+      child: Container(
+        constraints: BoxConstraints(
+            minWidth: 160, minHeight: 36.0), // min sizes for Material buttons
+        alignment: Alignment.center,
+        child: const Row(children: [
+          Icon(
+            CupertinoIcons.person_add_solid,
+            size: 20,
+            color: Colors.white,
           ),
-          splashRadius: 25,
-          tooltip: "add trainer",
-          onPressed: () {
-            showDialog(
-              context: context,
-              builder: (context) {
-                return const AlertDialog(
-                  content: Padding(
+          SizedBox(width: 6),
+          Text(
+            'Add a Trainer',
+            style: TextStyle(color: Colors.white),
+            textAlign: TextAlign.center,
+          ),
+        ]),
+      ),
+    );
+    // return CupertinoButton(
+    //       onPressed: () {
+    //         showDialog(
+    //           context: context,
+    //           builder: (context) {
+    //             return const AlertDialog(
+    //               content: Padding(
+    //                 padding: EdgeInsets.fromLTRB(27, 25, 27, 25),
+    //                 child: Column(
+    //                   mainAxisSize: MainAxisSize.min,
+    //                   crossAxisAlignment: CrossAxisAlignment.center,
+    //                   children: [
+    //                     CircleAvatar(
+    //                       radius: 80,
+    //                     ),
+    //                     SizedBox(height: 20),
+    //                     TrainersForm(),
+    //                   ],
+    //                 ),
+    //               ),
+    //             );
+    //           },
+    //         );
+    //       }, child: Text("Add a Trainer"),
+    //     );
+  }
+
+  Widget editButton() {
+    return TextButton(
+        onPressed: () {
+          showDialog(
+            context: context,
+            builder: (context) {
+              return const AlertDialog(
+                content: SizedBox(
+                  width: 406,
+                  height: 498,
+                  child: Padding(
                     padding: EdgeInsets.fromLTRB(27, 25, 27, 25),
                     child: Column(
                       mainAxisSize: MainAxisSize.min,
@@ -114,65 +188,82 @@ class _TrainersPageState extends State<TrainersPage> {
                           radius: 80,
                         ),
                         SizedBox(height: 20),
-                        TrainerForm(),
+                        Expanded(
+                          // TODO: Pass Program object to form
+                          child: TrainersForm(
+                            trainer: true,
+                          ),
+                        ),
                       ],
                     ),
                   ),
-                );
-              },
-            );
-          },
-        );
+                ),
+              );
+            },
+          );
+        },
+        child: const Row(
+          children: [
+            Icon(
+              Icons.edit,
+              size: 20,
+              color: Color(0xff153faa),
+            ),
+            SizedBox(
+              width: 5,
+            ),
+            Text("Edit"),
+          ],
+        ));
   }
 
-  Widget editButton() {
-    return FilledButton(
-      onPressed: () {
-        showDialog(
-          context: context,
-          builder: (context) {
-            return const AlertDialog(
-              content: SizedBox(
-                width: 406,
-                height: 498,
-                child: Padding(
-                  padding: EdgeInsets.fromLTRB(27, 25, 27, 25),
-                  child: Column(
-                    mainAxisSize: MainAxisSize.min,
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: [
-                      CircleAvatar(
-                        radius: 80,
-                      ),
-                      SizedBox(height: 20),
-                      Expanded(
-                        // TODO: Pass Program object to form
-                        child: TrainerForm(
-                          trainer: true,
+  Widget viewButton(){
+    return TextButton(
+        onPressed: () {
+          showDialog(
+            context: context,
+            builder: (context) {
+              return const AlertDialog(
+                content: SizedBox(
+                  width: 406,
+                  height: 498,
+                  child: Padding(
+                    padding: EdgeInsets.fromLTRB(27, 25, 27, 25),
+                    child: Column(
+                      mainAxisSize: MainAxisSize.min,
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: [
+                        CircleAvatar(
+                          radius: 80,
                         ),
-                      ),
-                    ],
+                        SizedBox(height: 20),
+                        Expanded(
+                          // TODO: Pass Program object to form
+                          child: TrainersForm(
+                            trainer: true,
+                          ),
+                        ),
+                      ],
+                    ),
                   ),
                 ),
-              ),
-            );
-          },
-        );
-      },
-      child: const Icon(
-        Icons.edit,
-        color: Colors.white,
-      ),
-    );
+              );
+            },
+          );
+        },
+        child: const Row(
+          children: [
+            Icon(
+              Icons.visibility,
+              size: 20,
+              color: Color(0xff153faa),
+            ),
+            SizedBox(
+              width: 5,
+            ),
+            Text("View"),
+          ],
+        ));
   }
 
-  Widget trainersCounter() {
-    return const Row(
-      children: [
-        Text('Total Trainers: '),
-        //TODO: sa baba neto is yung code sa counter ng total course
-        Text('1')
-      ],
-    );
-  }
 }
