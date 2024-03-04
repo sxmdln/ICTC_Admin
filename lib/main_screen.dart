@@ -188,9 +188,9 @@ class _MainScreenState extends State<MainScreen> {
 
   Container buildBar(BuildContext context) {
     return Container(
-        color: Color(0xfff1f5fb),
+        color: const Color(0xfff1f5fb),
         padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 16),
-        height: 70,
+        height: 80,
         child:
             Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
           AnimatedSwitcher(
@@ -208,7 +208,7 @@ class _MainScreenState extends State<MainScreen> {
                   key: ValueKey<String>(getSearchName()),
                   style: const TextStyle(
                       fontSize: 28,
-                      fontWeight: FontWeight.bold,
+                      fontWeight: FontWeight.w700,
                       color: Colors.black),
                 ),
                 const SizedBox(
@@ -230,23 +230,43 @@ class _MainScreenState extends State<MainScreen> {
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
               buildSearchBar(context),
-              const SizedBox(width: 0),
+              SizedBox(width: MediaQuery.of(context).size.width * 0.2),
               Container(
-                decoration: BoxDecoration(borderRadius: BorderRadius.circular(16), 
-                color: Colors.white,
+                padding: EdgeInsets.all(8),
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(24),
                 ),
-                child: const Row(
-                  children: [
-                    Icon(
-                      CupertinoIcons.person_crop_circle,
-                      color: Color(0xff153faa),
-                    ),
-                    SizedBox(
-                      width: 5,
-                    ),
-                    Text("name ko"),
-                  ],
-                ),
+                // child: Row(
+                //   mainAxisAlignment: MainAxisAlignment.center,
+                //   crossAxisAlignment: CrossAxisAlignment.center,
+                //   children: [
+                //     FilledButton.icon(
+                //       style: ButtonStyle(
+                //         enableFeedback: false,
+                //         splashFactory: NoSplash.splashFactory,
+                //         iconSize: MaterialStateProperty.all(23),
+                //         maximumSize: MaterialStateProperty.all(Size.fromWidth(
+                //             MediaQuery.of(context).size.height * 1)),
+                //         backgroundColor: MaterialStateProperty.all(
+                //           Color(0xfff1f5fb),
+                //         ),
+                //         elevation: MaterialStateProperty.all(0.5),
+                //       ),
+
+                //       label: const Text(
+                //         "Welcome, Admin",
+                //         style: TextStyle(color: Colors.black, fontSize: 14),
+                //       ),
+                //       icon: Icon(
+                //         CupertinoIcons.person_alt_circle,
+                //         color: Color(0xff19306B),
+                //       ),
+                //       // child: ,
+                //       onPressed:
+                          // () {}, //TODO: Add a dropdown for profile settings: to change admin pass and user
+                //     ),
+                //   ],
+                // ),
               ),
               // ProfileDropdown(
               //   onSettingsTap: state.openSettings,
@@ -263,11 +283,11 @@ class _MainScreenState extends State<MainScreen> {
       duration: const Duration(milliseconds: 350),
       child: _selectedIndex != 0
           ? SearchBar(
-              constraints: const BoxConstraints(
+              constraints: BoxConstraints(
                   minWidth: 80.0,
-                  maxWidth: 250,
-                  maxHeight: 100,
-                  minHeight: 100),
+                  maxWidth: MediaQuery.of(context).size.width * 0.3,
+                  maxHeight: 70,
+                  minHeight: 60),
               controller: searchController,
               elevation: const MaterialStatePropertyAll(1),
               leading: const Icon(Icons.search),
