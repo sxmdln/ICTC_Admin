@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:data_table_2/data_table_2.dart';
-import 'package:ictc_admin/pages/Trainees/trainee_forms.dart';
+import 'package:ictc_admin/pages/trainees/trainees_forms.dart';
 
 class TraineesPage extends StatefulWidget {
   const TraineesPage({super.key});
