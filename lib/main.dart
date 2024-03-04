@@ -84,9 +84,9 @@ class MyApp extends StatelessWidget {
               (states) {
                 // If the button is pressed, return green, otherwise blue
                 if (states.contains(MaterialState.pressed)) {
-                  return Color.fromARGB(255, 245, 154, 43);
+                  return Color.fromARGB(255, 57, 167, 74);
                 }
-                return Color.fromARGB(255, 248, 159, 25);
+                return Color.fromARGB(255, 33, 175, 23);
               },
             ),
             fixedSize: MaterialStateProperty.all(Size.fromWidth(145))
