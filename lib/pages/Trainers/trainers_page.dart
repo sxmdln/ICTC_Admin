@@ -28,12 +28,13 @@ class _TrainersPageState extends State<TrainersPage> {
   @override
   Widget build(BuildContext context) {
     return Column(
-      mainAxisAlignment: MainAxisAlignment.start,
+      mainAxisAlignment: MainAxisAlignment.end,
       children: [
         Container(
           // margin: EdgeInsets.symmetric(horizontal: 100),
-          padding: EdgeInsets.only(right: MediaQuery.of(context).size.width * 0.1,
-),
+          padding: EdgeInsets.only(
+            right: 5,
+          ),
           child: SizedBox(
             child: Row(
               mainAxisAlignment: MainAxisAlignment.end,
@@ -48,53 +49,56 @@ class _TrainersPageState extends State<TrainersPage> {
   }
 
   Widget buildDataTable() {
-    return SizedBox(
-      width: MediaQuery.of(context).size.width * 0.67,
-      height: MediaQuery.of(context).size.height * 0.8,
-      child: Card(
-          elevation: 0,
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Expanded(
-                  child: DataTable2(
-                showCheckboxColumn: false,
-                showBottomBorder: true,
-                horizontalMargin: 30,
-                isVerticalScrollBarVisible: true,
-                columns: const [
-                  DataColumn2(
-                      label: Text(
-                    'Name of Trainer',
-                  )),
-                  // DataColumn2(
-                  //     label: Text(
-                  //   'Handled Courses',
-                  //   style: TextStyle(fontSize: 20, fontWeight: FontWeight.w500),
-                  // )),
-                  // DataColumn2(label: Text('')),
-                  DataColumn2(
-                      label: Text(
-                    'Actions',
-                  )),
-                ],
-                rows: [
-                  DataRow2(onSelectChanged: (selected) {}, cells: [
-                    const DataCell(Text('John Doe')),
-                    // const DataCell(Text('Intro to Cybersecurity')),
-                    // const DataCell(Text('')),
-                    DataCell(Row(
-                      children: [
-                        editButton(),
-                        viewButton(),
-                      ],
+    return Expanded(
+      child: SizedBox(
+        // width: MediaQuery.of(context).size.width * 0.67,
+        // width: MediaQuery.of(context).size.width * 0.8,
+        // height: MediaQuery.of(context).size.height * 0.8,
+        child: Card(
+            elevation: 0,
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Expanded(
+                    child: DataTable2(
+                  showCheckboxColumn: false,
+                  showBottomBorder: true,
+                  horizontalMargin: 30,
+                  isVerticalScrollBarVisible: true,
+                  columns: const [
+                    DataColumn2(
+                        label: Text(
+                      'Name of Trainer',
                     )),
-                  ]),
-                ],
-              ))
-            ],
-          )),
+                    // DataColumn2(
+                    //     label: Text(
+                    //   'Handled Courses',
+                    //   style: TextStyle(fontSize: 20, fontWeight: FontWeight.w500),
+                    // )),
+                    // DataColumn2(label: Text('')),
+                    DataColumn2(
+                        label: Text(
+                      'Actions',
+                    )),
+                  ],
+                  rows: [
+                    DataRow2(onSelectChanged: (selected) {}, cells: [
+                      const DataCell(Text('John Doe')),
+                      // const DataCell(Text('Intro to Cybersecurity')),
+                      // const DataCell(Text('')),
+                      DataCell(Row(
+                        children: [
+                          editButton(),
+                          viewButton(),
+                        ],
+                      )),
+                    ]),
+                  ],
+                ))
+              ],
+            )),
+      ),
     );
   }
 
@@ -123,7 +127,7 @@ class _TrainersPageState extends State<TrainersPage> {
       // materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
       // shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10.0)),
       child: Container(
-        constraints: BoxConstraints(
+        constraints: const BoxConstraints(
             minWidth: 160, minHeight: 36.0), // min sizes for Material buttons
         alignment: Alignment.center,
         child: const Row(children: [
@@ -141,31 +145,6 @@ class _TrainersPageState extends State<TrainersPage> {
         ]),
       ),
     );
-    // return CupertinoButton(
-    //       onPressed: () {
-    //         showDialog(
-    //           context: context,
-    //           builder: (context) {
-    //             return const AlertDialog(
-    //               content: Padding(
-    //                 padding: EdgeInsets.fromLTRB(27, 25, 27, 25),
-    //                 child: Column(
-    //                   mainAxisSize: MainAxisSize.min,
-    //                   crossAxisAlignment: CrossAxisAlignment.center,
-    //                   children: [
-    //                     CircleAvatar(
-    //                       radius: 80,
-    //                     ),
-    //                     SizedBox(height: 20),
-    //                     TrainersForm(),
-    //                   ],
-    //                 ),
-    //               ),
-    //             );
-    //           },
-    //         );
-    //       }, child: Text("Add a Trainer"),
-    //     );
   }
 
   Widget editButton() {
@@ -174,11 +153,11 @@ class _TrainersPageState extends State<TrainersPage> {
           showDialog(
             context: context,
             builder: (context) {
-              return const AlertDialog(
+              return AlertDialog(
                 content: SizedBox(
-                  width: 406,
-                  height: 498,
-                  child: Padding(
+                  width: MediaQuery.of(context).size.width * 0.3,
+                  height: MediaQuery.of(context).size.height * 0.7,
+                  child: const Padding(
                     padding: EdgeInsets.fromLTRB(27, 25, 27, 25),
                     child: Column(
                       mainAxisSize: MainAxisSize.min,
@@ -217,7 +196,7 @@ class _TrainersPageState extends State<TrainersPage> {
         ));
   }
 
-  Widget viewButton(){
+  Widget viewButton() {
     return TextButton(
         onPressed: () {
           showDialog(
@@ -256,14 +235,13 @@ class _TrainersPageState extends State<TrainersPage> {
             Icon(
               Icons.visibility,
               size: 20,
-              color: Color(0xff153faa),
+              color: Colors.grey,
             ),
             SizedBox(
               width: 5,
             ),
-            Text("View"),
+            Text("View", style: TextStyle(color: Colors.black54,),),
           ],
         ));
   }
-
 }
