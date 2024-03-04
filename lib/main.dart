@@ -1,9 +1,9 @@
 import 'package:ictc_admin/main_screen.dart';
 import 'package:ictc_admin/pages/auth/login_page.dart';
-import 'package:ictc_admin/pages/Courses/courses_page.dart';
-import 'package:ictc_admin/pages/Dashboard/dashboard.dart';
+import 'package:ictc_admin/pages/courses/courses_page.dart';
+import 'package:ictc_admin/pages/dashboard/dashboard.dart';
 import 'package:flutter/material.dart';
-import 'package:ictc_admin/pages/Programs/programs_page.dart';
+import 'package:ictc_admin/pages/programs/programs_page.dart';
 // import 'package:responsive_builder/responsive_builder.dart';
 // import 'package:firebase_core/firebase_core.dart';
 // import 'firebase_options.dart';
@@ -29,7 +29,7 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       title: 'Ateneo ICTC',
       theme: ThemeData(
-        fontFamily: "Montserrat",
+        fontFamily: "Archivo",
         colorScheme: ColorScheme.fromSeed(
             seedColor: const Color(0xff153faa),
             onPrimary: const Color(0xff153faa),
@@ -59,6 +59,38 @@ class MyApp extends StatelessWidget {
           //     color: Color(0xff153faa)),
           bodyMedium: TextStyle(
               fontSize: 14, fontWeight: FontWeight.w400, color: Colors.black),
+        ),
+        dataTableTheme: DataTableThemeData(
+          headingRowColor: MaterialStateColor.resolveWith((states) {
+            // If the button is pressed, return size 40, otherwise 20
+            if (states.contains(MaterialState.hovered)) {
+              return Color(0xff19306B);
+            }
+            return Color(0xff19306B);
+          }),
+          headingTextStyle: const TextStyle(
+              fontSize: 16, color: Colors.white, fontWeight: FontWeight.w800),
+          dataRowColor: MaterialStateProperty.resolveWith<Color?>(
+              (Set<MaterialState> states) {
+            if (states.contains(MaterialState.selected)) {
+              return Colors.grey.shade400;
+            }
+            return null;
+          }),
+        ),
+        elevatedButtonTheme: ElevatedButtonThemeData(
+          style: ButtonStyle(
+            backgroundColor: MaterialStateProperty.resolveWith(
+              (states) {
+                // If the button is pressed, return green, otherwise blue
+                if (states.contains(MaterialState.pressed)) {
+                  return Color.fromARGB(255, 245, 154, 43);
+                }
+                return Color.fromARGB(255, 248, 159, 25);
+              },
+            ),
+            fixedSize: MaterialStateProperty.all(Size.fromWidth(145))
+          ),
         ),
         useMaterial3: false,
       ),
