@@ -55,7 +55,7 @@ class _MainScreenState extends State<MainScreen> {
   Widget build(BuildContext context) {
     List<Widget> views = [
       const DashboardPage(),
-      TrainersPage(),
+      const TrainersPage(),
       const TraineesPage(),
       const ProgramsPage(),
       const CoursesPage(),
@@ -188,8 +188,8 @@ class _MainScreenState extends State<MainScreen> {
   Container buildBar(BuildContext context) {
     return Container(
         color: const Color(0xfff1f5fb),
-        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-        height: 64,
+        padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 16),
+        height: 70,
         child:
             Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
           AnimatedSwitcher(
@@ -204,7 +204,7 @@ class _MainScreenState extends State<MainScreen> {
               getSearchName(),
               key: ValueKey<String>(getSearchName()),
               style: const TextStyle(
-                  fontSize: 24,
+                  fontSize: 30,
                   fontWeight: FontWeight.bold,
                   color: Colors.black),
             ),
@@ -256,7 +256,7 @@ class _MainScreenState extends State<MainScreen> {
 
   NavigationRail buildNavRail(List<NavigationRailDestination> destinations) {
     return NavigationRail(
-      backgroundColor: Color(0xff19306B),
+      backgroundColor: const Color(0xff19306B),
       destinations: destinations,
       selectedIndex: _selectedIndex,
       onDestinationSelected: (int value) {
