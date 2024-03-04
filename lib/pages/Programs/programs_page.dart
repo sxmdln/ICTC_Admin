@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:data_table_2/data_table_2.dart';
-import 'package:ictc_admin/pages/Programs/program_forms.dart';
-import 'package:ictc_admin/pages/Programs/programs_viewMore.dart';
+import 'package:ictc_admin/pages/programs/program_forms.dart';
+import 'package:ictc_admin/pages/programs/programs_viewMore.dart';
 
 class ProgramsPage extends StatefulWidget {
   const ProgramsPage({super.key});

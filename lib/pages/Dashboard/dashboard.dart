@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:ictc_admin/pages/Dashboard/card_button.dart';
+import 'package:ictc_admin/pages/dashboard/card_button.dart';
 
 class DashboardPage extends StatefulWidget {
   const DashboardPage({super.key});

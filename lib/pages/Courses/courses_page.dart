@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:data_table_2/data_table_2.dart';
-import 'package:ictc_admin/pages/Courses/course_viewMore.dart';
-import 'package:ictc_admin/pages/Courses/course_forms.dart';
+import 'package:ictc_admin/pages/courses/course_viewMore.dart';
+import 'package:ictc_admin/pages/courses/course_forms.dart';
 
 class CoursesPage extends StatefulWidget {
   const CoursesPage({super.key});
