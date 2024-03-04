@@ -1,12 +1,13 @@
 // import 'dart:async';
 // import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:ictc_admin/pages/auth/login_page.dart';
-import 'package:ictc_admin/pages/Courses/courses_page.dart';
-import 'package:ictc_admin/pages/Dashboard/dashboard.dart';
-import 'package:ictc_admin/pages/Programs/programs_page.dart';
-import 'package:ictc_admin/pages/Trainers/trainers_page.dart';
-import 'package:ictc_admin/pages/Trainees/trainees_page.dart';
+import 'package:ictc_admin/pages/courses/courses_page.dart';
+import 'package:ictc_admin/pages/dashboard/dashboard.dart';
+import 'package:ictc_admin/pages/programs/programs_page.dart';
+import 'package:ictc_admin/pages/trainers/trainers_page.dart';
+import 'package:ictc_admin/pages/trainees/trainees_page.dart';
 
 class MainScreen extends StatefulWidget {
   const MainScreen({super.key});
@@ -77,19 +78,19 @@ class _MainScreenState extends State<MainScreen> {
           "Dashboard",
           style: TextStyle(
             fontSize: 16,
-            fontWeight: FontWeight.w500,
+            fontWeight: FontWeight.w400,
             color: Colors.white,
           ),
         ),
       ),
       NavigationRailDestination(
         icon: Icon(
-          Icons.person_outline,
+          Icons.person_outline_rounded,
           color: Colors.white,
           size: 30,
         ),
         selectedIcon: Icon(
-          Icons.person,
+          Icons.person_rounded,
           color: Colors.white,
           size: 30,
         ),
@@ -97,7 +98,7 @@ class _MainScreenState extends State<MainScreen> {
           "Trainers",
           style: TextStyle(
             fontSize: 16,
-            fontWeight: FontWeight.w500,
+            fontWeight: FontWeight.w400,
             color: Colors.white,
           ),
         ),
@@ -117,7 +118,7 @@ class _MainScreenState extends State<MainScreen> {
           "Trainees",
           style: TextStyle(
             fontSize: 16,
-            fontWeight: FontWeight.w500,
+            fontWeight: FontWeight.w400,
             color: Colors.white,
           ),
         ),
@@ -137,7 +138,7 @@ class _MainScreenState extends State<MainScreen> {
           "Programs",
           style: TextStyle(
             fontSize: 16,
-            fontWeight: FontWeight.w500,
+            fontWeight: FontWeight.w400,
             color: Colors.white,
           ),
         ),
@@ -157,7 +158,7 @@ class _MainScreenState extends State<MainScreen> {
           "Courses",
           style: TextStyle(
             fontSize: 16,
-            fontWeight: FontWeight.w500,
+            fontWeight: FontWeight.w400,
             color: Colors.white,
           ),
         ),
@@ -169,8 +170,8 @@ class _MainScreenState extends State<MainScreen> {
       body: Row(
         children: [
           Container(
-              decoration: const BoxDecoration(
-                  border: Border(right: BorderSide(width: 0.5))),
+              // decoration: const BoxDecoration(
+              //     border: Border(bottom: BorderSide(width: 2))),
               child: buildNavRail(destinations)),
           Expanded(
             child: Column(
@@ -187,7 +188,7 @@ class _MainScreenState extends State<MainScreen> {
 
   Container buildBar(BuildContext context) {
     return Container(
-        color: const Color(0xfff1f5fb),
+        color: Color(0xfff1f5fb),
         padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 16),
         height: 70,
         child:
@@ -200,13 +201,27 @@ class _MainScreenState extends State<MainScreen> {
                         end: const Offset(0.0, 0.0))
                     .animate(animation),
                 child: child),
-            child: Text(
-              getSearchName(),
-              key: ValueKey<String>(getSearchName()),
-              style: const TextStyle(
-                  fontSize: 30,
-                  fontWeight: FontWeight.bold,
-                  color: Colors.black),
+            child: Row(
+              children: [
+                Text(
+                  getSearchName(),
+                  key: ValueKey<String>(getSearchName()),
+                  style: const TextStyle(
+                      fontSize: 28,
+                      fontWeight: FontWeight.bold,
+                      color: Colors.black),
+                ),
+                const SizedBox(
+                  width: 10,
+                ),
+                const Text(
+                  "15",
+                  style: TextStyle(
+                      fontSize: 28,
+                      fontWeight: FontWeight.bold,
+                      color: Colors.black26),
+                ), //TODO: need backend - FOR TOTAL# (remove it if page is on dashboard).
+              ],
             ),
           ),
           Row(
@@ -216,6 +231,23 @@ class _MainScreenState extends State<MainScreen> {
             children: [
               buildSearchBar(context),
               const SizedBox(width: 0),
+              Container(
+                decoration: BoxDecoration(borderRadius: BorderRadius.circular(16), 
+                color: Colors.white,
+                ),
+                child: const Row(
+                  children: [
+                    Icon(
+                      CupertinoIcons.person_crop_circle,
+                      color: Color(0xff153faa),
+                    ),
+                    SizedBox(
+                      width: 5,
+                    ),
+                    Text("name ko"),
+                  ],
+                ),
+              ),
               // ProfileDropdown(
               //   onSettingsTap: state.openSettings,
               // )
@@ -278,12 +310,12 @@ class _MainScreenState extends State<MainScreen> {
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
         Padding(
-          padding: EdgeInsets.only(top: 40.0, bottom: 30),
+          padding: EdgeInsets.only(top: 20.0, bottom: 20),
           child: Image(
               image: AssetImage("assets/images/logo_ictc.png"), height: 60),
         ),
         Padding(
-            padding: EdgeInsets.only(left: 10, top: 30, bottom: 30),
+            padding: EdgeInsets.only(left: 8, top: 0, bottom: 0),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
