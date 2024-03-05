@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:data_table_2/data_table_2.dart';
 import 'package:ictc_admin/pages/Trainers/trainers_forms.dart';
+import 'package:ictc_admin/pages/Trainers/trainers_viewMore.dart';
 
 class TrainersPage extends StatefulWidget {
   TrainersPage({super.key});
@@ -84,6 +85,7 @@ class _TrainersPageState extends State<TrainersPage> {
                             children: [
                               editButton(),
                               const Padding(padding: EdgeInsets.all(5)),
+                              viewMore()
                               // FilledButton(
                               //   style: ButtonStyle(
                               //     backgroundColor:
@@ -125,30 +127,38 @@ class _TrainersPageState extends State<TrainersPage> {
         context: context,
         builder: (context) {
           return const AlertDialog(
-            content: Padding(
-              padding: EdgeInsets.fromLTRB(27, 25, 27, 25),
-              child: Column(
-                mainAxisSize: MainAxisSize.min,
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: [
-                  CircleAvatar(
-                    radius: 80,
-                  ),
-                  SizedBox(height: 20),
-                  TrainerForm(),
-                ],
+            content: SizedBox(
+              width: 800,
+              child: Padding(
+                padding: EdgeInsets.fromLTRB(27, 25, 27, 25),
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    TrainerForm(),
+                  ],
+                ),
               ),
-            ),
+            )
           );
         },
       );
     },
-    child: const Text(
-      "Add Trainee",
-      style: TextStyle(
-        color: Colors.white,
-      ),
-    ),
+    child: const Row(
+      children: [
+        Icon(
+          Icons.add,
+          color: Colors.white,
+        ),
+        SizedBox(width: 5),
+        Text(
+          'Add Trainer',
+          style: TextStyle(
+            color: Colors.white,
+          ),
+        ),
+      ],
+    )
   );
 }
 
@@ -161,22 +171,17 @@ class _TrainersPageState extends State<TrainersPage> {
           builder: (context) {
             return const AlertDialog(
               content: SizedBox(
-                width: 406,
-                height: 498,
+                width: 800,
                 child: Padding(
                   padding: EdgeInsets.fromLTRB(27, 25, 27, 25),
                   child: Column(
                     mainAxisSize: MainAxisSize.min,
                     crossAxisAlignment: CrossAxisAlignment.center,
                     children: [
-                      CircleAvatar(
-                        radius: 80,
-                      ),
-                      SizedBox(height: 20),
-                      Expanded(
+                      
                         // TODO: Pass Program object to form
-                        child: TrainerForm(trainer: true,),
-                      ),
+                      TrainerForm(trainer: true,),
+                      
                     ],
                   ),
                 ),
@@ -189,6 +194,31 @@ class _TrainersPageState extends State<TrainersPage> {
         Icons.edit,
         color: Colors.white,
       ),
+    );
+  }
+
+  Widget viewMore(){
+    return FilledButton(
+      onPressed: () {
+        showDialog(
+          context: context,
+          builder: (context) {
+            return const AlertDialog(
+              content: SizedBox(
+                width: 600,
+                child: Padding(
+                  padding: EdgeInsets.fromLTRB(27, 25, 27, 25),
+                  child: TrainerViewMore()
+                ),
+              ),
+            );
+          }
+        );
+      }, 
+      child: const Icon(
+        Icons.remove_red_eye,
+        color: Colors.white,
+      )
     );
   }
 

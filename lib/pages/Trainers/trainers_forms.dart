@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
 class TrainerForm extends StatefulWidget {
-  const TrainerForm({super.key, this.trainer});
+  const TrainerForm({Key? key, this.trainer}) : super(key: key);
 
   final Object? trainer;
 
@@ -16,93 +16,125 @@ class _TrainerFormState extends State<TrainerForm> {
       child: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
+          Row(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              const SizedBox(
+                width: 200,
+                child: CircleAvatar(
+                  radius: 80,
+                ),
+              ),
+              const SizedBox(width: 20),
+              Expanded(
+                child: Column(
+                  children: [
+                    TextFormField(
+                      style: const TextStyle(
+                        fontSize: 18,
+                        fontFamily: "Montserrat",
+                        fontWeight: FontWeight.w600,
+                        color: Colors.black,
+                      ),
+                      decoration: const InputDecoration(
+                          hintText: "Name",
+                          hintStyle: TextStyle(
+                            fontSize: 18,
+                            fontWeight: FontWeight.w600,
+                            fontFamily: "Montserrat",
+                          ),
+                          border: OutlineInputBorder(),
+                          prefixIcon: Icon(Icons.person)),
+                    ),
+                    const SizedBox(height: 20),
+                    TextFormField(
+                      style: const TextStyle(
+                        fontSize: 18,
+                        fontFamily: "Montserrat",
+                        fontWeight: FontWeight.w600,
+                        color: Colors.black,
+                      ),
+                      decoration: const InputDecoration(
+                          hintText: "Email Address",
+                          hintStyle:
+                              TextStyle(fontSize: 18, fontFamily: "Montserrat"),
+                          border: OutlineInputBorder(),
+                          prefixIcon: Icon(Icons.email)),
+                    ),
+                  ],
+                ),
+              ),
+            ],
+          ),
+          const SizedBox(height: 20),
           TextFormField(
             style: const TextStyle(
               fontSize: 18,
-              fontFamily: "Monsterrat",
+              fontFamily: "Montserrat",
               fontWeight: FontWeight.w600,
               color: Colors.black,
             ),
             decoration: const InputDecoration(
-              hintText: "Enter Name",
-              hintStyle: TextStyle(
-                  fontSize: 18,
-                  fontWeight: FontWeight.w600,
-                  fontFamily: "Monsterrat"),
-              border: OutlineInputBorder(),
-            ),
+                hintText: "Contact Number",
+                hintStyle: TextStyle(fontSize: 18, fontFamily: "Montserrat"),
+                border: OutlineInputBorder(),
+                prefixIcon: Icon(Icons.phone)),
           ),
           const SizedBox(height: 20),
           TextFormField(
             style: const TextStyle(
               fontSize: 18,
-              fontFamily: "Monsterrat",
-              fontWeight: FontWeight.w300,
+              fontFamily: "Montserrat",
+              fontWeight: FontWeight.w600,
               color: Colors.black,
             ),
             decoration: const InputDecoration(
-              hintText: "Enter Handled Programs",
-              hintStyle: TextStyle(fontSize: 18, fontFamily: "Monsterrat"),
-              border: OutlineInputBorder(),
-            ),
+                hintText: "Handled Course",
+                hintStyle: TextStyle(fontSize: 18, fontFamily: "Montserrat"),
+                border: OutlineInputBorder(),
+                prefixIcon: Icon(Icons.book)),
           ),
           const SizedBox(height: 20),
           TextFormField(
             style: const TextStyle(
               fontSize: 18,
-              fontFamily: "Monsterrat",
-              fontWeight: FontWeight.w300,
+              fontFamily: "Montserrat",
+              fontWeight: FontWeight.w600,
               color: Colors.black,
             ),
             decoration: const InputDecoration(
-              hintText: "Enter Handled Course",
-              hintStyle: TextStyle(fontSize: 18, fontFamily: "Monsterrat"),
-              border: OutlineInputBorder(),
-            ),
+                hintText: "Description",
+                hintStyle: TextStyle(fontSize: 18, fontFamily: "Montserrat"),
+                border: OutlineInputBorder(),
+                prefixIcon: Icon(Icons.description)),
           ),
           const SizedBox(height: 20),
           TextFormField(
             style: const TextStyle(
               fontSize: 18,
-              fontFamily: "Monsterrat",
-              fontWeight: FontWeight.w300,
+              fontFamily: "Montserrat",
+              fontWeight: FontWeight.w600,
               color: Colors.black,
             ),
             decoration: const InputDecoration(
-              hintText: "Enter Description",
-              hintStyle: TextStyle(fontSize: 18, fontFamily: "Monsterrat"),
-              border: OutlineInputBorder(),
-            ),
-          ),
-          const SizedBox(height: 20),
-          TextFormField(
-            style: const TextStyle(
-              fontSize: 18,
-              fontFamily: "Monsterrat",
-              fontWeight: FontWeight.w300,
-              color: Colors.black,
-            ),
-            decoration: const InputDecoration(
-              hintText: "Enter Date",
-              hintStyle: TextStyle(fontSize: 18, fontFamily: "Monsterrat"),
-              border: OutlineInputBorder(),
-            ),
+                hintText: "Date",
+                hintStyle: TextStyle(fontSize: 18, fontFamily: "Montserrat"),
+                border: OutlineInputBorder(),
+                prefixIcon: Icon(Icons.calendar_month)),
           ),
           const SizedBox(height: 20),
           Row(
             children: [
+              Expanded(child: SizedBox(child: cancelButton())),
+              SizedBox(width: 10),
               Expanded(
-                child: SizedBox(
-                  child: saveButton()
-                ),
+                child: SizedBox(child: saveButton()),
               ),
-              const SizedBox(width: 10,),
-              if (widget.trainer != null) 
-              Expanded(
-                child: SizedBox(
-                  child: deleteButton()
-                )
-              )
+              const SizedBox(width: 10),
+              if (widget.trainer != null)
+                Expanded(
+                  child: SizedBox(child: deleteButton()),
+                ),
             ],
           )
         ],
@@ -111,10 +143,52 @@ class _TrainerFormState extends State<TrainerForm> {
   }
 
   Widget saveButton() {
-    return OutlinedButton(onPressed: () {}, child: const Text("Save"));
+    return FilledButton(
+      onPressed: () {},
+      child: const Text(
+        "Save",
+        style: TextStyle(
+          color: Colors.white,
+        ),
+      ),
+    );
+  }
+
+  Widget cancelButton() {
+    return FilledButton(
+        style: ButtonStyle(
+          backgroundColor: MaterialStateProperty.resolveWith((states) {
+            if (states.contains(MaterialState.pressed)) {
+              return Colors.grey;
+            }
+            return Colors.grey;
+          }),
+        ),
+        onPressed: () {
+          Navigator.pop(context);
+        },
+        child: const Text(
+          "Cancel",
+          style: TextStyle(
+            color: Colors.white,
+          ),
+        ));
   }
 
   Widget deleteButton() {
-    return OutlinedButton(onPressed: () {}, child: const Text("Delete"));
+    return FilledButton(
+      style: ButtonStyle(
+          backgroundColor: MaterialStateProperty.resolveWith((states) {
+            if (states.contains(MaterialState.pressed)) {
+              return Colors.red;
+            }
+            return Colors.red;
+          }),
+        ),
+        onPressed: () {},
+        child: const Text(
+          "Delete",
+          style: TextStyle(color: Colors.white),
+        ));
   }
 }

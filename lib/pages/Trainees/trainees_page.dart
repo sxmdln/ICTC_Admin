@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:data_table_2/data_table_2.dart';
-import 'package:ictc_admin/pages/Trainees/trainee_forms.dart';
+import 'package:ictc_admin/pages/Trainees/trainees_viewMore.dart';
 
 class TraineesPage extends StatefulWidget {
   const TraineesPage({super.key});
@@ -39,7 +39,6 @@ class _TraineesPageState extends State<TraineesPage> {
                             crossAxisAlignment: CrossAxisAlignment.end,
                             children: [
                               traineesCounter(),
-                              addButton(),
                             ],
                           ),
                         )),
@@ -60,8 +59,7 @@ class _TraineesPageState extends State<TraineesPage> {
                           const DataCell(Text('')),
                           DataCell(Row(
                             children: [
-                              editButton(),
-                              const Padding(padding: EdgeInsets.all(5)),
+                              viewMore()
                               // FilledButton(
                               //   style: ButtonStyle(
                               //     backgroundColor:
@@ -96,7 +94,7 @@ class _TraineesPageState extends State<TraineesPage> {
     );
   }
 
-  Widget addButton() {
+  Widget viewMore(){
     return FilledButton(
       onPressed: () {
         showDialog(
@@ -108,70 +106,17 @@ class _TraineesPageState extends State<TraineesPage> {
                 height: 498,
                 child: Padding(
                   padding: EdgeInsets.fromLTRB(27, 25, 27, 25),
-                  child: Column(
-                    mainAxisSize: MainAxisSize.min,
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: [
-                      CircleAvatar(
-                        radius: 80,
-                      ),
-                      SizedBox(height: 20),
-                      Expanded(
-                        child: TraineeForm(),
-                      ),
-                    ],
-                  ),
+                  child: TraineeViewMore()
                 ),
               ),
             );
-          },
+          }
         );
-      },
-      child: const Text(
-        "Add Trainee",
-        style: TextStyle(
-          color: Colors.white,
-        ),
-      )
-    );
-  }
-
-  Widget editButton() {
-    return FilledButton(
-      onPressed: () {
-        showDialog(
-          context: context,
-          builder: (context) {
-            return const AlertDialog(
-              content: SizedBox(
-                width: 406,
-                height: 498,
-                child: Padding(
-                  padding: EdgeInsets.fromLTRB(27, 25, 27, 25),
-                  child: Column(
-                    mainAxisSize: MainAxisSize.min,
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: [
-                      CircleAvatar(
-                        radius: 80,
-                      ),
-                      SizedBox(height: 20),
-                      Expanded(
-                        // TODO: Pass Program object to form
-                        child: TraineeForm(trainee: true,),
-                      ),
-                    ],
-                  ),
-                ),
-              ),
-            );
-          },
-        );
-      },
+      }, 
       child: const Icon(
-        Icons.edit,
+        Icons.remove_red_eye,
         color: Colors.white,
-      ),
+      )
     );
   }
 
