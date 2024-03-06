@@ -12,121 +12,88 @@ class TraineesPage extends StatefulWidget {
 class _TraineesPageState extends State<TraineesPage> {
   @override
   Widget build(BuildContext context) {
-    return Container(
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          const Padding(padding: EdgeInsets.all(20)),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              SizedBox(
-                width: MediaQuery.of(context).size.width * 0.7,
-                height: MediaQuery.of(context).size.height * 0.8,
-                child: Card(
-                    child: Column(
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Container(
-                        width: MediaQuery.of(context).size.width,
-                        height: 72,
-                        color: Colors.white,
-                        child: Padding(
-                          padding: const EdgeInsets.fromLTRB(26, 19, 26, 19),
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            crossAxisAlignment: CrossAxisAlignment.end,
-                            children: [
-                              traineesCounter(),
-                            ],
-                          ),
-                        )),
-                    Expanded(
-                        child: DataTable2(
-                      horizontalMargin: 12,
-                      columns: const [
-                        DataColumn2(label: Text('Name')),
-                        DataColumn2(label: Text('Attended Programs')),
-                        DataColumn2(label: Text('')),
-                        DataColumn2(label: Text('Option')),
-                      ],
-                      rows: [
-                        DataRow2(cells: [
-                          const DataCell(Text('Taylor Batumbakal Swift')),
-                          const DataCell(
-                              Text('Advance Figma')),
-                          const DataCell(Text('')),
-                          DataCell(Row(
-                            children: [
-                              viewMore()
-                              // FilledButton(
-                              //   style: ButtonStyle(
-                              //     backgroundColor:
-                              //         MaterialStateProperty.resolveWith(
-                              //             (states) {
-                              //       // If the button is pressed, return green, otherwise blue
-                              //       if (states
-                              //           .contains(MaterialState.pressed)) {
-                              //         return Colors.red;
-                              //       }
-                              //       return Colors.red;
-                              //     }),
-                              //   ),
-                              //   onPressed: () {},
-                              //   child: const Icon(
-                              //     Icons.delete,
-                              //     color: Colors.white,
-                              //   ),
-                              // )
-                            ],
-                          )),
-                        ]),
-                      ],
-                    ))
-                  ],
-                )),
-              )
-            ],
-          )
+    return Column(
+      mainAxisAlignment: MainAxisAlignment.end,
+      children: [
+        Container(
+          // margin: EdgeInsets.symmetric(horizontal: 100),
+          padding: EdgeInsets.only(
+            right: 5,
+          ),
+          
+        ),
+        buildDataTable(),
+      ],
+    );
+  }
+
+  Widget buildDataTable() {
+    return Expanded(
+      child: DataTable2(
+        showCheckboxColumn: false,
+        showBottomBorder: true,
+        horizontalMargin: 30,
+        isVerticalScrollBarVisible: true,
+        columns: const [
+          DataColumn2(label: Text('Name')),
+          // DataColumn2(label: Text('Attended Programs')),
+          DataColumn2(label: Text('')),
+          DataColumn2(label: Text('Option')),
+        ],
+        rows: [
+          DataRow2(onSelectChanged: (selected) {}, cells: [
+            const DataCell(Text('Taylor Batumbakal Swift')),
+            // const DataCell(Text('Advance Figma')),
+            const DataCell(Text('')),
+            DataCell(Row(
+              children: [viewButton()],
+            )),
+          ]),
         ],
       ),
     );
   }
 
-  Widget viewMore(){
-    return FilledButton(
-      onPressed: () {
-        showDialog(
-          context: context,
-          builder: (context) {
-            return const AlertDialog(
-              content: SizedBox(
-                width: 600,
-                child: Padding(
-                  padding: EdgeInsets.fromLTRB(27, 25, 27, 25),
-                  child: TraineeViewMore()
+  Widget viewButton() {
+    return TextButton(
+        onPressed: () {
+          showDialog(
+            context: context,
+            builder: (context) {
+              return const AlertDialog(
+                content: SizedBox(
+                  width: 600,
+                  // height: 498,
+                  child: Padding(
+                    padding: EdgeInsets.fromLTRB(27, 25, 27, 25),
+                    child: Column(
+                      mainAxisSize: MainAxisSize.min,
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: [
+                        // CircleAvatar(
+                        //   radius: 80,
+                        // ),
+                        TraineeViewMore(),
+                      ],
+                    ),
+                  ),
                 ),
-              ),
-            );
-          }
-        );
-      }, 
-      child: const Icon(
-        Icons.remove_red_eye,
-        color: Colors.white,
-      )
-    );
-  }
-
-  Widget traineesCounter(){
-    return const Row(
-      children: [
-        Text('Total Trainees: '),
-        
-        //TODO: sa baba neto is yung code sa counter ng total course
-        Text('1')
-      ],
-    );
+              );
+            },
+          );
+        },
+        child: const Row(
+          children: [
+            Icon(
+              Icons.visibility,
+              size: 20,
+              color: Colors.grey,
+            ),
+            SizedBox(
+              width: 5,
+            ),
+            Text("View", style: TextStyle(color: Colors.black54,),),
+          ],
+        ));
   }
 }

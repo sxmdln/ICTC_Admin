@@ -33,15 +33,13 @@ class _TrainersPageState extends State<TrainersPage> {
       children: [
         Container(
           // margin: EdgeInsets.symmetric(horizontal: 100),
-          padding: EdgeInsets.only(
-            right: 5,
+          padding: const EdgeInsets.only(
+            right: 5, bottom: 8
           ),
-          child: SizedBox(
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.end,
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: [addButton()],
-            ),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.end,
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [addButton()],
           ),
         ),
         buildDataTable(),
@@ -51,54 +49,32 @@ class _TrainersPageState extends State<TrainersPage> {
 
   Widget buildDataTable() {
     return Expanded(
-      child: SizedBox(
-        // width: MediaQuery.of(context).size.width * 0.67,
-        // width: MediaQuery.of(context).size.width * 0.8,
-        // height: MediaQuery.of(context).size.height * 0.8,
-        child: Card(
-            elevation: 0,
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              crossAxisAlignment: CrossAxisAlignment.start,
+      child: DataTable2(
+        showCheckboxColumn: false,
+        showBottomBorder: true,
+        horizontalMargin: 30,
+        isVerticalScrollBarVisible: true,
+        columns: const [
+          DataColumn2(
+              label: Text(
+            'Name of Trainer',
+          )),
+          DataColumn2(
+              label: Text(
+            'Actions',
+          )),
+        ],
+        rows: [
+          DataRow2(onSelectChanged: (selected) {}, cells: [
+            const DataCell(Text('John Doe')),
+            DataCell(Row(
               children: [
-                Expanded(
-                    child: DataTable2(
-                  showCheckboxColumn: false,
-                  showBottomBorder: true,
-                  horizontalMargin: 30,
-                  isVerticalScrollBarVisible: true,
-                  columns: const [
-                    DataColumn2(
-                        label: Text(
-                      'Name of Trainer',
-                    )),
-                    // DataColumn2(
-                    //     label: Text(
-                    //   'Handled Courses',
-                    //   style: TextStyle(fontSize: 20, fontWeight: FontWeight.w500),
-                    // )),
-                    // DataColumn2(label: Text('')),
-                    DataColumn2(
-                        label: Text(
-                      'Actions',
-                    )),
-                  ],
-                  rows: [
-                    DataRow2(onSelectChanged: (selected) {}, cells: [
-                      const DataCell(Text('John Doe')),
-                      // const DataCell(Text('Intro to Cybersecurity')),
-                      // const DataCell(Text('')),
-                      DataCell(Row(
-                        children: [
-                          editButton(),
-                          viewButton(),
-                        ],
-                      )),
-                    ]),
-                  ],
-                ))
+                editButton(),
+                viewButton(),
               ],
             )),
+          ]),
+        ],
       ),
     );
   }
@@ -110,22 +86,22 @@ class _TrainersPageState extends State<TrainersPage> {
           context: context,
           builder: (context) {
             return AlertDialog(
-                content: SizedBox(
-                  width: MediaQuery.of(context).size.width * 0.4,
-                  child: const Padding(
-                    padding: EdgeInsets.fromLTRB(27, 25, 27, 25),
-                    child: SingleChildScrollView(
-                      child: Column(
-                        mainAxisSize: MainAxisSize.min,
-                        crossAxisAlignment: CrossAxisAlignment.center,
-                        children: [
-                          TrainersForm(),
-                        ],
-                      ),
+              content: SizedBox(
+                width: MediaQuery.of(context).size.width * 0.4,
+                child: const Padding(
+                  padding: EdgeInsets.fromLTRB(27, 25, 27, 25),
+                  child: SingleChildScrollView(
+                    child: Column(
+                      mainAxisSize: MainAxisSize.min,
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: [
+                        TrainersForm(),
+                      ],
                     ),
                   ),
                 ),
-              );
+              ),
+            );
           },
         );
       },
@@ -137,7 +113,7 @@ class _TrainersPageState extends State<TrainersPage> {
         alignment: Alignment.center,
         child: const Row(children: [
           Icon(
-            CupertinoIcons.person_add_solid,
+            CupertinoIcons.add,
             size: 20,
             color: Colors.white,
           ),
@@ -233,7 +209,12 @@ class _TrainersPageState extends State<TrainersPage> {
             SizedBox(
               width: 5,
             ),
-            Text("View", style: TextStyle(color: Colors.black54,),),
+            Text(
+              "View",
+              style: TextStyle(
+                color: Colors.black54,
+              ),
+            ),
           ],
         ));
   }

@@ -1,3 +1,4 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:data_table_2/data_table_2.dart';
 import 'package:ictc_admin/pages/courses/course_viewMore.dart';
@@ -13,134 +14,75 @@ class CoursesPage extends StatefulWidget {
 class _CoursesPageState extends State<CoursesPage> {
   @override
   Widget build(BuildContext context) {
-    return Container(
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              SizedBox(
-                width: MediaQuery.of(context).size.width * 0.7,
-                height: MediaQuery.of(context).size.height * 0.8,
-                child: Card(
-                    child: Column(
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Container(
-                        width: MediaQuery.of(context).size.width,
-                        height: 72,
-                        color: Colors.white,
-                        child: Padding(
-                          padding: const EdgeInsets.fromLTRB(26, 19, 26, 19),
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            crossAxisAlignment: CrossAxisAlignment.end,
-                            children: [
-                              courseCounter(),
-                              addButton()
-                            ],
-                          ),
-                        )),
-                    Expanded(
-                        child: DataTable2(
-                      horizontalMargin: 12,
-                      columns: const [
-                        DataColumn2(label: Text('Title')),
-                        DataColumn2(label: Text('')),
-                        DataColumn2(label: Text('Option')),
-                      ],
-                      rows: [
-                        DataRow2(cells: [
-                          const DataCell(Text('Advance Figma')),
-                          const DataCell(Text('')),
-                          DataCell(Row(
-                            children: [
-                              editButton(),
-                              const Padding(padding: EdgeInsets.all(5)),
-                              viewMore()
-                            ],
-                          )),
-                        ]),
-                      ],
-                    ))
-                  ],
-                )),
-              )
-            ],
-          )
+    return Column(
+      mainAxisAlignment: MainAxisAlignment.end,
+      children: [
+        Container(
+          // margin: EdgeInsets.symmetric(horizontal: 100),
+          padding: const EdgeInsets.only(
+            right: 10, bottom: 8
+          ),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.end,
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [addButton()],
+          ),
+        ),
+        buildDataTable(),
+      ],
+    );
+  }
+
+  Widget buildDataTable() {
+    return Expanded(
+      child: DataTable2(
+        showCheckboxColumn: false,
+        showBottomBorder: true,
+        horizontalMargin: 30,
+        isVerticalScrollBarVisible: true,
+        columns: const [
+          DataColumn2(label: Text('Title')),
+          DataColumn2(label: Text('')),
+          DataColumn2(label: Text('Option')),
+        ],
+        rows: [
+          DataRow2(onSelectChanged: (selected) {}, cells: [
+            const DataCell(Text('Advance Figma')),
+            const DataCell(Text('')),
+            DataCell(Row(
+              children: [
+                editButton(),
+                const Padding(padding: EdgeInsets.all(5)),
+                viewButton()
+              ],
+            )),
+          ]),
         ],
       ),
     );
   }
 
   Widget addButton() {
-    return FilledButton(
-        onPressed: () {
-          showDialog(
-            context: context,
-            builder: (context) {
-              return const AlertDialog(
-                content: SizedBox(
-                  width: 406,
-                  height: 498,
-                  child: Padding(
-                    padding: EdgeInsets.fromLTRB(27, 25, 27, 25),
-                    child: Column(
-                      mainAxisSize: MainAxisSize.min,
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      children: [
-                        CircleAvatar(
-                          radius: 80,
-                        ),
-                        SizedBox(height: 20),
-                        Expanded(
-                          child: CourseForm(),
-                        ),
-                      ],
-                    ),
-                  ),
-                ),
-              );
-            },
-          );
-        },
-        child: const Text(
-          "Add Course",
-          style: TextStyle(
-            color: Colors.white,
-          ),
-        ));
-  }
-
-  Widget editButton() {
-    return FilledButton(
+    return ElevatedButton(
+      style: ButtonStyle(
+          fixedSize: MaterialStateProperty.all(Size.fromWidth(155))),
       onPressed: () {
         showDialog(
           context: context,
           builder: (context) {
-            return const AlertDialog(
+            return AlertDialog(
               content: SizedBox(
-                width: 406,
-                height: 498,
-                child: Padding(
+                width: MediaQuery.of(context).size.width * 0.4,
+                child: const Padding(
                   padding: EdgeInsets.fromLTRB(27, 25, 27, 25),
-                  child: Column(
-                    mainAxisSize: MainAxisSize.min,
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: [
-                      CircleAvatar(
-                        radius: 80,
-                      ),
-                      SizedBox(height: 20),
-                      Expanded(
-                        // TODO: Pass Program object to form
-                        child: CourseForm(
-                          course: true,
-                        ),
-                      ),
-                    ],
+                  child: SingleChildScrollView(
+                    child: Column(
+                      mainAxisSize: MainAxisSize.min,
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: [
+                        CourseForm(),
+                      ],
+                    ),
                   ),
                 ),
               ),
@@ -148,44 +90,102 @@ class _CoursesPageState extends State<CoursesPage> {
           },
         );
       },
-      child: const Icon(
-        Icons.edit,
-        color: Colors.white,
+      // materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
+      // shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10.0)),
+      child: Container(
+        constraints: const BoxConstraints(
+            maxWidth: 160, minHeight: 36.0), // min sizes for Material buttons
+        alignment: Alignment.center,
+        child:
+            const Row(crossAxisAlignment: CrossAxisAlignment.center, children: [
+          Icon(
+            CupertinoIcons.add,
+            size: 20,
+            color: Colors.white,
+          ),
+          SizedBox(width: 6),
+          Text(
+            'Add a Course',
+            style: TextStyle(color: Colors.white),
+            textAlign: TextAlign.center,
+          ),
+        ]),
       ),
     );
   }
 
-  Widget viewMore() {
-    return FilledButton(
+  Widget editButton() {
+    return TextButton(
         onPressed: () {
           showDialog(
-              context: context,
-              builder: (context) {
-                return const AlertDialog(
-                  content: SizedBox(
-                    width: 406,
-                    height: 498,
-                    child: Padding(
-                        padding: EdgeInsets.fromLTRB(27, 25, 27, 25),
-                        child: CourseViewMore()),
+            context: context,
+            builder: (context) {
+              return AlertDialog(
+                content: SizedBox(
+                  width: MediaQuery.of(context).size.width * 0.4,
+                  child: const Padding(
+                    padding: EdgeInsets.fromLTRB(27, 25, 27, 25),
+                    child: SingleChildScrollView(
+                      child: Column(
+                        mainAxisSize: MainAxisSize.min,
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: [
+                          CourseForm(),
+                        ],
+                      ),
+                    ),
                   ),
-                );
-              });
+                ),
+              );
+            },
+          );
         },
-        child: const Icon(
-          Icons.remove_red_eye,
-          color: Colors.white,
+        child: const Row(
+          children: [
+            Icon(
+              Icons.edit,
+              size: 20,
+              color: Color(0xff153faa),
+            ),
+            SizedBox(
+              width: 5,
+            ),
+            Text("Edit"),
+          ],
         ));
   }
 
-  Widget courseCounter(){
-    return const Row(
-      children: [
-        Text('Total Courses: '),
-        
-        //TODO: sa baba neto is yung code sa counter ng total course
-        Text('1')
-      ],
-    );
+  Widget viewButton() {
+    return TextButton(
+        onPressed: () {
+          showDialog(
+            context: context,
+            builder: (context) {
+              return const AlertDialog(
+                contentPadding: EdgeInsets.all(0),
+                backgroundColor: Colors.transparent,
+                content: CourseViewMore(),
+              );
+            },
+          );
+        },
+        child: const Row(
+          children: [
+            Icon(
+              Icons.visibility,
+              size: 20,
+              color: Colors.grey,
+            ),
+            SizedBox(
+              width: 5,
+            ),
+            Text(
+              "View",
+              style: TextStyle(
+                color: Colors.black54,
+              ),
+            ),
+          ],
+        ));
   }
 }
