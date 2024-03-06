@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:data_table_2/data_table_2.dart';
-import 'package:ictc_admin/pages/trainees/trainees_forms.dart';
 import 'package:ictc_admin/pages/trainees/trainees_viewMore.dart';
 
 class TraineesPage extends StatefulWidget {

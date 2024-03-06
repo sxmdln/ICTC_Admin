@@ -20,27 +20,33 @@ class _TrainersFormState extends State<TrainersForm> {
             mainAxisSize: MainAxisSize.min,
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
-              const CircleAvatar(
-                  radius: 80,
+              Stack(children: [
+                const CircleAvatar(
+                  backgroundColor: Color(0xff153faa),
+                  // backgroundImage: AssetImage("assets/photos/photo-1.jpg"),
+                  radius: 90.0,
                 ),
-              const Padding(padding: EdgeInsets.all(10)),
-              SizedBox(
-                width: 150,
-                child: OutlinedButton(
-                  onPressed: () {}, 
-                  child: const Row(
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      Icon(
-                        Icons.add,
+                Positioned(
+                    right: 0,
+                    bottom: 0,
+                    child: Container(
+                      // alignment: Alignment.topLeft,
+                      child: IconButton(icon: Icon(Icons.add, size: 24, color: Colors.white),
+                      // constraints: BoxConstraints(maxHeight: 15, maxWidth: 15),
+                      splashRadius: 20,
+                      // iconSize: 30,
+                      onPressed: (){},
                       ),
-                      Text("Add Photo")
-                    ],
-                  )),
-              )
+                        // padding: EdgeInsets.all(1.5),
+                        decoration: BoxDecoration(
+                            border: Border.all(width: 2, color: Colors.white),
+                            borderRadius: BorderRadius.circular(90.0),
+                            color: Colors.green)))
+              ]),
+              const Padding(padding: EdgeInsets.all(10)),
             ],
           ),
-                    const SizedBox(height: 20),
+          const SizedBox(height: 20),
           TextFormField(
             style: const TextStyle(
               fontSize: 18,
@@ -48,14 +54,13 @@ class _TrainersFormState extends State<TrainersForm> {
               color: Colors.black,
             ),
             decoration: const InputDecoration(
-              hintText: "Enter Name",
-              hintStyle: TextStyle(
-                fontSize: 18,
-                fontWeight: FontWeight.w600,
-              ),
-              border: OutlineInputBorder(),
-              prefixIcon: Icon(Icons.person)
-            ),
+                hintText: "Enter Name",
+                hintStyle: TextStyle(
+                  fontSize: 18,
+                  fontWeight: FontWeight.w600,
+                ),
+                border: OutlineInputBorder(),
+                prefixIcon: Icon(Icons.person)),
           ),
           const SizedBox(height: 20),
           TextFormField(
@@ -83,8 +88,6 @@ class _TrainersFormState extends State<TrainersForm> {
                 border: OutlineInputBorder(),
                 prefixIcon: Icon(Icons.phone)),
           ),
-
-          
           const SizedBox(height: 20),
           TextFormField(
             style: const TextStyle(

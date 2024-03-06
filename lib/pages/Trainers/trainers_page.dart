@@ -109,19 +109,23 @@ class _TrainersPageState extends State<TrainersPage> {
         showDialog(
           context: context,
           builder: (context) {
-            return const AlertDialog(
-              content: Column(
-                mainAxisSize: MainAxisSize.min,
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: [
-                  CircleAvatar(
-                    radius: 80,
+            return AlertDialog(
+                content: SizedBox(
+                  width: MediaQuery.of(context).size.width * 0.4,
+                  child: const Padding(
+                    padding: EdgeInsets.fromLTRB(27, 25, 27, 25),
+                    child: SingleChildScrollView(
+                      child: Column(
+                        mainAxisSize: MainAxisSize.min,
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: [
+                          TrainersForm(),
+                        ],
+                      ),
+                    ),
                   ),
-                  SizedBox(height: 20),
-                  TrainersForm(),
-                ],
-              ),
-            );
+                ),
+              );
           },
         );
       },
@@ -156,25 +160,19 @@ class _TrainersPageState extends State<TrainersPage> {
             builder: (context) {
               return AlertDialog(
                 content: SizedBox(
-                  width: MediaQuery.of(context).size.width * 0.3,
-                  height: MediaQuery.of(context).size.height * 0.7,
+                  width: MediaQuery.of(context).size.width * 0.4,
                   child: const Padding(
                     padding: EdgeInsets.fromLTRB(27, 25, 27, 25),
-                    child: Column(
-                      mainAxisSize: MainAxisSize.min,
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      children: [
-                        CircleAvatar(
-                          radius: 80,
-                        ),
-                        SizedBox(height: 20),
-                        Expanded(
-                          // TODO: Pass Program object to form
-                          child: TrainersForm(
+                    child: SingleChildScrollView(
+                      child: Column(
+                        mainAxisSize: MainAxisSize.min,
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: [
+                          TrainersForm(
                             trainer: true,
                           ),
-                        ),
-                      ],
+                        ],
+                      ),
                     ),
                   ),
                 ),
@@ -205,22 +203,18 @@ class _TrainersPageState extends State<TrainersPage> {
             builder: (context) {
               return const AlertDialog(
                 content: SizedBox(
-                  width: 406,
-                  height: 498,
+                  width: 600,
+                  // height: 498,
                   child: Padding(
                     padding: EdgeInsets.fromLTRB(27, 25, 27, 25),
                     child: Column(
                       mainAxisSize: MainAxisSize.min,
                       crossAxisAlignment: CrossAxisAlignment.center,
                       children: [
-                        CircleAvatar(
-                          radius: 80,
-                        ),
-                        SizedBox(height: 20),
-                        Expanded(
-                          // TODO: Pass Program object to form
-                          child: TrainerViewMore()
-                        ),
+                        // CircleAvatar(
+                        //   radius: 80,
+                        // ),
+                        TrainerViewMore(),
                       ],
                     ),
                   ),
