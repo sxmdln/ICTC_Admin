@@ -127,14 +127,22 @@ class _TrainersPageState extends State<TrainersPage> {
         context: context,
         builder: (context) {
           return const AlertDialog(
+            title: Text(
+              "Add Trainer",
+              style: TextStyle(
+                fontSize: 40
+              ),
+            ),
             content: SizedBox(
               width: 800,
               child: Padding(
-                padding: EdgeInsets.fromLTRB(27, 25, 27, 25),
+                padding: EdgeInsets.fromLTRB(27, 0, 27, 25),
                 child: Column(
                   mainAxisSize: MainAxisSize.min,
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
+                    Divider(),
+                    Padding(padding: EdgeInsets.all(10)),
                     TrainerForm(),
                   ],
                 ),

@@ -16,55 +16,61 @@ class _TrainerFormState extends State<TrainerForm> {
       child: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
-          Row(
-            crossAxisAlignment: CrossAxisAlignment.start,
+          Column(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.center,
             children: [
-              const SizedBox(
-                width: 200,
-                child: CircleAvatar(
+              const CircleAvatar(
                   radius: 80,
                 ),
-              ),
-              const SizedBox(width: 20),
-              Expanded(
-                child: Column(
-                  children: [
-                    TextFormField(
-                      style: const TextStyle(
-                        fontSize: 18,
-                        fontFamily: "Montserrat",
-                        fontWeight: FontWeight.w600,
-                        color: Colors.black,
+              const Padding(padding: EdgeInsets.all(10)),
+              SizedBox(
+                width: 150,
+                child: OutlinedButton(
+                  onPressed: () {}, 
+                  child: const Row(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      Icon(
+                        Icons.add,
                       ),
-                      decoration: const InputDecoration(
-                          hintText: "Name",
-                          hintStyle: TextStyle(
-                            fontSize: 18,
-                            fontWeight: FontWeight.w600,
-                            fontFamily: "Montserrat",
-                          ),
-                          border: OutlineInputBorder(),
-                          prefixIcon: Icon(Icons.person)),
-                    ),
-                    const SizedBox(height: 20),
-                    TextFormField(
-                      style: const TextStyle(
-                        fontSize: 18,
-                        fontFamily: "Montserrat",
-                        fontWeight: FontWeight.w600,
-                        color: Colors.black,
-                      ),
-                      decoration: const InputDecoration(
-                          hintText: "Email Address",
-                          hintStyle:
-                              TextStyle(fontSize: 18, fontFamily: "Montserrat"),
-                          border: OutlineInputBorder(),
-                          prefixIcon: Icon(Icons.email)),
-                    ),
-                  ],
-                ),
-              ),
+                      Text("Add Photo")
+                    ],
+                  )),
+              )
             ],
+          ),
+                    const SizedBox(height: 20),
+          TextFormField(
+            style: const TextStyle(
+              fontSize: 18,
+              fontFamily: "Montserrat",
+              fontWeight: FontWeight.w600,
+              color: Colors.black,
+            ),
+            decoration: const InputDecoration(
+                hintText: "Name",
+                hintStyle: TextStyle(
+                  fontSize: 18,
+                  fontWeight: FontWeight.w600,
+                  fontFamily: "Montserrat",
+                ),
+                border: OutlineInputBorder(),
+                prefixIcon: Icon(Icons.person)),
+          ),
+          const SizedBox(height: 20),
+          TextFormField(
+            style: const TextStyle(
+              fontSize: 18,
+              fontFamily: "Montserrat",
+              fontWeight: FontWeight.w600,
+              color: Colors.black,
+            ),
+            decoration: const InputDecoration(
+                hintText: "Email Address",
+                hintStyle: TextStyle(fontSize: 18, fontFamily: "Montserrat"),
+                border: OutlineInputBorder(),
+                prefixIcon: Icon(Icons.email)),
           ),
           const SizedBox(height: 20),
           TextFormField(
@@ -80,6 +86,8 @@ class _TrainerFormState extends State<TrainerForm> {
                 border: OutlineInputBorder(),
                 prefixIcon: Icon(Icons.phone)),
           ),
+
+          
           const SizedBox(height: 20),
           TextFormField(
             style: const TextStyle(
@@ -126,7 +134,7 @@ class _TrainerFormState extends State<TrainerForm> {
           Row(
             children: [
               Expanded(child: SizedBox(child: cancelButton())),
-              SizedBox(width: 10),
+              const SizedBox(width: 10),
               Expanded(
                 child: SizedBox(child: saveButton()),
               ),
@@ -177,7 +185,7 @@ class _TrainerFormState extends State<TrainerForm> {
 
   Widget deleteButton() {
     return FilledButton(
-      style: ButtonStyle(
+        style: ButtonStyle(
           backgroundColor: MaterialStateProperty.resolveWith((states) {
             if (states.contains(MaterialState.pressed)) {
               return Colors.red;

@@ -102,8 +102,7 @@ class _TraineesPageState extends State<TraineesPage> {
           builder: (context) {
             return const AlertDialog(
               content: SizedBox(
-                width: 406,
-                height: 498,
+                width: 600,
                 child: Padding(
                   padding: EdgeInsets.fromLTRB(27, 25, 27, 25),
                   child: TraineeViewMore()
