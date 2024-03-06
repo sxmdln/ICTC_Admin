@@ -2,6 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:data_table_2/data_table_2.dart';
 import 'package:ictc_admin/pages/trainers/trainers_forms.dart';
+import 'package:ictc_admin/pages/trainers/trainers_viewMore.dart';
 
 class TrainersPage extends StatefulWidget {
   const TrainersPage({super.key});
@@ -218,9 +219,7 @@ class _TrainersPageState extends State<TrainersPage> {
                         SizedBox(height: 20),
                         Expanded(
                           // TODO: Pass Program object to form
-                          child: TrainersForm(
-                            trainer: true,
-                          ),
+                          child: TrainerViewMore()
                         ),
                       ],
                     ),
