@@ -130,7 +130,9 @@ class _TrainersPageState extends State<TrainersPage> {
             title: Text(
               "Add Trainer",
               style: TextStyle(
-                fontSize: 40
+                fontSize: 30,
+                color: Colors.black,
+                fontWeight: FontWeight.w300
               ),
             ),
             content: SizedBox(
