@@ -214,13 +214,8 @@ class _MainScreenState extends State<MainScreen> {
                 const SizedBox(
                   width: 10,
                 ),
-                const Text(
-                  "15",
-                  style: TextStyle(
-                      fontSize: 28,
-                      fontWeight: FontWeight.bold,
-                      color: Colors.black26),
-                ), //TODO: need backend - FOR TOTAL# (remove it if page is on dashboard).
+                buildCounter(context),
+                //TODO: need backend - FOR TOTAL# (remove it if page is on dashboard).
               ],
             ),
           ),
@@ -263,7 +258,7 @@ class _MainScreenState extends State<MainScreen> {
                 //       ),
                 //       // child: ,
                 //       onPressed:
-                          // () {}, //TODO: Add a dropdown for profile settings: to change admin pass and user
+                // () {}, //TODO: Add a dropdown for profile settings: to change admin pass and user
                 //     ),
                 //   ],
                 // ),
@@ -296,11 +291,29 @@ class _MainScreenState extends State<MainScreen> {
                   Theme.of(context).textTheme.bodyMedium),
               trailing: [
                 IconButton(
+                    splashRadius: 15,
                     onPressed: () {
                       searchController.clear();
                     },
                     icon: const Icon(Icons.clear))
               ],
+            )
+          : Container(key: key),
+    );
+  }
+
+  Widget buildCounter(BuildContext context) {
+    const key = ValueKey("counter");
+    return AnimatedSwitcher(
+      key: key,
+      duration: const Duration(milliseconds: 350),
+      child: _selectedIndex != 0
+          ? const Text(
+              "15",
+              style: TextStyle(
+                  fontSize: 28,
+                  fontWeight: FontWeight.bold,
+                  color: Colors.black26),
             )
           : Container(key: key),
     );
