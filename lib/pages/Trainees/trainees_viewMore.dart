@@ -17,10 +17,25 @@ class _TraineeViewMoreState extends State<TraineeViewMore> {
       mainAxisSize: MainAxisSize.min,
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Row(
-          crossAxisAlignment: CrossAxisAlignment.center,
+        traineeHeader(),
+        const SizedBox(height: 20),
+        traineeCourseCard()
+      ],
+    );
+  }
+
+  Widget traineeHeader() {
+    return Container(
+        decoration: const BoxDecoration(
+          border: Border(bottom: BorderSide(width: 1)),
+          color: Color(0xfff1f5fb),
+          borderRadius: BorderRadius.only(
+              topLeft: Radius.circular(30), topRight: Radius.circular(30)),
+        ),
+        padding: const EdgeInsets.all(25),
+        child: Row(
           children: [
-            SizedBox(
+            const SizedBox(
               width: 200,
               child: Center(
                 child: CircleAvatar(
@@ -28,49 +43,81 @@ class _TraineeViewMoreState extends State<TraineeViewMore> {
                 ),
               ),
             ),
-            SizedBox(width: 20),
-            Expanded(
-                child: Column(
+            const Padding(padding: EdgeInsets.all(20)),
+            Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
                   widget.trainee.toString(),
-                  style: TextStyle(
-                      fontSize: 18,
-                      fontFamily: "Monsterrat",
-                      color: Colors.black),
+                  style: const TextStyle(
+                      fontSize: 25,
+                      color: Colors.black,
+                      fontWeight: FontWeight.w600),
                 ),
-                SizedBox(height: 20),
+                const SizedBox(height: 20),
                 Text(
                   widget.trainee.emailAddress,
-                    style: TextStyle(
+                    style: const TextStyle(
                         fontSize: 18,
-                        fontFamily: "Monsterrat",
                         color: Colors.black)),
-                SizedBox(height: 20),
+                const SizedBox(height: 20),
                 Text(
                   widget.trainee.contactNumber,
-                    style: TextStyle(
+                    style: const TextStyle(
                         fontSize: 18,
-                        fontFamily: "Monsterrat",
                         color: Colors.black)),
-                SizedBox(height: 20),
-                Text("Attended Programs: Advance Figma",
-                    style: TextStyle(
-                        fontSize: 18,
-                        fontFamily: "Monsterrat",
-                        color: Colors.black)),
-                SizedBox(height: 20),
-                Text("Feedback: ",
-                    style: TextStyle(
-                        fontSize: 18,
-                        fontFamily: "Monsterrat",
-                        color: Colors.black)),
+                const SizedBox(height: 20),
+                
               ],
-            ))
+            )
           ],
-        )
-      ],
+        ));
+  }
+
+  Widget traineeCourseCard() {
+    return const Padding(
+      padding: EdgeInsets.all(20),
+      child: SizedBox(
+        width: 240,
+        height: 120,
+        child: Card(
+          elevation: 3,
+          shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.all(Radius.circular(20))),
+          color: Color(0xfff1f5fb),
+          child: Padding(
+            padding: EdgeInsets.all(5),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(" Advance Figma",
+                    style: TextStyle(
+                        fontSize: 20,
+                        fontWeight: FontWeight.w600,
+                        color: Colors.black)),
+                SizedBox(height: 10),
+                Text(" January 12, 2024 - February 1, 2024",
+                    style: TextStyle(
+                        fontSize: 12,
+                        color: Color(0xff153faa))),
+                SizedBox(height: 10),
+                Row(
+                  children: [
+                    Text(
+                      "Feedback: ",
+                      style: TextStyle(
+                          fontSize: 12,
+                          color: Color(0xff153faa)),
+                    ),
+                    Icon(Icons.check, color: Colors.green, size: 20),
+                  ],
+                ),
+              ],
+            ),
+          ),
+        ),
+      ),
     );
   }
 }
