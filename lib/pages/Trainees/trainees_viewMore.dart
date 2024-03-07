@@ -1,7 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:ictc_admin/models/trainee.dart';
 
 class TraineeViewMore extends StatefulWidget {
-  const TraineeViewMore({super.key});
+  final Trainee trainee;
+
+  const TraineeViewMore({required this.trainee, super.key});
 
   @override
   State<TraineeViewMore> createState() => _TraineeViewMoreState();
@@ -10,7 +13,7 @@ class TraineeViewMore extends StatefulWidget {
 class _TraineeViewMoreState extends State<TraineeViewMore> {
   @override
   Widget build(BuildContext context) {
-    return const Column(
+    return Column(
       mainAxisSize: MainAxisSize.min,
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -31,20 +34,22 @@ class _TraineeViewMoreState extends State<TraineeViewMore> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  "Name: Taylor Batumbakal Swift",
+                  widget.trainee.toString(),
                   style: TextStyle(
                       fontSize: 18,
                       fontFamily: "Monsterrat",
                       color: Colors.black),
                 ),
                 SizedBox(height: 20),
-                Text("Email Address: tbs@gmail.com",
+                Text(
+                  widget.trainee.emailAddress,
                     style: TextStyle(
                         fontSize: 18,
                         fontFamily: "Monsterrat",
                         color: Colors.black)),
                 SizedBox(height: 20),
-                Text("Contact number: 09065553353",
+                Text(
+                  widget.trainee.contactNumber,
                     style: TextStyle(
                         fontSize: 18,
                         fontFamily: "Monsterrat",

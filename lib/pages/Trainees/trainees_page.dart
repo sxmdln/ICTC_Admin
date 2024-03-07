@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:data_table_2/data_table_2.dart';
+import 'package:ictc_admin/models/seeds.dart';
+import 'package:ictc_admin/models/trainee.dart';
 import 'package:ictc_admin/pages/trainees/trainees_viewMore.dart';
 
 class TraineesPage extends StatefulWidget {
@@ -10,6 +12,16 @@ class TraineesPage extends StatefulWidget {
 }
 
 class _TraineesPageState extends State<TraineesPage> {
+  late List<Trainee> trainees;
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    trainees = Seeds.trainees;
+
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Column(
@@ -20,7 +32,6 @@ class _TraineesPageState extends State<TraineesPage> {
           padding: EdgeInsets.only(
             right: 5,
           ),
-          
         ),
         buildDataTable(),
       ],
@@ -40,27 +51,29 @@ class _TraineesPageState extends State<TraineesPage> {
           DataColumn2(label: Text('')),
           DataColumn2(label: Text('Option')),
         ],
-        rows: [
-          DataRow2(onSelectChanged: (selected) {}, cells: [
-            const DataCell(Text('Taylor Batumbakal Swift')),
-            // const DataCell(Text('Advance Figma')),
-            const DataCell(Text('')),
-            DataCell(Row(
-              children: [viewButton()],
-            )),
-          ]),
-        ],
+        rows:  trainees.map((e) => buildRow(e)).toList(),
       ),
     );
   }
 
-  Widget viewButton() {
+  DataRow2 buildRow(Trainee trainee) {
+    return DataRow2(onSelectChanged: (selected) {}, cells: [
+      DataCell(Text(trainee.toString())),
+      // const DataCell(Text('Advance Figma')),
+      const DataCell(Text('')),
+      DataCell(Row(
+        children: [viewButton(trainee)],
+      )),
+    ]);
+  }
+
+  Widget viewButton(Trainee trainee) {
     return TextButton(
         onPressed: () {
           showDialog(
             context: context,
             builder: (context) {
-              return const AlertDialog(
+              return AlertDialog(
                 content: SizedBox(
                   width: 600,
                   // height: 498,
@@ -73,7 +86,7 @@ class _TraineesPageState extends State<TraineesPage> {
                         // CircleAvatar(
                         //   radius: 80,
                         // ),
-                        TraineeViewMore(),
+                        TraineeViewMore(trainee: trainee),
                       ],
                     ),
                   ),
@@ -92,7 +105,12 @@ class _TraineesPageState extends State<TraineesPage> {
             SizedBox(
               width: 5,
             ),
-            Text("View", style: TextStyle(color: Colors.black54,),),
+            Text(
+              "View",
+              style: TextStyle(
+                color: Colors.black54,
+              ),
+            ),
           ],
         ));
   }

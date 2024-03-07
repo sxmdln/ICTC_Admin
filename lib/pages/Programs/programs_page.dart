@@ -1,6 +1,8 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:data_table_2/data_table_2.dart';
+import 'package:ictc_admin/models/program.dart';
+import 'package:ictc_admin/models/seeds.dart';
 import 'package:ictc_admin/pages/programs/program_forms.dart';
 import 'package:ictc_admin/pages/programs/programs_viewMore.dart';
 
@@ -12,6 +14,15 @@ class ProgramsPage extends StatefulWidget {
 }
 
 class _ProgramsPageState extends State<ProgramsPage> {
+  late List<Program> programs;
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    programs = Seeds.programs;
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Column(
@@ -19,9 +30,7 @@ class _ProgramsPageState extends State<ProgramsPage> {
       children: [
         Container(
           // margin: EdgeInsets.symmetric(horizontal: 100),
-          padding: const EdgeInsets.only(
-            right: 10, bottom: 8
-          ),
+          padding: const EdgeInsets.only(right: 10, bottom: 8),
           child: Row(
             mainAxisAlignment: MainAxisAlignment.end,
             crossAxisAlignment: CrossAxisAlignment.center,
@@ -42,33 +51,32 @@ class _ProgramsPageState extends State<ProgramsPage> {
         isVerticalScrollBarVisible: true,
         columns: const [
           DataColumn2(label: Text('Title')),
-          DataColumn2(label: Text('Courses')),
           DataColumn2(label: Text('')),
           DataColumn2(label: Text('Option')),
         ],
-        rows: [
-          DataRow2(onSelectChanged: (selected) {}, cells: [
-            const DataCell(Text('Skill-Up Program')),
-            const DataCell(Text('Advance Figma')),
-            const DataCell(Text('')),
-            DataCell(Row(
-              children: [
-                editButton(),
-                const Padding(padding: EdgeInsets.all(5)),
-                viewButton()
-              ],
-            )),
-          ]),
-        ],
+        rows: programs.map((e) => buildRow(e)).toList(),
       ),
     );
+  }
+
+  DataRow2 buildRow(Program program) {
+    return DataRow2(onSelectChanged: (selected) {}, cells: [
+      DataCell(Text(program.title)),
+      const DataCell(Text('')),
+      DataCell(Row(
+        children: [
+          editButton(),
+          const Padding(padding: EdgeInsets.all(5)),
+          viewButton(program)
+        ],
+      )),
+    ]);
   }
 
   Widget addButton() {
     return ElevatedButton(
       style: ButtonStyle(
-        fixedSize: MaterialStateProperty.all(Size.fromWidth(155))
-      ),
+          fixedSize: MaterialStateProperty.all(Size.fromWidth(155))),
       onPressed: () {
         showDialog(
           context: context,
@@ -99,9 +107,8 @@ class _ProgramsPageState extends State<ProgramsPage> {
         constraints: const BoxConstraints(
             maxWidth: 160, minHeight: 36.0), // min sizes for Material buttons
         alignment: Alignment.center,
-        child: const Row(
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: [
+        child:
+            const Row(crossAxisAlignment: CrossAxisAlignment.center, children: [
           Icon(
             CupertinoIcons.add,
             size: 20,
@@ -159,16 +166,16 @@ class _ProgramsPageState extends State<ProgramsPage> {
         ));
   }
 
-  Widget viewButton() {
+  Widget viewButton(Program program) {
     return TextButton(
         onPressed: () {
           showDialog(
             context: context,
             builder: (context) {
-              return const AlertDialog(
-                contentPadding: EdgeInsets.all(0),
+              return AlertDialog(
+                contentPadding: const EdgeInsets.all(0),
                 backgroundColor: Colors.transparent,
-                content: ProgramViewMore(),
+                content: ProgramViewMore(program: program),
               );
             },
           );

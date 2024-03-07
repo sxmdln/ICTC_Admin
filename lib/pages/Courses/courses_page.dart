@@ -1,6 +1,8 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:data_table_2/data_table_2.dart';
+import 'package:ictc_admin/models/course.dart';
+import 'package:ictc_admin/models/seeds.dart';
 import 'package:ictc_admin/pages/courses/course_viewMore.dart';
 import 'package:ictc_admin/pages/courses/course_forms.dart';
 
@@ -12,6 +14,16 @@ class CoursesPage extends StatefulWidget {
 }
 
 class _CoursesPageState extends State<CoursesPage> {
+  late List<Course> courses;
+
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    courses = Seeds.courses;
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Column(
@@ -42,25 +54,29 @@ class _CoursesPageState extends State<CoursesPage> {
         isVerticalScrollBarVisible: true,
         columns: const [
           DataColumn2(label: Text('Title')),
+          DataColumn2(label: Text('Cost')),
           DataColumn2(label: Text('')),
           DataColumn2(label: Text('Option')),
         ],
-        rows: [
-          DataRow2(onSelectChanged: (selected) {}, cells: [
-            const DataCell(Text('Advance Figma')),
+        rows: courses.map((e) => buildRow(e)).toList(),
+      ),
+    );
+  }
+
+DataRow2 buildRow(Course course) {
+  return DataRow2(onSelectChanged: (selected) {}, cells: [
+             DataCell(Text(course.title)),
+             DataCell(Text(course.cost.toString())),
             const DataCell(Text('')),
             DataCell(Row(
               children: [
                 editButton(),
                 const Padding(padding: EdgeInsets.all(5)),
-                viewButton()
+                viewButton(course)
               ],
             )),
-          ]),
-        ],
-      ),
-    );
-  }
+          ]);
+}
 
   Widget addButton() {
     return ElevatedButton(
@@ -155,16 +171,16 @@ class _CoursesPageState extends State<CoursesPage> {
         ));
   }
 
-  Widget viewButton() {
+  Widget viewButton(Course course) {
     return TextButton(
         onPressed: () {
           showDialog(
             context: context,
             builder: (context) {
-              return const AlertDialog(
+              return AlertDialog(
                 contentPadding: EdgeInsets.all(0),
                 backgroundColor: Colors.transparent,
-                content: CourseViewMore(),
+                content: CourseViewMore(course: course),
               );
             },
           );

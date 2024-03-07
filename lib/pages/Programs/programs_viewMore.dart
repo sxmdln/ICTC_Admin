@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:ictc_admin/models/program.dart';
 
 class ProgramViewMore extends StatefulWidget {
-  const ProgramViewMore({super.key});
+  final Program program;
+  const ProgramViewMore({required this.program, super.key});
 
   @override
   State<ProgramViewMore> createState() => _ProgramViewMoreState();
@@ -32,12 +34,12 @@ class _ProgramViewMoreState extends State<ProgramViewMore> {
                         fontWeight: FontWeight.w400,
                         decoration: TextDecoration.underline)),
                 SizedBox(height: 30),
-                Text("Google Certified Educators",
+                Text(widget.program.title,
                     style:
                         TextStyle(fontSize: 24, fontWeight: FontWeight.w600)),
                 SizedBox(height: 20),
                 Text(
-                  "validate educators' proficiency in effectively integrating technology and Google tools to enhance teaching and learning experiences for students",
+                  widget.program.description,
                   maxLines: 3,
                   overflow: TextOverflow.ellipsis,
                   textHeightBehavior: TextHeightBehavior(
@@ -51,7 +53,7 @@ class _ProgramViewMoreState extends State<ProgramViewMore> {
                         size: 14, color: Color(0xff153faa)),
                     SizedBox(width: 5),
                     Text(
-                      "12 courses", //TODO: add counter functionality
+                      "12 courses", //TODO: add counter functionality  //TODO: view all courses button
                       style: TextStyle(fontSize: 12, color: Color(0xff153faa)),
                     ),
                   ],

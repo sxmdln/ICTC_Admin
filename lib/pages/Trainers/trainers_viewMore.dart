@@ -1,7 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:ictc_admin/models/trainer.dart';
 
 class TrainerViewMore extends StatefulWidget {
-  const TrainerViewMore({Key? key});
+  final Trainer trainer;
+
+  const TrainerViewMore({required this.trainer, super.key});
 
   @override
   State<TrainerViewMore> createState() => _TrainerViewMoreState();
@@ -10,14 +13,14 @@ class TrainerViewMore extends StatefulWidget {
 class _TrainerViewMoreState extends State<TrainerViewMore> {
   @override
   Widget build(BuildContext context) {
-    return const Column(
+    return Column(
       mainAxisSize: MainAxisSize.min,
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Row(
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
-            SizedBox(
+            const SizedBox(
               width: 200,
               child: Center(
                 child: CircleAvatar(
@@ -25,40 +28,40 @@ class _TrainerViewMoreState extends State<TrainerViewMore> {
                 ),
               ),
             ),
-            SizedBox(width: 20),
+            const SizedBox(width: 20),
             Expanded(
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  SizedBox(height: 20),
+                  const SizedBox(height: 20),
                   Text(
-                    "Name: Bananakin Skywalker",
+                    widget.trainer.toString(),
+                    style: const TextStyle(
+                      fontSize: 18,
+                      fontFamily: "Monsterrat",
+                      color: Colors.black,
+                    ),
+                  ),
+                  const SizedBox(height: 20),
+                   Text(
+                    widget.trainer.emailAddress,
                     style: TextStyle(
                       fontSize: 18,
                       fontFamily: "Monsterrat",
                       color: Colors.black,
                     ),
                   ),
-                  SizedBox(height: 20),
-                  Text(
-                    "Email address: banana@gmail.com",
+                  const SizedBox(height: 20),
+                   Text(
+                    widget.trainer.contactNumber,
                     style: TextStyle(
                       fontSize: 18,
                       fontFamily: "Monsterrat",
                       color: Colors.black,
                     ),
                   ),
-                  SizedBox(height: 20),
-                  Text(
-                    "Contact number: 09452363553",
-                    style: TextStyle(
-                      fontSize: 18,
-                      fontFamily: "Monsterrat",
-                      color: Colors.black,
-                    ),
-                  ),
-                  SizedBox(height: 20),
-                  Text(
+                  const SizedBox(height: 20),
+                  const Text( //TODO: add handled courses
                     "Handled Courses: Intro to Cybersecurity",
                     style: TextStyle(
                       fontSize: 18,
@@ -66,8 +69,8 @@ class _TrainerViewMoreState extends State<TrainerViewMore> {
                       color: Colors.black,
                     ),
                   ),
-                  SizedBox(height: 20),
-                  Text(
+                  const SizedBox(height: 20),
+                  const Text( // TODO: add date
                     "Date: January 12, 2024 - February 1, 2024 ",
                     style: TextStyle(
                       fontSize: 18,

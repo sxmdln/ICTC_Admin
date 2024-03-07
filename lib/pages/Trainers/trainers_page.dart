@@ -1,6 +1,8 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:data_table_2/data_table_2.dart';
+import 'package:ictc_admin/models/seeds.dart';
+import 'package:ictc_admin/models/trainer.dart';
 import 'package:ictc_admin/pages/trainers/trainers_forms.dart';
 import 'package:ictc_admin/pages/trainers/trainers_viewMore.dart';
 
@@ -25,6 +27,15 @@ class _TrainersPageState extends State<TrainersPage> {
 //   void deleteItem(int id) {
 //     items.removeWhere((item) => item.id == id);
 //   }
+  late List<Trainer> trainers;
+
+  @override
+  void initState() {
+    // TODO: implement initState for populating the table with data from the backend
+    trainers = Seeds.trainers;
+
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -33,9 +44,7 @@ class _TrainersPageState extends State<TrainersPage> {
       children: [
         Container(
           // margin: EdgeInsets.symmetric(horizontal: 100),
-          padding: const EdgeInsets.only(
-            right: 5, bottom: 8
-          ),
+          padding: const EdgeInsets.only(right: 5, bottom: 8),
           child: Row(
             mainAxisAlignment: MainAxisAlignment.end,
             crossAxisAlignment: CrossAxisAlignment.center,
@@ -64,19 +73,21 @@ class _TrainersPageState extends State<TrainersPage> {
             'Actions',
           )),
         ],
-        rows: [
-          DataRow2(onSelectChanged: (selected) {}, cells: [
-            const DataCell(Text('John Doe')),
-            DataCell(Row(
-              children: [
-                editButton(),
-                viewButton(),
-              ],
-            )),
-          ]),
-        ],
+        rows: trainers.map((e) => buildRow(e)).toList(),
       ),
     );
+  }
+
+  DataRow2 buildRow(Trainer trainer) {
+    return DataRow2(onSelectChanged: (selected) {}, cells: [
+      DataCell(Text(trainer.toString())),
+      DataCell(Row(
+        children: [
+          editButton(),
+          viewButton(trainer),
+        ],
+      )),
+    ]);
   }
 
   Widget addButton() {
@@ -171,13 +182,13 @@ class _TrainersPageState extends State<TrainersPage> {
         ));
   }
 
-  Widget viewButton() {
+  Widget viewButton(Trainer trainer) {
     return TextButton(
         onPressed: () {
           showDialog(
             context: context,
             builder: (context) {
-              return const AlertDialog(
+              return AlertDialog(
                 content: SizedBox(
                   width: 600,
                   // height: 498,
@@ -190,7 +201,7 @@ class _TrainersPageState extends State<TrainersPage> {
                         // CircleAvatar(
                         //   radius: 80,
                         // ),
-                        TrainerViewMore(),
+                        TrainerViewMore(trainer: trainer),
                       ],
                     ),
                   ),
