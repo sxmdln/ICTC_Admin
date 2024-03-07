@@ -13,7 +13,7 @@ class CourseViewMore extends StatefulWidget {
 class _CourseViewMoreState extends State<CourseViewMore> {
   @override
   Widget build(BuildContext context) {
-    return Container(
+    return SizedBox(
       width: 400,
       height: 500,
       child: Card(
@@ -29,56 +29,56 @@ class _CourseViewMoreState extends State<CourseViewMore> {
               mainAxisAlignment: MainAxisAlignment.start,
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text("COURSES",
+                const Text("COURSES",
                     style: TextStyle(
                         fontSize: 15,
                         fontWeight: FontWeight.w400,
                         decoration: TextDecoration.underline)),
-                SizedBox(height: 30),
+                const SizedBox(height: 30),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     Text(widget.course.title,
-                        style: TextStyle(
+                        style: const TextStyle(
                             fontSize: 24, fontWeight: FontWeight.w600)),
                     Row(
                       children: [
-                        FaIcon(FontAwesomeIcons.pesoSign, color: Color(0xff153faa),), 
-                        SizedBox(width: 5),
+                        const FaIcon(FontAwesomeIcons.pesoSign, color: Color(0xff153faa),), 
+                        const SizedBox(width: 5),
                         Text(
                           widget.course.cost
                               .toString(),
                           style:
-                              TextStyle(fontSize: 24, fontWeight: FontWeight.w500, color: Color(0xff153faa)),
+                              const TextStyle(fontSize: 24, fontWeight: FontWeight.w500, color: Color(0xff153faa)),
                         ),
                       ],
                     ),
                   ],
                 ),
-                SizedBox(height: 20),
+                const SizedBox(height: 20),
                 Text(
                   widget.course.description,
                   maxLines: 3,
                   overflow: TextOverflow.ellipsis,
-                  textHeightBehavior: TextHeightBehavior(
+                  textHeightBehavior: const TextHeightBehavior(
                       applyHeightToFirstAscent: true,
                       applyHeightToLastDescent: true),
                 ),
-                SizedBox(height: 20),
+                const SizedBox(height: 20),
                 Row(
                   children: [
-                    Icon(Icons.school_rounded,
+                    const Icon(Icons.school_rounded,
                         size: 14, color: Color(0xff153faa)),
-                    SizedBox(width: 5),
+                    const SizedBox(width: 5),
                     Text(
                       widget.course.cost
                           .toString(), // TODO: TOTAL number of enrollees!!!!
-                      style: TextStyle(fontSize: 12, color: Color(0xff153faa)),
+                      style: const TextStyle(fontSize: 12, color: Color(0xff153faa)),
                     ),
                   ],
                 ),
                 Padding(
-                  padding: EdgeInsets.only(top: 40),
+                  padding: const EdgeInsets.only(top: 40),
                   child: AspectRatio(
                     aspectRatio: 20 / 10,
                     child: Image.asset(

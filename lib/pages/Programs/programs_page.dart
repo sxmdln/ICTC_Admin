@@ -76,7 +76,7 @@ class _ProgramsPageState extends State<ProgramsPage> {
   Widget addButton() {
     return ElevatedButton(
       style: ButtonStyle(
-          fixedSize: MaterialStateProperty.all(Size.fromWidth(155))),
+          fixedSize: MaterialStateProperty.all(const Size.fromWidth(155))),
       onPressed: () {
         showDialog(
           context: context,
