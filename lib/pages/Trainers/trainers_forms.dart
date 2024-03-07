@@ -31,17 +31,17 @@ class _TrainersFormState extends State<TrainersForm> {
                     bottom: 0,
                     child: Container(
                       // alignment: Alignment.topLeft,
-                      child: IconButton(icon: Icon(Icons.add, size: 24, color: Colors.white),
+                      decoration: BoxDecoration(
+                            border: Border.all(width: 2, color: Colors.white),
+                            borderRadius: BorderRadius.circular(90.0),
+                            color: Colors.green),
+                      // alignment: Alignment.topLeft,
+                      child: IconButton(icon: const Icon(Icons.add, size: 24, color: Colors.white),
                       // constraints: BoxConstraints(maxHeight: 15, maxWidth: 15),
                       splashRadius: 20,
                       // iconSize: 30,
                       onPressed: (){},
-                      ),
-                        // padding: EdgeInsets.all(1.5),
-                        decoration: BoxDecoration(
-                            border: Border.all(width: 2, color: Colors.white),
-                            borderRadius: BorderRadius.circular(90.0),
-                            color: Colors.green)))
+                      )))
               ]),
               const Padding(padding: EdgeInsets.all(10)),
             ],

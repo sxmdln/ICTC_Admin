@@ -29,7 +29,7 @@ class _TraineesPageState extends State<TraineesPage> {
       children: [
         Container(
           // margin: EdgeInsets.symmetric(horizontal: 100),
-          padding: EdgeInsets.only(
+          padding: const EdgeInsets.only(
             right: 5,
           ),
         ),
@@ -74,11 +74,13 @@ class _TraineesPageState extends State<TraineesPage> {
             context: context,
             builder: (context) {
               return AlertDialog(
+                shape: const RoundedRectangleBorder(borderRadius: BorderRadius.all(Radius.circular(30))),
+                contentPadding: const EdgeInsets.all(0),
                 content: SizedBox(
-                  width: 600,
+                  width: MediaQuery.of(context).size.width*0.6,
                   // height: 498,
                   child: Padding(
-                    padding: EdgeInsets.fromLTRB(27, 25, 27, 25),
+                    padding: const EdgeInsets.only(bottom: 25),
                     child: Column(
                       mainAxisSize: MainAxisSize.min,
                       crossAxisAlignment: CrossAxisAlignment.center,

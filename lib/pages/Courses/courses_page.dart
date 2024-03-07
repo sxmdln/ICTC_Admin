@@ -81,7 +81,7 @@ DataRow2 buildRow(Course course) {
   Widget addButton() {
     return ElevatedButton(
       style: ButtonStyle(
-          fixedSize: MaterialStateProperty.all(Size.fromWidth(155))),
+          fixedSize: MaterialStateProperty.all(const Size.fromWidth(155))),
       onPressed: () {
         showDialog(
           context: context,
@@ -178,7 +178,7 @@ DataRow2 buildRow(Course course) {
             context: context,
             builder: (context) {
               return AlertDialog(
-                contentPadding: EdgeInsets.all(0),
+                contentPadding: const EdgeInsets.all(0),
                 backgroundColor: Colors.transparent,
                 content: CourseViewMore(course: course),
               );

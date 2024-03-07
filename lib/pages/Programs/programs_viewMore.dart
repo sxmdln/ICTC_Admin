@@ -12,7 +12,7 @@ class ProgramViewMore extends StatefulWidget {
 class _ProgramViewMoreState extends State<ProgramViewMore> {
   @override
   Widget build(BuildContext context) {
-    return Container(
+    return SizedBox(
       width: 400,
       height: 500,
       child: Card(
@@ -28,26 +28,26 @@ class _ProgramViewMoreState extends State<ProgramViewMore> {
               mainAxisAlignment: MainAxisAlignment.start,
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text("PROGRAM",
+                const Text("PROGRAM",
                     style: TextStyle(
                         fontSize: 15,
                         fontWeight: FontWeight.w400,
                         decoration: TextDecoration.underline)),
-                SizedBox(height: 30),
+                const SizedBox(height: 30),
                 Text(widget.program.title,
                     style:
-                        TextStyle(fontSize: 24, fontWeight: FontWeight.w600)),
-                SizedBox(height: 20),
+                        const TextStyle(fontSize: 24, fontWeight: FontWeight.w600)),
+                const SizedBox(height: 20),
                 Text(
                   widget.program.description,
                   maxLines: 3,
                   overflow: TextOverflow.ellipsis,
-                  textHeightBehavior: TextHeightBehavior(
+                  textHeightBehavior: const TextHeightBehavior(
                       applyHeightToFirstAscent: true,
                       applyHeightToLastDescent: true),
                 ),
-                SizedBox(height: 20),
-                Row(
+                const SizedBox(height: 20),
+                const Row(
                   children: [
                     Icon(Icons.school_rounded,
                         size: 14, color: Color(0xff153faa)),
@@ -59,7 +59,7 @@ class _ProgramViewMoreState extends State<ProgramViewMore> {
                   ],
                 ),
                 Padding(
-                  padding: EdgeInsets.only(top: 40),
+                  padding: const EdgeInsets.only(top: 40),
                   child: AspectRatio(
                     aspectRatio: 20 / 10,
                     child: Image.asset(
