@@ -97,6 +97,9 @@ class _TrainersPageState extends State<TrainersPage> {
           context: context,
           builder: (context) {
             return AlertDialog(
+              shape: const RoundedRectangleBorder(
+                  borderRadius: BorderRadius.all(Radius.circular(30))),
+              contentPadding: const EdgeInsets.all(0),
               content: SizedBox(
                 width: MediaQuery.of(context).size.width * 0.4,
                 child: const Padding(
