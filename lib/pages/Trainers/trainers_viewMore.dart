@@ -10,65 +10,53 @@ class TrainerViewMore extends StatefulWidget {
 class _TrainerViewMoreState extends State<TrainerViewMore> {
   @override
   Widget build(BuildContext context) {
-    return const Column(
+    return Column(
       mainAxisSize: MainAxisSize.min,
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Row(
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: [
-            SizedBox(
-              width: 200,
-              child: Center(
-                child: CircleAvatar(
-                  radius: 120,
-                ),
+        trainerHeader(),
+        const SizedBox(height: 20),
+        trainerCourseCard()
+      ],
+    );
+  }
+
+  Widget trainerHeader() {
+    return Container(
+      decoration: const BoxDecoration(
+          border: Border(bottom: BorderSide(width: 1)),
+          color: Color(0xfff1f5fb),
+          borderRadius: BorderRadius.only(
+              topLeft: Radius.circular(30), topRight: Radius.circular(30))),
+      padding: const EdgeInsets.all(25),
+      child: const Row(
+        children: [
+          SizedBox(
+            width: 200,
+            child: Center(
+              child: CircleAvatar(
+                radius: 120,
               ),
             ),
-            SizedBox(width: 20),
-            Expanded(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
+          ),
+          Padding(padding: EdgeInsets.all(20)),
+          Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                "John Doe",
+                style: TextStyle(
+                    fontSize: 30,
+                    fontFamily: "Monsterrat",
+                    color: Colors.black,
+                    fontWeight: FontWeight.w600),
+              ),
+              SizedBox(height: 20),
+              Row(
                 children: [
-                  SizedBox(height: 20),
+                  Icon(Icons.email),
                   Text(
-                    "Name: Bananakin Skywalker",
-                    style: TextStyle(
-                      fontSize: 18,
-                      fontFamily: "Monsterrat",
-                      color: Colors.black,
-                    ),
-                  ),
-                  SizedBox(height: 20),
-                  Text(
-                    "Email address: banana@gmail.com",
-                    style: TextStyle(
-                      fontSize: 18,
-                      fontFamily: "Monsterrat",
-                      color: Colors.black,
-                    ),
-                  ),
-                  SizedBox(height: 20),
-                  Text(
-                    "Contact number: 09452363553",
-                    style: TextStyle(
-                      fontSize: 18,
-                      fontFamily: "Monsterrat",
-                      color: Colors.black,
-                    ),
-                  ),
-                  SizedBox(height: 20),
-                  Text(
-                    "Handled Courses: Intro to Cybersecurity",
-                    style: TextStyle(
-                      fontSize: 18,
-                      fontFamily: "Monsterrat",
-                      color: Colors.black,
-                    ),
-                  ),
-                  SizedBox(height: 20),
-                  Text(
-                    "Date: January 12, 2024 - February 1, 2024 ",
+                    " banana@gmail.com",
                     style: TextStyle(
                       fontSize: 18,
                       fontFamily: "Monsterrat",
@@ -77,10 +65,65 @@ class _TrainerViewMoreState extends State<TrainerViewMore> {
                   ),
                 ],
               ),
-            )
-          ],
-        ),
-      ],
+              SizedBox(height: 20),
+              Row(
+                children: [
+                  Icon(Icons.phone),
+                  Text(
+                    " 09452363553",
+                    style: TextStyle(
+                      fontSize: 18,
+                      fontFamily: "Monsterrat",
+                      color: Colors.black,
+                    ),
+                  ),
+                ],
+              ),
+            ],
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget trainerCourseCard() {
+    return const Padding(
+      padding: EdgeInsets.all(20),
+      child: SizedBox(
+          width: 240,
+          height: 120,
+          child: Card(
+              elevation: 3,
+              shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.all(Radius.circular(20))),
+              color: Color(0xfff1f5fb),
+              child: Padding(
+                padding: EdgeInsets.all(5),
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      " Intro to Cybersecurity",
+                      style: TextStyle(
+                        fontSize: 20,
+                        fontWeight: FontWeight.w600,
+                        fontFamily: "Monsterrat",
+                        color: Colors.black,
+                      ),
+                    ),
+                    SizedBox(height: 10),
+                    Text(
+                      " January 12, 2024 - February 1, 2024",
+                      style: TextStyle(
+                        fontSize: 12,
+                        fontFamily: "Monsterrat",
+                        color: Color(0xff153faa),
+                      ),
+                    ),
+                  ],
+                ),
+              ))),
     );
   }
 }

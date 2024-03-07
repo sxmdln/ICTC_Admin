@@ -202,11 +202,13 @@ class _TrainersPageState extends State<TrainersPage> {
             context: context,
             builder: (context) {
               return const AlertDialog(
+                shape: RoundedRectangleBorder(borderRadius: BorderRadius.all(Radius.circular(30))),
+                contentPadding: EdgeInsets.all(0),
                 content: SizedBox(
                   width: 600,
                   // height: 498,
                   child: Padding(
-                    padding: EdgeInsets.fromLTRB(27, 25, 27, 25),
+                    padding: EdgeInsets.fromLTRB(0, 0, 0, 25),
                     child: Column(
                       mainAxisSize: MainAxisSize.min,
                       crossAxisAlignment: CrossAxisAlignment.center,
