@@ -13,7 +13,9 @@ class TrainersPage extends StatefulWidget {
   State<TrainersPage> createState() => _TrainersPageState();
 }
 
-class _TrainersPageState extends State<TrainersPage> {
+class _TrainersPageState extends State<TrainersPage>
+    with AutomaticKeepAliveClientMixin {
+  TrainerViewMore? trainerProfileWidget;
 // // CRUD operations
 //   void addItem(Item item) {
 //     items.add(item);
@@ -38,20 +40,60 @@ class _TrainersPageState extends State<TrainersPage> {
   }
 
   @override
+  bool get wantKeepAlive => true;
+  onListRowTap(Trainer trainer) {
+    setState(() => trainerProfileWidget =
+        TrainerViewMore(trainer: trainer, key: ValueKey<Trainer>(trainer)));
+  }
+
+  void closeProfile() {
+    setState(() => trainerProfileWidget = null);
+  }
+
+  @override
   Widget build(BuildContext context) {
-    return Column(
-      mainAxisAlignment: MainAxisAlignment.end,
+    super.build(context);
+    return Row(
       children: [
-        Container(
-          // margin: EdgeInsets.symmetric(horizontal: 100),
-          padding: const EdgeInsets.only(right: 5, bottom: 8),
-          child: Row(
+        Flexible(
+          flex: 2,
+          child: Column(
             mainAxisAlignment: MainAxisAlignment.end,
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: [addButton()],
+            children: [
+              Container(
+                // margin: EdgeInsets.symmetric(horizontal: 100),
+                padding: const EdgeInsets.only(right: 5, bottom: 8),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.end,
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [addButton()],
+                ),
+              ),
+              buildDataTable(),
+            ],
           ),
         ),
-        buildDataTable(),
+        const VerticalDivider(
+          color: Colors.black,
+          thickness: 0.1,
+        ),
+        trainerProfileWidget != null
+            ? Flexible(
+                flex: 1,
+                child: Stack(
+                  children: [
+                    trainerProfileWidget!,
+                    Container(
+                      padding: const EdgeInsets.only(top: 16, right: 16),
+                      alignment: Alignment.topRight,
+                      child: IconButton(
+                          onPressed: closeProfile,
+                          icon: const Icon(Icons.close)),
+                    ),
+                  ],
+                ),
+              )
+            : Container(),
       ],
     );
   }
@@ -188,34 +230,36 @@ class _TrainersPageState extends State<TrainersPage> {
   Widget viewButton(Trainer trainer) {
     return TextButton(
         onPressed: () {
-          showDialog(
-            context: context,
-            builder: (context) {
-              return AlertDialog(
-                shape: const RoundedRectangleBorder(
-                  side: BorderSide(color: Colors.black54),
-                    borderRadius: BorderRadius.all(Radius.circular(25))),
-                contentPadding: const EdgeInsets.all(0),
-                content: SizedBox(
-                  width: 450,
-                  // height: 498,
-                  child: Padding(
-                    padding: const EdgeInsets.only(bottom: 25),
-                    child: Column(
-                      mainAxisSize: MainAxisSize.min,
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      children: [
-                        // CircleAvatar(
-                        //   radius: 80,
-                        // ),
-                        TrainerViewMore(trainer: trainer),
-                      ],
-                    ),
-                  ),
-                ),
-              );
-            },
-          );
+          onListRowTap(trainer);
+          // showDialog(
+          //   context: context,
+          //   builder: (context) {
+          //     return AlertDialog(
+          //       shape: const RoundedRectangleBorder(
+          //           side: BorderSide(color: Colors.black54),
+          //           borderRadius: BorderRadius.all(Radius.circular(25))),
+          //       contentPadding: const EdgeInsets.all(0),
+          //       content: SizedBox(
+          //         width: 700,
+          //         height: MediaQuery.of(context).size.height,
+          //         // height: 498,
+          //         child: Padding(
+          //           padding: const EdgeInsets.only(bottom: 25),
+          //           child: Column(
+          //             mainAxisSize: MainAxisSize.min,
+          //             crossAxisAlignment: CrossAxisAlignment.center,
+          //             children: [
+          //               // CircleAvatar(
+          //               //   radius: 80,
+          //               // ),
+          //               TrainerViewMore(trainer: trainer),
+          //             ],
+          //           ),
+          //         ),
+          //       ),
+          //     );
+          //   },
+          // );
         },
         child: const Row(
           children: [

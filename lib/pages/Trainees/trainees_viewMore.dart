@@ -26,98 +26,98 @@ class _TraineeViewMoreState extends State<TraineeViewMore> {
 
   Widget traineeHeader() {
     return Container(
-        decoration: const BoxDecoration(
-          border: Border(bottom: BorderSide(width: 1)),
-          color: Color(0xfff1f5fb),
+      decoration: const BoxDecoration(
+          // border: Border(bottom: BorderSide(width: 1)),
+          // color: Color(0xfff1f5fb),
+          color: Colors.white,
           borderRadius: BorderRadius.only(
-              topLeft: Radius.circular(30), topRight: Radius.circular(30)),
-        ),
-        padding: const EdgeInsets.all(25),
-        child: Row(
-          children: [
-            const SizedBox(
-              width: 200,
-              child: Center(
-                child: CircleAvatar(
-                  radius: 120,
+              topLeft: Radius.circular(25), topRight: Radius.circular(25))),
+      padding: const EdgeInsets.only(top: 30, left: 25, right: 25, bottom: 30),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: [
+          Column(
+            mainAxisAlignment: MainAxisAlignment.start,
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              //image
+              const SizedBox(
+                width: 100,
+                height: 80,
+                child: Center(
+                  child: CircleAvatar(
+                    backgroundColor: Colors.grey,
+                    radius: 120,
+                  ),
                 ),
               ),
-            ),
-            const Padding(padding: EdgeInsets.all(20)),
-            Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  widget.trainee.toString(),
-                  style: const TextStyle(
-                      fontSize: 25,
-                      color: Colors.black,
-                      fontWeight: FontWeight.w600),
-                ),
-                const SizedBox(height: 20),
-                Text(
-                  widget.trainee.emailAddress,
-                    style: const TextStyle(
-                        fontSize: 18,
-                        color: Colors.black)),
-                const SizedBox(height: 20),
-                Text(
-                  widget.trainee.contactNumber,
-                    style: const TextStyle(
-                        fontSize: 18,
-                        color: Colors.black)),
-                const SizedBox(height: 20),
-                
-              ],
-            )
-          ],
-        ));
+              const SizedBox(
+                //spacing
+                height: 20,
+              ),
+              Text(
+                //name
+                widget.trainee.toString(),
+                style: const TextStyle(
+                    fontSize: 18,
+                    color: Colors.black,
+                    fontWeight: FontWeight.w400),
+              ),
+
+              //email
+              //desc
+              //edit
+              //total courses, total trained students(trainees),
+              //school
+              //credentials
+              //feedbacks
+            ],
+          ),
+        ],
+      ),
+      // ],
+      // ),
+    );
   }
 
   Widget traineeCourseCard() {
     return const Padding(
-      padding: EdgeInsets.all(20),
+      padding: EdgeInsets.all(0),
       child: SizedBox(
-        width: 240,
-        height: 120,
-        child: Card(
-          elevation: 3,
-          shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.all(Radius.circular(20))),
-          color: Color(0xfff1f5fb),
-          child: Padding(
-            padding: EdgeInsets.all(5),
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(" Advance Figma",
-                    style: TextStyle(
-                        fontSize: 20,
-                        fontWeight: FontWeight.w600,
-                        color: Colors.black)),
-                SizedBox(height: 10),
-                Text(" January 12, 2024 - February 1, 2024",
-                    style: TextStyle(
-                        fontSize: 12,
-                        color: Color(0xff153faa))),
-                SizedBox(height: 10),
-                Row(
+          width: 150,
+          height: 90,
+          child: Card(
+              elevation: 0.5,
+              shape: RoundedRectangleBorder(
+                  side: BorderSide(color: Colors.black12),
+                  borderRadius: BorderRadius.all(Radius.circular(12))),
+              color: Colors.white,
+              child: Padding(
+                padding: EdgeInsets.all(5),
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      "Feedback: ",
+                      " Introduction to Cybersecurity", //TODO: add courses of trainer (connected)
                       style: TextStyle(
-                          fontSize: 12,
-                          color: Color(0xff153faa)),
+                        fontSize: 13,
+                        fontWeight: FontWeight.w500,
+                        color: Colors.black,
+                      ),
                     ),
-                    Icon(Icons.check, color: Colors.green, size: 20),
+                    SizedBox(height: 5),
+                    Text(
+                      "01/01/2024-02/1/2024",
+                      style: TextStyle(
+                        fontSize: 8,
+                        color: Colors.black87,
+                      ),
+                    ),
                   ],
                 ),
-              ],
-            ),
-          ),
-        ),
-      ),
+              ))),
     );
   }
 }

@@ -33,16 +33,15 @@ class _TrainerViewMoreState extends State<TrainerViewMore> {
           color: Colors.white,
           borderRadius: BorderRadius.only(
               topLeft: Radius.circular(25), topRight: Radius.circular(25))),
-      padding: const EdgeInsets.only(top: 30, left: 25, right: 25, bottom: 0),
+      padding: const EdgeInsets.only(top: 30, left: 25, right: 25, bottom: 40),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-        crossAxisAlignment: CrossAxisAlignment.start,
+        crossAxisAlignment: CrossAxisAlignment.center,
         children: [
           Column(
             mainAxisAlignment: MainAxisAlignment.start,
-            crossAxisAlignment: CrossAxisAlignment.start,
+            crossAxisAlignment: CrossAxisAlignment.center,
             children: [
-              
               //image
               const SizedBox(
                 width: 100,
@@ -76,79 +75,8 @@ class _TrainerViewMoreState extends State<TrainerViewMore> {
               //feedbacks
             ],
           ),
-          Container(
-            // color: Colors.red.shade200,
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              mainAxisAlignment: MainAxisAlignment.start,
-              children: [
-                Text(
-                  "Courses",
-                  style: const TextStyle(
-                      fontSize: 18,
-                      color: Colors.black,
-                      fontWeight: FontWeight.w400),
-                ),
-                // SliverList(delegate:),
-                Row(
-                  mainAxisSize: MainAxisSize.min,
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [trainerCourseCard(),trainerCourseCard()],),
-                ],
-            ),
-          ),
-          // const SizedBox(
-          //   width: 200,
-          //   child: Center(
-          //     child: CircleAvatar(
-          //       radius: 120,
-          //     ),
-          //   ),
-          // ),
-          // const Padding(padding: EdgeInsets.all(20)),
-          // Column(
-          // crossAxisAlignment: CrossAxisAlignment.start,
-          // children: [
-          //   Text(
-          //     widget.trainer.toString(),
-          //     style: const TextStyle(
-          //         fontSize: 30,
-          //         fontFamily: "Monsterrat",
-          //         color: Colors.black,
-          //         fontWeight: FontWeight.w600),
-          //   ),
-          //   const SizedBox(height: 20),
-          // Row(
-          //   children: [
-          //     const Icon(Icons.email),
-          //     Text(
-          //       widget.trainer.emailAddress,
-          //       style: const TextStyle(
-          //         fontSize: 18,
-          //         color: Colors.black,
-          //       ),
-          //     ),
-          //   ],
-          // ),
-          // const SizedBox(height: 20),
-          // Row(
-          //   children: [
-          //     const Icon(Icons.phone),
-          //     Text(
-          //       widget.trainer.contactNumber,
-          //       style: const TextStyle(
-          //         fontSize: 18,
-          //         fontFamily: "Monsterrat",
-          //         color: Colors.black,
-          //       ),
-          //     ),
-          //   ],
-          // ),
         ],
       ),
-      // ],
-      // ),
     );
   }
 

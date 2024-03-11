@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:ictc_admin/pages/dashboard/card_button.dart';
+import 'package:ictc_admin/pages/dashboard/card_courses.dart';
+import 'package:ictc_admin/pages/dashboard/card_programs.dart';
+import 'package:ictc_admin/pages/dashboard/card_student.dart';
 
 class DashboardPage extends StatefulWidget {
   const DashboardPage({super.key});
@@ -22,9 +25,9 @@ class _DashboardPageState extends State<DashboardPage> {
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
                 CardButton(),
-                CardButton(),
-                CardButton(),
-                CardButton(),
+                CardCourses(),
+                CardPrograms(),
+                CardStudent(),
               ],
             ),
           ),

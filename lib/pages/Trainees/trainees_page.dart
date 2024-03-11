@@ -11,7 +11,10 @@ class TraineesPage extends StatefulWidget {
   State<TraineesPage> createState() => _TraineesPageState();
 }
 
-class _TraineesPageState extends State<TraineesPage> {
+class _TraineesPageState extends State<TraineesPage>
+    with AutomaticKeepAliveClientMixin {
+  TraineeViewMore? traineeProfileWidget;
+
   late List<Trainee> trainees;
 
   @override
@@ -23,17 +26,61 @@ class _TraineesPageState extends State<TraineesPage> {
   }
 
   @override
+  bool get wantKeepAlive => true;
+
+  onListRowTap(Trainee trainee) {
+    setState(() => traineeProfileWidget =
+        TraineeViewMore(trainee: trainee, key: ValueKey<Trainee>(trainee)));
+  }
+
+  void closeProfile() {
+    setState(() => traineeProfileWidget = null);
+  }
+
+  @override
   Widget build(BuildContext context) {
-    return Column(
-      mainAxisAlignment: MainAxisAlignment.end,
+    super.build(context);
+    return Row(
       children: [
-        Container(
-          // margin: EdgeInsets.symmetric(horizontal: 100),
-          padding: const EdgeInsets.only(
-            right: 5,
+        Flexible(
+          flex: 2,
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.end,
+            children: [
+              Container(
+                // margin: EdgeInsets.symmetric(horizontal: 100),
+                padding: const EdgeInsets.only(right: 5, bottom: 8),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.end,
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [SizedBox(height: 25)],
+                ),
+              ),
+              buildDataTable(),
+            ],
           ),
         ),
-        buildDataTable(),
+        const VerticalDivider(
+          color: Colors.black,
+          thickness: 0.1,
+        ),
+        traineeProfileWidget != null
+            ? Flexible(
+                flex: 1,
+                child: Stack(
+                  children: [
+                    traineeProfileWidget!,
+                    Container(
+                      padding: const EdgeInsets.only(top: 16, right: 16),
+                      alignment: Alignment.topRight,
+                      child: IconButton(
+                          onPressed: closeProfile,
+                          icon: const Icon(Icons.close)),
+                    ),
+                  ],
+                ),
+              )
+            : Container(),
       ],
     );
   }
@@ -51,7 +98,7 @@ class _TraineesPageState extends State<TraineesPage> {
           DataColumn2(label: Text('')),
           DataColumn2(label: Text('Option')),
         ],
-        rows:  trainees.map((e) => buildRow(e)).toList(),
+        rows: trainees.map((e) => buildRow(e)).toList(),
       ),
     );
   }
@@ -70,32 +117,34 @@ class _TraineesPageState extends State<TraineesPage> {
   Widget viewButton(Trainee trainee) {
     return TextButton(
         onPressed: () {
-          showDialog(
-            context: context,
-            builder: (context) {
-              return AlertDialog(
-                shape: const RoundedRectangleBorder(borderRadius: BorderRadius.all(Radius.circular(30))),
-                contentPadding: const EdgeInsets.all(0),
-                content: SizedBox(
-                  width: MediaQuery.of(context).size.width*0.6,
-                  // height: 498,
-                  child: Padding(
-                    padding: const EdgeInsets.only(bottom: 25),
-                    child: Column(
-                      mainAxisSize: MainAxisSize.min,
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      children: [
-                        // CircleAvatar(
-                        //   radius: 80,
-                        // ),
-                        TraineeViewMore(trainee: trainee),
-                      ],
-                    ),
-                  ),
-                ),
-              );
-            },
-          );
+          onListRowTap(trainee);
+          // showDialog(
+          //   context: context,
+          //   builder: (context) {
+          //     return AlertDialog(
+          //       shape: const RoundedRectangleBorder(
+          //           borderRadius: BorderRadius.all(Radius.circular(30))),
+          //       contentPadding: const EdgeInsets.all(0),
+          //       content: SizedBox(
+          //         width: MediaQuery.of(context).size.width * 0.6,
+          //         // height: 498,
+          //         child: Padding(
+          //           padding: const EdgeInsets.only(bottom: 25),
+          //           child: Column(
+          //             mainAxisSize: MainAxisSize.min,
+          //             crossAxisAlignment: CrossAxisAlignment.center,
+          //             children: [
+          //               // CircleAvatar(
+          //               //   radius: 80,
+          //               // ),
+          //               TraineeViewMore(trainee: trainee),
+          //             ],
+          //           ),
+          //         ),
+          //       ),
+          //     );
+          //   },
+          // );
         },
         child: const Row(
           children: [

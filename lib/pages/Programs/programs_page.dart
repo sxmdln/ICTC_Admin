@@ -13,7 +13,9 @@ class ProgramsPage extends StatefulWidget {
   State<ProgramsPage> createState() => _ProgramsPageState();
 }
 
-class _ProgramsPageState extends State<ProgramsPage> {
+class _ProgramsPageState extends State<ProgramsPage>
+    with AutomaticKeepAliveClientMixin {
+  ProgramViewMore? programProfileWidget;
   late List<Program> programs;
 
   @override
@@ -24,20 +26,60 @@ class _ProgramsPageState extends State<ProgramsPage> {
   }
 
   @override
+  bool get wantKeepAlive => true;
+  onListRowTap(Program program) {
+    setState(() => programProfileWidget =
+        ProgramViewMore(program: program, key: ValueKey<Program>(program)));
+  }
+
+  void closeProfile() {
+    setState(() => programProfileWidget = null);
+  }
+
+  @override
   Widget build(BuildContext context) {
-    return Column(
-      mainAxisAlignment: MainAxisAlignment.end,
+    super.build(context);
+    return Row(
       children: [
-        Container(
-          // margin: EdgeInsets.symmetric(horizontal: 100),
-          padding: const EdgeInsets.only(right: 10, bottom: 8),
-          child: Row(
+        Flexible(
+          flex: 2,
+          child: Column(
             mainAxisAlignment: MainAxisAlignment.end,
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: [addButton()],
+            children: [
+              Container(
+                // margin: EdgeInsets.symmetric(horizontal: 100),
+                padding: const EdgeInsets.only(right: 5, bottom: 8),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.end,
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [addButton()],
+                ),
+              ),
+              buildDataTable(),
+            ],
           ),
         ),
-        buildDataTable(),
+        const VerticalDivider(
+          color: Colors.black,
+          thickness: 0.1,
+        ),
+        programProfileWidget != null
+            ? Flexible(
+                flex: 1,
+                child: Stack(
+                  children: [
+                    programProfileWidget!,
+                    Container(
+                      padding: const EdgeInsets.only(top: 16, right: 16),
+                      alignment: Alignment.topRight,
+                      child: IconButton(
+                        onPressed: closeProfile,
+                        icon: const Icon(Icons.close),
+                      ),
+                    )
+                  ],
+                ))
+            : Container(),
       ],
     );
   }
@@ -169,16 +211,18 @@ class _ProgramsPageState extends State<ProgramsPage> {
   Widget viewButton(Program program) {
     return TextButton(
         onPressed: () {
-          showDialog(
-            context: context,
-            builder: (context) {
-              return AlertDialog(
-                contentPadding: const EdgeInsets.all(0),
-                backgroundColor: Colors.transparent,
-                content: ProgramViewMore(program: program),
-              );
-            },
-          );
+          onListRowTap(program);
+
+          // showDialog(
+          //   context: context,
+          //   builder: (context) {
+          //     return AlertDialog(
+          //       contentPadding: const EdgeInsets.all(0),
+          //       backgroundColor: Colors.transparent,
+          //       content: ProgramViewMore(program: program),
+          //     );
+          //   },
+          // );
         },
         child: const Row(
           children: [

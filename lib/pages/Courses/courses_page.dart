@@ -13,9 +13,11 @@ class CoursesPage extends StatefulWidget {
   State<CoursesPage> createState() => _CoursesPageState();
 }
 
-class _CoursesPageState extends State<CoursesPage> {
-  late List<Course> courses;
+class _CoursesPageState extends State<CoursesPage>
+    with AutomaticKeepAliveClientMixin {
+  CourseViewMore? courseProfileWidget;
 
+  late List<Course> courses;
 
   @override
   void initState() {
@@ -25,22 +27,60 @@ class _CoursesPageState extends State<CoursesPage> {
   }
 
   @override
+  bool get wantKeepAlive => true;
+  onListRowTap(Course course) {
+    setState(() => courseProfileWidget =
+        CourseViewMore(course: course, key: ValueKey<Course>(course)));
+  }
+
+  void closeProfile() {
+    setState(() => courseProfileWidget = null);
+  }
+
+  @override
   Widget build(BuildContext context) {
-    return Column(
-      mainAxisAlignment: MainAxisAlignment.end,
+    super.build(context);
+    return Row(
       children: [
-        Container(
-          // margin: EdgeInsets.symmetric(horizontal: 100),
-          padding: const EdgeInsets.only(
-            right: 10, bottom: 8
-          ),
-          child: Row(
+        Flexible(
+          flex: 2,
+          child: Column(
             mainAxisAlignment: MainAxisAlignment.end,
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: [addButton()],
+            children: [
+              Container(
+                // margin: EdgeInsets.symmetric(horizontal: 100),
+                padding: const EdgeInsets.only(right: 5, bottom: 8),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.end,
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [addButton()],
+                ),
+              ),
+              buildDataTable(),
+            ],
           ),
         ),
-        buildDataTable(),
+        const VerticalDivider(
+          color: Colors.black,
+          thickness: 0.1,
+        ),
+        courseProfileWidget != null
+            ? Flexible(
+                flex: 1,
+                child: Stack(
+                  children: [
+                    courseProfileWidget!,
+                    Container(
+                      padding: const EdgeInsets.only(top: 16, right: 16),
+                      alignment: Alignment.topRight,
+                      child: IconButton(
+                          onPressed: closeProfile,
+                          icon: const Icon(Icons.close)),
+                    ),
+                  ],
+                ),
+              )
+            : Container(),
       ],
     );
   }
@@ -63,20 +103,20 @@ class _CoursesPageState extends State<CoursesPage> {
     );
   }
 
-DataRow2 buildRow(Course course) {
-  return DataRow2(onSelectChanged: (selected) {}, cells: [
-             DataCell(Text(course.title)),
-             DataCell(Text(course.cost.toString())),
-            const DataCell(Text('')),
-            DataCell(Row(
-              children: [
-                editButton(),
-                const Padding(padding: EdgeInsets.all(5)),
-                viewButton(course)
-              ],
-            )),
-          ]);
-}
+  DataRow2 buildRow(Course course) {
+    return DataRow2(onSelectChanged: (selected) {}, cells: [
+      DataCell(Text(course.title)),
+      DataCell(Text(course.cost.toString())),
+      const DataCell(Text('')),
+      DataCell(Row(
+        children: [
+          editButton(),
+          const Padding(padding: EdgeInsets.all(5)),
+          viewButton(course)
+        ],
+      )),
+    ]);
+  }
 
   Widget addButton() {
     return ElevatedButton(
@@ -174,16 +214,17 @@ DataRow2 buildRow(Course course) {
   Widget viewButton(Course course) {
     return TextButton(
         onPressed: () {
-          showDialog(
-            context: context,
-            builder: (context) {
-              return AlertDialog(
-                contentPadding: const EdgeInsets.all(0),
-                backgroundColor: Colors.transparent,
-                content: CourseViewMore(course: course),
-              );
-            },
-          );
+          onListRowTap(course);
+          // showDialog(
+          //   context: context,
+          //   builder: (context) {
+          //     return AlertDialog(
+          //       contentPadding: const EdgeInsets.all(0),
+          //       backgroundColor: Colors.transparent,
+          //       content: CourseViewMore(course: course),
+          //     );
+          //   },
+          // );
         },
         child: const Row(
           children: [
