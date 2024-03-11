@@ -47,6 +47,62 @@ class _CourseFormState extends State<CourseForm> {
             ),
           ),
           const SizedBox(height: 20),
+          TextFormField(
+            style: const TextStyle(
+              fontSize: 18,
+              fontFamily: "Monsterrat",
+              fontWeight: FontWeight.w300,
+              color: Colors.black,
+            ),
+            decoration: const InputDecoration(
+              hintText: "Cost",
+              hintStyle: TextStyle(fontSize: 18, fontFamily: "Monsterrat"),
+              border: OutlineInputBorder(),
+            ),
+          ),
+          const SizedBox(height: 20),
+          TextFormField(
+            style: const TextStyle(
+              fontSize: 18,
+              fontFamily: "Monsterrat",
+              fontWeight: FontWeight.w300,
+              color: Colors.black,
+            ),
+            decoration: const InputDecoration(
+              hintText: "Duration",
+              hintStyle: TextStyle(fontSize: 18, fontFamily: "Monsterrat"),
+              border: OutlineInputBorder(),
+            ),
+          ),
+          const SizedBox(height: 20),
+          TextFormField(
+            style: const TextStyle(
+              fontSize: 18,
+              fontFamily: "Monsterrat",
+              fontWeight: FontWeight.w300,
+              color: Colors.black,
+            ),
+            decoration: const InputDecoration(
+              hintText: "Schedule",
+              hintStyle: TextStyle(fontSize: 18, fontFamily: "Monsterrat"),
+              border: OutlineInputBorder(),
+            ),
+          ),
+          const SizedBox(height: 20),
+          TextFormField(
+            style: const TextStyle(
+              fontSize: 18,
+              fontFamily: "Monsterrat",
+              fontWeight: FontWeight.w300,
+              color: Colors.black,
+            ),
+            decoration: const InputDecoration(
+              hintText: "Venue",
+              hintStyle: TextStyle(fontSize: 18, fontFamily: "Monsterrat"),
+              border: OutlineInputBorder(),
+            ),
+          ),
+          const SizedBox(height: 20),
           Row(
             children: [
               Expanded(

@@ -93,7 +93,7 @@ class _TrainersFormState extends State<TrainersForm> {
             style: const TextStyle(
               fontSize: 18,
               fontFamily: "Montserrat",
-              fontWeight: FontWeight.w600,
+              fontWeight: FontWeight.w300,
               color: Colors.black,
             ),
             decoration: const InputDecoration(
@@ -107,7 +107,7 @@ class _TrainersFormState extends State<TrainersForm> {
             style: const TextStyle(
               fontSize: 18,
               fontFamily: "Montserrat",
-              fontWeight: FontWeight.w600,
+              fontWeight: FontWeight.w300,
               color: Colors.black,
             ),
             decoration: const InputDecoration(
@@ -121,7 +121,7 @@ class _TrainersFormState extends State<TrainersForm> {
             style: const TextStyle(
               fontSize: 18,
               fontFamily: "Montserrat",
-              fontWeight: FontWeight.w600,
+              fontWeight: FontWeight.w300,
               color: Colors.black,
             ),
             decoration: const InputDecoration(
