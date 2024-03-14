@@ -13,15 +13,28 @@ class TrainerViewMore extends StatefulWidget {
 class _TrainerViewMoreState extends State<TrainerViewMore> {
   @override
   Widget build(BuildContext context) {
-    return Column(
-      mainAxisSize: MainAxisSize.min,
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        trainerHeader(),
-        // const SizedBox(height: 20),
-        // trainerCourseCard(),
-        // trainerCourseCard2()
-      ],
+    return Container(
+      margin: const EdgeInsets.only(bottom: 20, top: 33.5, right: 12),
+      decoration: const BoxDecoration(
+        // border: Border(bottom: BorderSide(width: 1)),
+        // color: Color(0xfff1f5fb),
+        borderRadius: BorderRadius.all(Radius.circular(24)),
+        color: Colors.white,
+      ),
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          trainerHeader(),
+          const SizedBox(height: 8),
+          const Divider(thickness: 0.5, color: Colors.black87),
+          const SizedBox(height: 8),
+          buildCourses(),
+          const Spacer(
+            flex: 2,
+          ),
+        ],
+      ),
     );
   }
 
@@ -30,52 +43,172 @@ class _TrainerViewMoreState extends State<TrainerViewMore> {
       decoration: const BoxDecoration(
           // border: Border(bottom: BorderSide(width: 1)),
           // color: Color(0xfff1f5fb),
+          // color: Color(0xff19306B),
           color: Colors.white,
           borderRadius: BorderRadius.only(
-              topLeft: Radius.circular(25), topRight: Radius.circular(25))),
-      padding: const EdgeInsets.only(top: 30, left: 25, right: 25, bottom: 40),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-        crossAxisAlignment: CrossAxisAlignment.center,
+              topRight: Radius.circular(24), topLeft: Radius.circular(24))),
+      padding: const EdgeInsets.only(top: 50, left: 25, right: 25, bottom: 25),
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.start,
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Column(
-            mainAxisAlignment: MainAxisAlignment.start,
+            mainAxisAlignment: MainAxisAlignment.center,
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
-              //image
               const SizedBox(
-                width: 100,
-                height: 80,
+                width: 200,
+                height: 120,
                 child: Center(
                   child: CircleAvatar(
-                    backgroundColor: Colors.grey,
+                    backgroundColor: Color.fromARGB(255, 247, 247, 247),
                     radius: 120,
                   ),
                 ),
               ),
               const SizedBox(
                 //spacing
-                height: 20,
+                height: 12,
               ),
               Text(
+                softWrap: true,
                 //name
                 widget.trainer.toString(),
                 style: const TextStyle(
-                    fontSize: 18,
-                    color: Colors.black,
-                    fontWeight: FontWeight.w400),
+                    fontSize: 24,
+                    color: Colors.black87,
+                    fontWeight: FontWeight.w700),
               ),
-
-              //email
-              //desc
-              //edit
-              //total courses, total trained students(trainees),
-              //school
-              //credentials
-              //feedbacks
+              const SizedBox(
+                height: 35,
+              ),
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  const Text(
+                    softWrap: true,
+                    //name
+                    "Contact",
+                    style: TextStyle(
+                        fontSize: 16,
+                        color: Colors.black87,
+                        fontWeight: FontWeight.w600),
+                  ),
+                  const SizedBox(
+                    height: 20,
+                  ),
+                  //email
+                  Padding(
+                    padding: const EdgeInsets.only(left: 13.0),
+                    child: Row(
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        children: [
+                          const Icon(
+                            Icons.mail_outline,
+                            size: 24,
+                            weight: 0.5,
+                          ),
+                          const SizedBox(
+                            width: 12,
+                          ),
+                          Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            mainAxisAlignment: MainAxisAlignment.start,
+                            children: [
+                              const Text(
+                                "Email",
+                                style: TextStyle(
+                                    color: Colors.black87,
+                                    fontWeight: FontWeight.w300),
+                              ),
+                              Text(widget.trainer.emailAddress),
+                            ],
+                          ),
+                        ]),
+                  ),
+                  const SizedBox(
+                    height: 20,
+                  ),
+                  //contact number
+                  Padding(
+                    padding: const EdgeInsets.only(left: 13.0),
+                    child: Row(
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        children: [
+                          const Icon(
+                            Icons.phone_outlined,
+                            size: 24,
+                            weight: 0.5,
+                          ),
+                          const SizedBox(
+                            width: 12,
+                          ),
+                          Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            mainAxisAlignment: MainAxisAlignment.start,
+                            children: [
+                              const Text(
+                                "Phone",
+                                style: TextStyle(
+                                    color: Colors.black87,
+                                    fontWeight: FontWeight.w300),
+                              ),
+                              Text(widget.trainer.contactNumber),
+                            ],
+                          ),
+                        ]),
+                  ),
+                ],
+              ),
             ],
           ),
         ],
+      ),
+      // ],
+      // ),
+    );
+  }
+
+  Widget buildCourses() {
+    return Flexible(
+      flex: 8,
+      child: Container(
+        padding: const EdgeInsets.only(top: 0, left: 25, right: 25),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.start,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            //title
+            const Text(
+              softWrap: true,
+              //name
+              "Courses",
+              style: TextStyle(
+                  fontSize: 16,
+                  color: Colors.black87,
+                  fontWeight: FontWeight.w600),
+            ),
+            const SizedBox(
+              height: 15,
+            ),
+            //courses
+            Expanded(
+                flex: 2,
+                child: ListView(
+                    padding: const EdgeInsets.only(left: 13),
+                    shrinkWrap: true,
+                    children: [
+                      trainerCourseCard(),
+                      trainerCourseCard(),
+                      trainerCourseCard(),
+                      trainerCourseCard(),
+                      trainerCourseCard(),
+                    ])),
+          ],
+        ),
       ),
     );
   }
@@ -84,24 +217,24 @@ class _TrainerViewMoreState extends State<TrainerViewMore> {
     return const Padding(
       padding: EdgeInsets.all(0),
       child: SizedBox(
-          width: 150,
-          height: 90,
+          width: 240,
+          height: 60,
           child: Card(
               elevation: 0.5,
               shape: RoundedRectangleBorder(
                   side: BorderSide(color: Colors.black12),
-                  borderRadius: BorderRadius.all(Radius.circular(12))),
-              color: Colors.white,
+                  borderRadius: BorderRadius.all(Radius.circular(10))),
+              color: Color.fromARGB(255, 247, 247, 247),
               child: Padding(
-                padding: EdgeInsets.all(5),
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  crossAxisAlignment: CrossAxisAlignment.start,
+                padding: EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
                     Text(
                       " Introduction to Cybersecurity", //TODO: add courses of trainer (connected)
                       style: TextStyle(
-                        fontSize: 13,
+                        fontSize: 14,
                         fontWeight: FontWeight.w500,
                         color: Colors.black,
                       ),
@@ -110,9 +243,9 @@ class _TrainerViewMoreState extends State<TrainerViewMore> {
                     Text(
                       "01/01/2024-02/1/2024",
                       style: TextStyle(
-                        fontSize: 8,
-                        color: Colors.black87,
-                      ),
+                          fontSize: 12,
+                          color: Colors.black54,
+                          fontWeight: FontWeight.w300),
                     ),
                   ],
                 ),

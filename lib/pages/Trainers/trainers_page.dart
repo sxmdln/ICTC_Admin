@@ -84,11 +84,14 @@ class _TrainersPageState extends State<TrainersPage>
                   children: [
                     trainerProfileWidget!,
                     Container(
-                      padding: const EdgeInsets.only(top: 16, right: 16),
+                      margin: const EdgeInsets.only(top: 45, right: 30),
                       alignment: Alignment.topRight,
                       child: IconButton(
-                          onPressed: closeProfile,
-                          icon: const Icon(Icons.close)),
+                        splashRadius: 15,
+                        onPressed: closeProfile,
+                        icon: const Icon(Icons.close_outlined),
+                        color: Colors.black87,
+                      ),
                     ),
                   ],
                 ),
@@ -138,26 +141,7 @@ class _TrainersPageState extends State<TrainersPage>
         showDialog(
           context: context,
           builder: (context) {
-            return AlertDialog(
-              shape: const RoundedRectangleBorder(
-                  borderRadius: BorderRadius.all(Radius.circular(30))),
-              contentPadding: const EdgeInsets.all(0),
-              content: SizedBox(
-                width: MediaQuery.of(context).size.width * 0.4,
-                child: const Padding(
-                  padding: EdgeInsets.fromLTRB(27, 25, 27, 25),
-                  child: SingleChildScrollView(
-                    child: Column(
-                      mainAxisSize: MainAxisSize.min,
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      children: [
-                        TrainersForm(),
-                      ],
-                    ),
-                  ),
-                ),
-              ),
-            );
+            return addDialog();
           },
         );
       },
@@ -184,31 +168,61 @@ class _TrainersPageState extends State<TrainersPage>
     );
   }
 
+  Widget addDialog() {
+    return AlertDialog(
+      // shape: const RoundedRectangleBorder(
+      //     borderRadius: BorderRadius.all(Radius.circular(30))),
+      contentPadding: EdgeInsets.only(left: 20, right: 30, top: 40),
+      title: Column(
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: [
+          Container(
+            alignment: FractionalOffset.topRight,
+            child: IconButton(
+              onPressed: () {
+                Navigator.pop(context);
+              },
+              icon: const Icon(Icons.clear),
+            ),
+          ),
+          const Text(
+            "Add a Trainer",
+            style: TextStyle(
+                color: Colors.black87,
+                fontSize: 24,
+                fontWeight: FontWeight.w600),
+          ),
+        ],
+      ),
+      content: Flexible(
+        flex: 2,
+        child: SizedBox(
+          width: 550,
+          height: MediaQuery.of(context).size.height * 0.4,
+          child: const Padding(
+            padding: EdgeInsets.fromLTRB(0, 0, 0, 0),
+            child: SingleChildScrollView(
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  TrainersForm(),
+                ],
+              ),
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+
   Widget editButton() {
     return TextButton(
         onPressed: () {
           showDialog(
             context: context,
             builder: (context) {
-              return AlertDialog(
-                content: SizedBox(
-                  width: MediaQuery.of(context).size.width * 0.4,
-                  child: const Padding(
-                    padding: EdgeInsets.fromLTRB(27, 25, 27, 25),
-                    child: SingleChildScrollView(
-                      child: Column(
-                        mainAxisSize: MainAxisSize.min,
-                        crossAxisAlignment: CrossAxisAlignment.center,
-                        children: [
-                          TrainersForm(
-                            trainer: true,
-                          ),
-                        ],
-                      ),
-                    ),
-                  ),
-                ),
-              );
+              return editDialog();
             },
           );
         },
@@ -227,39 +241,58 @@ class _TrainersPageState extends State<TrainersPage>
         ));
   }
 
+  Widget editDialog() {
+    return AlertDialog(
+      // shape: const RoundedRectangleBorder(
+      //     borderRadius: BorderRadius.all(Radius.circular(30))),
+      contentPadding: EdgeInsets.only(left: 20, right: 30, top: 40),
+      title: Column(
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: [
+          Container(
+            alignment: FractionalOffset.topRight,
+            child: IconButton(
+              onPressed: () {
+                Navigator.pop(context);
+              },
+              icon: const Icon(Icons.clear),
+            ),
+          ),
+          const Text(
+            "Edit a Trainer",
+            style: TextStyle(
+                color: Colors.black87,
+                fontSize: 24,
+                fontWeight: FontWeight.w600),
+          ),
+        ],
+      ),
+      content: Flexible(
+        flex: 2,
+        child: SizedBox(
+          width: 550,
+          height: MediaQuery.of(context).size.height * 0.4,
+          child: const Padding(
+            padding: EdgeInsets.fromLTRB(0, 0, 0, 0),
+            child: SingleChildScrollView(
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  TrainersForm(trainer: true),
+                ],
+              ),
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+
   Widget viewButton(Trainer trainer) {
     return TextButton(
         onPressed: () {
           onListRowTap(trainer);
-          // showDialog(
-          //   context: context,
-          //   builder: (context) {
-          //     return AlertDialog(
-          //       shape: const RoundedRectangleBorder(
-          //           side: BorderSide(color: Colors.black54),
-          //           borderRadius: BorderRadius.all(Radius.circular(25))),
-          //       contentPadding: const EdgeInsets.all(0),
-          //       content: SizedBox(
-          //         width: 700,
-          //         height: MediaQuery.of(context).size.height,
-          //         // height: 498,
-          //         child: Padding(
-          //           padding: const EdgeInsets.only(bottom: 25),
-          //           child: Column(
-          //             mainAxisSize: MainAxisSize.min,
-          //             crossAxisAlignment: CrossAxisAlignment.center,
-          //             children: [
-          //               // CircleAvatar(
-          //               //   radius: 80,
-          //               // ),
-          //               TrainerViewMore(trainer: trainer),
-          //             ],
-          //           ),
-          //         ),
-          //       ),
-          //     );
-          //   },
-          // );
         },
         child: const Row(
           children: [

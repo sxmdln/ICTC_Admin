@@ -126,23 +126,7 @@ class _CoursesPageState extends State<CoursesPage>
         showDialog(
           context: context,
           builder: (context) {
-            return AlertDialog(
-              content: SizedBox(
-                width: MediaQuery.of(context).size.width * 0.4,
-                child: const Padding(
-                  padding: EdgeInsets.fromLTRB(27, 25, 27, 25),
-                  child: SingleChildScrollView(
-                    child: Column(
-                      mainAxisSize: MainAxisSize.min,
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      children: [
-                        CourseForm(),
-                      ],
-                    ),
-                  ),
-                ),
-              ),
-            );
+            return addDialog();
           },
         );
       },
@@ -170,29 +154,63 @@ class _CoursesPageState extends State<CoursesPage>
     );
   }
 
+  
+  Widget addDialog() {
+    return AlertDialog(
+      // shape: const RoundedRectangleBorder(
+      //     borderRadius: BorderRadius.all(Radius.circular(30))),
+      contentPadding: EdgeInsets.only(left: 20, right: 30, top: 40),
+      title: Column(
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: [
+          Container(
+            alignment: FractionalOffset.topRight,
+            child: IconButton(
+              onPressed: () {
+                Navigator.pop(context);
+              },
+              icon: const Icon(Icons.clear),
+            ),
+          ),
+          const Text(
+            "Add a Program",
+            style: TextStyle(
+                color: Colors.black87,
+                fontSize: 24,
+                fontWeight: FontWeight.w600),
+          ),
+        ],
+      ),
+      content: Flexible(
+        flex: 2,
+        child: SizedBox(
+          width: 550,
+          height: MediaQuery.of(context).size.height * 0.4,
+          child: const Padding(
+            padding: EdgeInsets.fromLTRB(0, 0, 0, 0),
+            child: SingleChildScrollView(
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  CourseForm(),
+                ],
+              ),
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+
+
   Widget editButton() {
     return TextButton(
         onPressed: () {
           showDialog(
             context: context,
             builder: (context) {
-              return AlertDialog(
-                content: SizedBox(
-                  width: MediaQuery.of(context).size.width * 0.4,
-                  child: const Padding(
-                    padding: EdgeInsets.fromLTRB(27, 25, 27, 25),
-                    child: SingleChildScrollView(
-                      child: Column(
-                        mainAxisSize: MainAxisSize.min,
-                        crossAxisAlignment: CrossAxisAlignment.center,
-                        children: [
-                          CourseForm(),
-                        ],
-                      ),
-                    ),
-                  ),
-                ),
-              );
+              return editDialog();
             },
           );
         },
@@ -209,6 +227,55 @@ class _CoursesPageState extends State<CoursesPage>
             Text("Edit"),
           ],
         ));
+  }
+
+
+  Widget editDialog() {
+    return AlertDialog(
+      // shape: const RoundedRectangleBorder(
+      //     borderRadius: BorderRadius.all(Radius.circular(30))),
+      contentPadding: EdgeInsets.only(left: 20, right: 30, top: 40),
+      title: Column(
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: [
+          Container(
+            alignment: FractionalOffset.topRight,
+            child: IconButton(
+              onPressed: () {
+                Navigator.pop(context);
+              },
+              icon: const Icon(Icons.clear),
+            ),
+          ),
+          const Text(
+            "Edit a Program",
+            style: TextStyle(
+                color: Colors.black87,
+                fontSize: 24,
+                fontWeight: FontWeight.w600),
+          ),
+        ],
+      ),
+      content: Flexible(
+        flex: 2,
+        child: SizedBox(
+          width: 550,
+          height: MediaQuery.of(context).size.height * 0.4,
+          child: const Padding(
+            padding: EdgeInsets.fromLTRB(0, 0, 0, 0),
+            child: SingleChildScrollView(
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  CourseForm(),
+                ],
+              ),
+            ),
+          ),
+        ),
+      ),
+    );
   }
 
   Widget viewButton(Course course) {

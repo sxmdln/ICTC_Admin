@@ -50,7 +50,7 @@ class _TraineesPageState extends State<TraineesPage>
               Container(
                 // margin: EdgeInsets.symmetric(horizontal: 100),
                 padding: const EdgeInsets.only(right: 5, bottom: 8),
-                child: Row(
+                child: const Row(
                   mainAxisAlignment: MainAxisAlignment.end,
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: [SizedBox(height: 25)],
@@ -61,7 +61,7 @@ class _TraineesPageState extends State<TraineesPage>
           ),
         ),
         const VerticalDivider(
-          color: Colors.black,
+          color: const Color(0xfff1f5fb),
           thickness: 0.1,
         ),
         traineeProfileWidget != null
@@ -71,11 +71,12 @@ class _TraineesPageState extends State<TraineesPage>
                   children: [
                     traineeProfileWidget!,
                     Container(
-                      padding: const EdgeInsets.only(top: 16, right: 16),
+                      margin: const EdgeInsets.only(top:45, right: 30),
                       alignment: Alignment.topRight,
                       child: IconButton(
+                        splashRadius: 15,
                           onPressed: closeProfile,
-                          icon: const Icon(Icons.close)),
+                          icon: const Icon(Icons.close_outlined), color: Colors.black87,),
                     ),
                   ],
                 ),
@@ -118,33 +119,6 @@ class _TraineesPageState extends State<TraineesPage>
     return TextButton(
         onPressed: () {
           onListRowTap(trainee);
-          // showDialog(
-          //   context: context,
-          //   builder: (context) {
-          //     return AlertDialog(
-          //       shape: const RoundedRectangleBorder(
-          //           borderRadius: BorderRadius.all(Radius.circular(30))),
-          //       contentPadding: const EdgeInsets.all(0),
-          //       content: SizedBox(
-          //         width: MediaQuery.of(context).size.width * 0.6,
-          //         // height: 498,
-          //         child: Padding(
-          //           padding: const EdgeInsets.only(bottom: 25),
-          //           child: Column(
-          //             mainAxisSize: MainAxisSize.min,
-          //             crossAxisAlignment: CrossAxisAlignment.center,
-          //             children: [
-          //               // CircleAvatar(
-          //               //   radius: 80,
-          //               // ),
-          //               TraineeViewMore(trainee: trainee),
-          //             ],
-          //           ),
-          //         ),
-          //       ),
-          //     );
-          //   },
-          // );
         },
         child: const Row(
           children: [
