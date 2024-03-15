@@ -60,7 +60,7 @@ class _ProgramsPageState extends State<ProgramsPage>
           ),
         ),
         const VerticalDivider(
-          color: Colors.black,
+          color: Colors.black87,
           thickness: 0.1,
         ),
         programProfileWidget != null

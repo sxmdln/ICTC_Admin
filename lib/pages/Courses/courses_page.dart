@@ -61,7 +61,7 @@ class _CoursesPageState extends State<CoursesPage>
           ),
         ),
         const VerticalDivider(
-          color: Colors.black,
+          color: Colors.black87,
           thickness: 0.1,
         ),
         courseProfileWidget != null

@@ -61,7 +61,7 @@ class _TraineesPageState extends State<TraineesPage>
           ),
         ),
         const VerticalDivider(
-          color: const Color(0xfff1f5fb),
+          color: Colors.black87,
           thickness: 0.1,
         ),
         traineeProfileWidget != null

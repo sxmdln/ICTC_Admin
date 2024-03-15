@@ -74,7 +74,7 @@ class _TrainersPageState extends State<TrainersPage>
           ),
         ),
         const VerticalDivider(
-          color: Colors.black,
+          color: Colors.black87,
           thickness: 0.1,
         ),
         trainerProfileWidget != null
