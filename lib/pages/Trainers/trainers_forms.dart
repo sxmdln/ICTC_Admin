@@ -182,7 +182,7 @@ class _TrainersFormState extends State<TrainersForm> {
               ],
             ),
             // padding: EdgeInsets.only(left: 90),
-            placeholder: "e.g. John",
+            placeholder: "e.g. 09123456789",
             placeholderStyle: const TextStyle(
               fontSize: 14,
               fontWeight: FontWeight.w400,
