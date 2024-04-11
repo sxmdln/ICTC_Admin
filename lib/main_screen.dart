@@ -5,7 +5,9 @@ import 'package:flutter/material.dart';
 import 'package:ictc_admin/pages/auth/login_page.dart';
 import 'package:ictc_admin/pages/courses/courses_page.dart';
 import 'package:ictc_admin/pages/dashboard/dashboard.dart';
+import 'package:ictc_admin/pages/expenses/expenses_page.dart';
 import 'package:ictc_admin/pages/programs/programs_page.dart';
+import 'package:ictc_admin/pages/sales/sales_page.dart';
 import 'package:ictc_admin/pages/trainers/trainers_page.dart';
 import 'package:ictc_admin/pages/trainees/trainees_page.dart';
 
@@ -47,6 +49,8 @@ class _MainScreenState extends State<MainScreen> {
       "Trainees",
       "Programs",
       "Courses",
+      "Sales",
+      "Expenses",
     ];
 
     return pageNames[_selectedIndex];
@@ -60,6 +64,8 @@ class _MainScreenState extends State<MainScreen> {
       const TraineesPage(),
       const ProgramsPage(),
       const CoursesPage(),
+      const SalesPage(),
+      const ExpensesPage(),
     ];
 
     List<NavigationRailDestination> destinations = const [
@@ -163,6 +169,46 @@ class _MainScreenState extends State<MainScreen> {
           ),
         ),
       ),
+      NavigationRailDestination(
+        icon: Icon(
+          Icons.monetization_on_outlined,
+          color: Colors.white,
+          size: 30,
+        ),
+        selectedIcon: Icon(
+          Icons.monetization_on,
+          color: Colors.white,
+          size: 30,
+        ),
+        label: Text(
+          "Sales",
+          style: TextStyle(
+            fontSize: 16,
+            fontWeight: FontWeight.w400,
+            color: Colors.white,
+          ),
+        ),
+      ),
+      NavigationRailDestination(
+        icon: Icon(
+          Icons.money_off_rounded,
+          color: Colors.white,
+          size: 30,
+        ),
+        selectedIcon: Icon(
+          Icons.money_off_csred,
+          color: Colors.white,
+          size: 30,
+        ),
+        label: Text(
+          "Expenses",
+          style: TextStyle(
+            fontSize: 16,
+            fontWeight: FontWeight.w400,
+            color: Colors.white,
+          ),
+        ),
+      ),
     ];
 
     return Scaffold(
@@ -193,7 +239,8 @@ class _MainScreenState extends State<MainScreen> {
         height: 80,
         child:
             Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
-          AnimatedSwitcher(
+           _selectedIndex != 0
+          ? AnimatedSwitcher(
             duration: const Duration(milliseconds: 350),
             transitionBuilder: (child, animation) => SlideTransition(
                 position: Tween<Offset>(
@@ -218,7 +265,29 @@ class _MainScreenState extends State<MainScreen> {
                 //TODO: need backend - FOR TOTAL# (remove it if page is on dashboard).
               ],
             ),
-          ),
+          ) : 
+          AnimatedSwitcher(
+            duration: const Duration(milliseconds: 350),
+            transitionBuilder: (child, animation) => SlideTransition(
+                position: Tween<Offset>(
+                        begin: const Offset(0.0, -3),
+                        end: const Offset(0.0, 0.0))
+                    .animate(animation),
+                child: child),
+            child: Row(
+              children: [
+                Text(
+                  "Welcome, Admin",
+                  style: const TextStyle(
+                      fontSize: 28,
+                      fontWeight: FontWeight.w700,
+                      color: Colors.black),
+                ),
+                //TODO: need backend - FOR TOTAL# (remove it if page is on dashboard).
+              ],
+            ),
+          )
+          ,
           Row(
             mainAxisSize: MainAxisSize.min,
             mainAxisAlignment: MainAxisAlignment.center,
