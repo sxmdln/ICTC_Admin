@@ -1,7 +1,9 @@
 import 'package:ictc_admin/main_screen.dart';
 import 'package:ictc_admin/pages/auth/login_page.dart';
-import 'package:ictc_admin/pages/dashboard.dart';
+import 'package:ictc_admin/pages/courses/courses_page.dart';
+import 'package:ictc_admin/pages/dashboard/dashboard.dart';
 import 'package:flutter/material.dart';
+import 'package:ictc_admin/pages/programs/programs_page.dart';
 // import 'package:responsive_builder/responsive_builder.dart';
 // import 'package:firebase_core/firebase_core.dart';
 // import 'firebase_options.dart';
@@ -25,47 +27,83 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-        title: 'Ateneo ICTC',
-        theme: ThemeData(
-          fontFamily: "Montserrat",
-          colorScheme: ColorScheme.fromSeed(
-              seedColor: const Color(0xff153faa),
-              onPrimary: const Color(0xff153faa),
-              onSecondary: Colors.white,
-              onPrimaryContainer: const Color(0xff153faa),
-              onSecondaryContainer: Colors.white),
-          textTheme: const TextTheme(
-            displayLarge: TextStyle(
-                fontSize: 64, fontWeight: FontWeight.w800, color: Colors.white),
-            titleLarge: TextStyle(
-                fontSize: 64,
-                fontWeight: FontWeight.w800,
-                color: Color(0xffF9CE69)),
-            labelMedium: TextStyle(
-                fontSize: 20, fontWeight: FontWeight.w300, color: Colors.white),
-            displayMedium: TextStyle(
-                fontSize: 40, fontWeight: FontWeight.w800, color: Colors.white),
-            titleMedium: TextStyle(
-                fontSize: 40,
-                fontWeight: FontWeight.w800,
-                color: Color(0xffF9CE69)),
-            labelSmall: TextStyle(
-                fontSize: 12, fontWeight: FontWeight.w300, color: Colors.white),
-            bodyLarge: TextStyle(
-                fontSize: 64, fontWeight: FontWeight.w600, color: Color(0xff153faa)),
-            bodyMedium: TextStyle(
-                fontSize: 14, fontWeight: FontWeight.w400, color: Colors.black),
-            ),
-          useMaterial3: true,
+      title: 'Ateneo ICTC',
+      theme: ThemeData(
+        fontFamily: "Archivo",
+        colorScheme: ColorScheme.fromSeed(
+            seedColor: const Color(0xff153faa),
+            onPrimary: const Color(0xff153faa),
+            onSecondary: Colors.white,
+            onPrimaryContainer: const Color(0xff153faa),
+            onSecondaryContainer: Colors.white),
+        textTheme: const TextTheme(
+          // displayLarge: TextStyle(
+          //     fontSize: 64, fontWeight: FontWeight.w800, color: Colors.white),
+          // titleLarge: TextStyle(
+          //     fontSize: 64,
+          //     fontWeight: FontWeight.w800,
+          //     color: Color(0xffF9CE69)),
+          // labelMedium: TextStyle(
+          //     fontSize: 20, fontWeight: FontWeight.w300, color: Colors.white),
+          // displayMedium: TextStyle(
+          //     fontSize: 40, fontWeight: FontWeight.w800, color: Colors.white),
+          // titleMedium: TextStyle(
+          //     fontSize: 40,
+          //     fontWeight: FontWeight.w800,
+          //     color: Color(0xffF9CE69)),
+          // labelSmall: TextStyle(
+          //     fontSize: 12, fontWeight: FontWeight.w300, color: Colors.white),
+          // bodyLarge: TextStyle(
+          //     fontSize: 12,
+          //     fontWeight: FontWeight.w600,
+          //     color: Color(0xff153faa)),
+          bodyMedium: TextStyle(
+              fontSize: 14, fontWeight: FontWeight.w400, color: Colors.black),
         ),
-        routes: {
-          '/dashboard': (context) => const DashboardPage(),
-          '/home': (context) => const MainScreen(),
-          '/login': (context) => const LoginPage(),
-        },
-        home: const MainApp(),
-        debugShowCheckedModeBanner: false,
-        );
+        dataTableTheme: DataTableThemeData(
+          headingRowColor: MaterialStateColor.resolveWith((states) {
+            // If the button is pressed, return size 40, otherwise 20
+            if (states.contains(MaterialState.hovered)) {
+              return Color(0xff19306B);
+            }
+            return Color(0xff19306B);
+          }),
+          headingTextStyle: const TextStyle(
+              fontSize: 16, color: Colors.white, fontWeight: FontWeight.w800),
+          dataRowColor: MaterialStateProperty.resolveWith<Color?>(
+              (Set<MaterialState> states) {
+            if (states.contains(MaterialState.selected)) {
+              return Colors.grey.shade400;
+            }
+            return null;
+          }),
+        ),
+        elevatedButtonTheme: ElevatedButtonThemeData(
+          style: ButtonStyle(
+            backgroundColor: MaterialStateProperty.resolveWith(
+              (states) {
+                // If the button is pressed, return green, otherwise blue
+                if (states.contains(MaterialState.pressed)) {
+                  return Color.fromARGB(255, 57, 167, 74);
+                }
+                return Color.fromARGB(255, 33, 175, 23);
+              },
+            ),
+            fixedSize: MaterialStateProperty.all(Size.fromWidth(145))
+          ),
+        ),
+        useMaterial3: false,
+      ),
+      routes: {
+        '/dashboard': (context) => const DashboardPage(),
+        '/programs': (context) => const ProgramsPage(),
+        '/courses': (context) => const CoursesPage(),
+        '/home': (context) => const MainScreen(),
+        '/login': (context) => const LoginPage(),
+      },
+      home: const MainApp(),
+      debugShowCheckedModeBanner: false,
+    );
   }
 }
 
@@ -75,7 +113,7 @@ class MainApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return const Scaffold(
-      body: LoginPage(),
+      body: MainScreen(),
     );
   }
 }

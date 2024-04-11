@@ -1,11 +1,15 @@
 // import 'dart:async';
 // import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:ictc_admin/pages/auth/login_page.dart';
-import 'package:ictc_admin/pages/courses_page.dart';
-import 'package:ictc_admin/pages/dashboard.dart';
-import 'package:ictc_admin/pages/trainers_page.dart';
-import 'package:ictc_admin/trainees_page.dart';
+import 'package:ictc_admin/pages/courses/courses_page.dart';
+import 'package:ictc_admin/pages/dashboard/dashboard.dart';
+import 'package:ictc_admin/pages/expenses/expenses_page.dart';
+import 'package:ictc_admin/pages/programs/programs_page.dart';
+import 'package:ictc_admin/pages/sales/sales_page.dart';
+import 'package:ictc_admin/pages/trainers/trainers_page.dart';
+import 'package:ictc_admin/pages/trainees/trainees_page.dart';
 
 class MainScreen extends StatefulWidget {
   const MainScreen({super.key});
@@ -20,15 +24,15 @@ class _MainScreenState extends State<MainScreen> {
     super.initState();
   }
 
-  int selectedIndex = 0;
+  int _selectedIndex = 0;
   PageController pageController = PageController(
     keepPage: true,
   );
-  // SearchController searchController = SearchController();
+  SearchController searchController = SearchController();
 
   void onDestinationChanged(int value) {
     setState(() {
-      selectedIndex = value;
+      _selectedIndex = value;
       pageController.animateToPage(value,
           duration: const Duration(milliseconds: 400), curve: Curves.ease);
     });
@@ -41,95 +45,179 @@ class _MainScreenState extends State<MainScreen> {
   String getSearchName() {
     List<String> pageNames = const [
       "Dashboard",
-      "Teachers",
-      "Students",
-      "Classes"
+      "Trainers",
+      "Trainees",
+      "Programs",
+      "Courses",
+      "Sales",
+      "Expenses",
     ];
 
-    return pageNames[selectedIndex];
+    return pageNames[_selectedIndex];
   }
-    @override
+
+  @override
   Widget build(BuildContext context) {
     List<Widget> views = [
       const DashboardPage(),
-      TrainersPage(),
-      TraineesPage(),
-      CoursesPage(),
+      const TrainersPage(),
+      const TraineesPage(),
+      const ProgramsPage(),
+      const CoursesPage(),
+      const SalesPage(),
+      const ExpensesPage(),
     ];
 
     List<NavigationRailDestination> destinations = const [
       NavigationRailDestination(
         icon: Icon(
           Icons.home_outlined,
-          color: Color(0xff353535),
+          color: Colors.white,
           size: 30,
         ),
         selectedIcon: Icon(
-          Icons.home,
-          color: Color(0xff153faa),
+          Icons.home_rounded,
+          color: Colors.white,
           size: 30,
         ),
         label: Text(
           "Dashboard",
-          style: TextStyle(fontSize: 16, fontWeight: FontWeight.w500),
+          style: TextStyle(
+            fontSize: 16,
+            fontWeight: FontWeight.w400,
+            color: Colors.white,
+          ),
         ),
       ),
       NavigationRailDestination(
         icon: Icon(
-          Icons.person_outline,
-          color: Color(0xff353535),
+          Icons.person_outline_rounded,
+          color: Colors.white,
           size: 30,
         ),
         selectedIcon: Icon(
-          Icons.person,
-          color: Color(0xff153faa),
+          Icons.person_rounded,
+          color: Colors.white,
           size: 30,
         ),
         label: Text(
-          "Teachers",
-          style: TextStyle(fontSize: 16, fontWeight: FontWeight.w500),
+          "Trainers",
+          style: TextStyle(
+            fontSize: 16,
+            fontWeight: FontWeight.w400,
+            color: Colors.white,
+          ),
         ),
       ),
       NavigationRailDestination(
         icon: Icon(
           Icons.group_outlined,
-          color: Color(0xff353535),
+          color: Colors.white,
           size: 30,
         ),
         selectedIcon: Icon(
           Icons.group,
-          color: Color(0xff153faa),
+          color: Colors.white,
           size: 30,
         ),
         label: Text(
-          "Students",
-          style: TextStyle(fontSize: 16, fontWeight: FontWeight.w500),
+          "Trainees",
+          style: TextStyle(
+            fontSize: 16,
+            fontWeight: FontWeight.w400,
+            color: Colors.white,
+          ),
         ),
       ),
       NavigationRailDestination(
         icon: Icon(
           Icons.grid_view_outlined,
-          color: Color(0xff353535),
+          color: Colors.white,
           size: 30,
         ),
         selectedIcon: Icon(
           Icons.grid_view_rounded,
-          color: Color(0xff153faa),
+          color: Colors.white,
           size: 30,
         ),
         label: Text(
-          "Classes",
-          style: TextStyle(fontSize: 16, fontWeight: FontWeight.w500),
+          "Programs",
+          style: TextStyle(
+            fontSize: 16,
+            fontWeight: FontWeight.w400,
+            color: Colors.white,
+          ),
+        ),
+      ),
+      NavigationRailDestination(
+        icon: Icon(
+          Icons.book_outlined,
+          color: Colors.white,
+          size: 30,
+        ),
+        selectedIcon: Icon(
+          Icons.book_rounded,
+          color: Colors.white,
+          size: 30,
+        ),
+        label: Text(
+          "Courses",
+          style: TextStyle(
+            fontSize: 16,
+            fontWeight: FontWeight.w400,
+            color: Colors.white,
+          ),
+        ),
+      ),
+      NavigationRailDestination(
+        icon: Icon(
+          Icons.monetization_on_outlined,
+          color: Colors.white,
+          size: 30,
+        ),
+        selectedIcon: Icon(
+          Icons.monetization_on,
+          color: Colors.white,
+          size: 30,
+        ),
+        label: Text(
+          "Sales",
+          style: TextStyle(
+            fontSize: 16,
+            fontWeight: FontWeight.w400,
+            color: Colors.white,
+          ),
+        ),
+      ),
+      NavigationRailDestination(
+        icon: Icon(
+          Icons.money_off_rounded,
+          color: Colors.white,
+          size: 30,
+        ),
+        selectedIcon: Icon(
+          Icons.money_off_csred,
+          color: Colors.white,
+          size: 30,
+        ),
+        label: Text(
+          "Expenses",
+          style: TextStyle(
+            fontSize: 16,
+            fontWeight: FontWeight.w400,
+            color: Colors.white,
+          ),
         ),
       ),
     ];
 
     return Scaffold(
+      backgroundColor: const Color(0xfff1f5fb),
       body: Row(
         children: [
           Container(
-              decoration: const BoxDecoration(
-                  border: Border(right: BorderSide(width: 0.5))),
+              // decoration: const BoxDecoration(
+              //     border: Border(bottom: BorderSide(width: 2))),
               child: buildNavRail(destinations)),
           Expanded(
             child: Column(
@@ -146,11 +234,38 @@ class _MainScreenState extends State<MainScreen> {
 
   Container buildBar(BuildContext context) {
     return Container(
-        color: Colors.white,
-        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-        height: 64,
+        color: const Color(0xfff1f5fb),
+        padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 16),
+        height: 80,
         child:
             Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
+           _selectedIndex != 0
+          ? AnimatedSwitcher(
+            duration: const Duration(milliseconds: 350),
+            transitionBuilder: (child, animation) => SlideTransition(
+                position: Tween<Offset>(
+                        begin: const Offset(0.0, -3),
+                        end: const Offset(0.0, 0.0))
+                    .animate(animation),
+                child: child),
+            child: Row(
+              children: [
+                Text(
+                  getSearchName(),
+                  key: ValueKey<String>(getSearchName()),
+                  style: const TextStyle(
+                      fontSize: 28,
+                      fontWeight: FontWeight.w700,
+                      color: Colors.black),
+                ),
+                const SizedBox(
+                  width: 10,
+                ),
+                buildCounter(context),
+                //TODO: need backend - FOR TOTAL# (remove it if page is on dashboard).
+              ],
+            ),
+          ) : 
           AnimatedSwitcher(
             duration: const Duration(milliseconds: 350),
             transitionBuilder: (child, animation) => SlideTransition(
@@ -159,48 +274,132 @@ class _MainScreenState extends State<MainScreen> {
                         end: const Offset(0.0, 0.0))
                     .animate(animation),
                 child: child),
-            child: const Text(
-              "Name",
-              // state.getSearchName(),
-              // key: ValueKey<String>(state.getSearchName()),
-              style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
+            child: Row(
+              children: [
+                Text(
+                  "Welcome, Admin",
+                  style: const TextStyle(
+                      fontSize: 28,
+                      fontWeight: FontWeight.w700,
+                      color: Colors.black),
+                ),
+                //TODO: need backend - FOR TOTAL# (remove it if page is on dashboard).
+              ],
             ),
-          ),
+          )
+          ,
+          Row(
+            mainAxisSize: MainAxisSize.min,
+            mainAxisAlignment: MainAxisAlignment.center,
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              buildSearchBar(context),
+              SizedBox(width: MediaQuery.of(context).size.width * 0.2),
+              Container(
+                padding: EdgeInsets.all(8),
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(24),
+                ),
+                // child: Row(
+                //   mainAxisAlignment: MainAxisAlignment.center,
+                //   crossAxisAlignment: CrossAxisAlignment.center,
+                //   children: [
+                //     FilledButton.icon(
+                //       style: ButtonStyle(
+                //         enableFeedback: false,
+                //         splashFactory: NoSplash.splashFactory,
+                //         iconSize: MaterialStateProperty.all(23),
+                //         maximumSize: MaterialStateProperty.all(Size.fromWidth(
+                //             MediaQuery.of(context).size.height * 1)),
+                //         backgroundColor: MaterialStateProperty.all(
+                //           Color(0xfff1f5fb),
+                //         ),
+                //         elevation: MaterialStateProperty.all(0.5),
+                //       ),
 
+                //       label: const Text(
+                //         "Welcome, Admin",
+                //         style: TextStyle(color: Colors.black, fontSize: 14),
+                //       ),
+                //       icon: Icon(
+                //         CupertinoIcons.person_alt_circle,
+                //         color: Color(0xff19306B),
+                //       ),
+                //       // child: ,
+                //       onPressed:
+                // () {}, //TODO: Add a dropdown for profile settings: to change admin pass and user
+                //     ),
+                //   ],
+                // ),
+              ),
+              // ProfileDropdown(
+              //   onSettingsTap: state.openSettings,
+              // )
+            ],
+          )
         ]));
   }
 
-  // Widget buildSearchBar(BuildContext context) {
-  //   const key = ValueKey("searchbar");
-  //   return AnimatedSwitcher(
-  //     key: key,
-  //     duration: const Duration(milliseconds: 350),
-  //     child: state.selectedIndex != 0
-  //         ? SearchBar(
-  //             constraints: const BoxConstraints(
-  //                 minWidth: 100.0,
-  //                 maxWidth: 300,
-  //                 maxHeight: 100,
-  //                 minHeight: 100),
-  //             controller: state.searchController,
-  //             elevation: const MaterialStatePropertyAll(1),
-  //             leading: const Icon(Icons.search),
-  //             hintText: "Search ${state.getSearchName()}...",
-  //             trailing: [
-  //               IconButton(
-  //                   onPressed: state.clearSearch, icon: const Icon(Icons.clear))
-  //             ],
-  //           )
-  //         : Container(key: key),
-  //   );
-  // }
+  Widget buildSearchBar(BuildContext context) {
+    const key = ValueKey("searchbar");
+    return AnimatedSwitcher(
+      key: key,
+      duration: const Duration(milliseconds: 350),
+      child: _selectedIndex != 0
+          ? SearchBar(
+              constraints: BoxConstraints(
+                  minWidth: 80.0,
+                  maxWidth: MediaQuery.of(context).size.width * 0.3,
+                  maxHeight: 70,
+                  minHeight: 60),
+              controller: searchController,
+              elevation: const MaterialStatePropertyAll(1),
+              leading: const Icon(Icons.search),
+              hintText: "Search ${getSearchName()}...",
+              textStyle: MaterialStatePropertyAll(
+                  Theme.of(context).textTheme.bodyMedium),
+              trailing: [
+                IconButton(
+                    splashRadius: 15,
+                    onPressed: () {
+                      searchController.clear();
+                    },
+                    icon: const Icon(Icons.clear))
+              ],
+            )
+          : Container(key: key),
+    );
+  }
+
+  Widget buildCounter(BuildContext context) {
+    const key = ValueKey("counter");
+    return AnimatedSwitcher(
+      key: key,
+      duration: const Duration(milliseconds: 350),
+      child: _selectedIndex != 0
+          ? const Text(
+              "15",
+              style: TextStyle(
+                  fontSize: 28,
+                  fontWeight: FontWeight.bold,
+                  color: Colors.black26),
+            )
+          : Container(key: key),
+    );
+  }
 
   NavigationRail buildNavRail(List<NavigationRailDestination> destinations) {
     return NavigationRail(
-      backgroundColor: Colors.white,
+      backgroundColor: const Color(0xff19306B),
       destinations: destinations,
-      selectedIndex: selectedIndex,
-      onDestinationSelected: onDestinationChanged,
+      selectedIndex: _selectedIndex,
+      onDestinationSelected: (int value) {
+        setState(() {
+          _selectedIndex = value;
+          pageController.animateToPage(value,
+              duration: const Duration(milliseconds: 400), curve: Curves.ease);
+        });
+      },
       useIndicator: false,
       extended: true,
       leading: buildLeading(),
@@ -213,13 +412,12 @@ class _MainScreenState extends State<MainScreen> {
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
         Padding(
-          padding: EdgeInsets.only(top: 40.0, bottom: 30),
+          padding: EdgeInsets.only(top: 20.0, bottom: 20),
           child: Image(
-              image: AssetImage("assets/images/logo_ictc.png"),
-              height: 60),
+              image: AssetImage("assets/images/logo_ictc.png"), height: 60),
         ),
         Padding(
-            padding: EdgeInsets.only(left: 4, top: 30, bottom: 30),
+            padding: EdgeInsets.only(left: 8, top: 0, bottom: 0),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
@@ -228,9 +426,13 @@ class _MainScreenState extends State<MainScreen> {
                   style: TextStyle(
                       fontSize: 24,
                       fontWeight: FontWeight.w600,
-                      color: Color(0xff153faa)),
+                      color: Colors.white),
                 ),
-                Text("Web Admin", style: TextStyle(fontSize: 10))
+                Text("Web Admin",
+                    style: TextStyle(
+                        fontSize: 12,
+                        fontWeight: FontWeight.w400,
+                        color: Color(0xffffc947)))
               ],
             ))
       ],
@@ -249,23 +451,25 @@ class _MainScreenState extends State<MainScreen> {
           child: TextButton.icon(
             icon: const Icon(
               Icons.logout_outlined,
-              size: 30,
+              size: 25,
+              color: Colors.white,
             ),
             label: const Text(
               "Log out",
               style: TextStyle(
-                  letterSpacing: 2,
-                  fontSize: 16,
-                  fontWeight: FontWeight.w500,
-                  color: Color(0xff353535)),
+                letterSpacing: 0,
+                fontSize: 16,
+                fontWeight: FontWeight.w500,
+                color: Colors.white,
+              ),
             ),
             // onPressed: state.logout,
             onPressed: () {
               Navigator.of(context).push(
-            MaterialPageRoute(
-              builder: (context) => const LoginPage(),
-            ),
-          );
+                MaterialPageRoute(
+                  builder: (context) => const LoginPage(),
+                ),
+              );
             },
           ),
         ),
@@ -276,7 +480,7 @@ class _MainScreenState extends State<MainScreen> {
   Expanded buildPageView(List<Widget> views) {
     return Expanded(
       child: PageView(
-        // controller: state.pageController,
+        controller: pageController,
         physics: const NeverScrollableScrollPhysics(),
         scrollDirection: Axis.vertical,
         children: views,
@@ -298,7 +502,6 @@ class ProfileDropdown extends StatefulWidget {
 }
 
 class _ProfileDropdownState extends State<ProfileDropdown> {
-
   @override
   void initState() {
     super.initState();
