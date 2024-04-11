@@ -1,5 +1,7 @@
 import 'package:ictc_admin/models/course.dart';
+import 'package:ictc_admin/models/expense.dart';
 import 'package:ictc_admin/models/program.dart';
+import 'package:ictc_admin/models/sale.dart';
 import 'package:ictc_admin/models/trainee.dart';
 import 'package:ictc_admin/models/trainer.dart';
 
@@ -65,5 +67,22 @@ class Seeds {
       title: 'Microcredential Program',
       description: 'Lorem ipsum please enroll now',
     ),
+  ];
+
+  static List<Sale> sales = [
+    Sale(
+      id: 1,
+      firstName: 'Samantha',
+      middleName: "Largo",
+      lastName: "De Las Nieves",
+      schedule: 'March 4, 2023',
+      totalStudents: 4,
+      saleTotal: 2000,
+      discountTotal: 200,
+    ),
+  ];
+
+  static List<Expense> expenses = [
+    Expense(id: 1, name: 'Snacks', date: 'March 4, 2023', cost: 1100)
   ];
 }
