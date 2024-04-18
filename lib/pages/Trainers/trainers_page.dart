@@ -141,7 +141,7 @@ class _TrainersPageState extends State<TrainersPage>
       DataCell(Text(trainer.toString())),
       DataCell(Row(
         children: [
-          editButton(),
+          editButton(trainer),
           viewButton(trainer),
         ],
       )),
@@ -229,13 +229,13 @@ class _TrainersPageState extends State<TrainersPage>
     );
   }
 
-  Widget editButton() {
+  Widget editButton(Trainer trainer) {
     return TextButton(
         onPressed: () {
           showDialog(
             context: context,
             builder: (context) {
-              return editDialog();
+              return editDialog(trainer);
             },
           );
         },
@@ -254,7 +254,7 @@ class _TrainersPageState extends State<TrainersPage>
         ));
   }
 
-  Widget editDialog() {
+  Widget editDialog(Trainer trainer) {
     return AlertDialog(
       // shape: const RoundedRectangleBorder(
       //     borderRadius: BorderRadius.all(Radius.circular(30))),
@@ -285,14 +285,14 @@ class _TrainersPageState extends State<TrainersPage>
         child: SizedBox(
           width: 550,
           height: MediaQuery.of(context).size.height * 0.4,
-          child: const Padding(
-            padding: EdgeInsets.fromLTRB(0, 0, 0, 0),
+          child: Padding(
+            padding: const EdgeInsets.fromLTRB(0, 0, 0, 0),
             child: SingleChildScrollView(
               child: Column(
                 mainAxisSize: MainAxisSize.min,
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
-                  TrainersForm(trainer: true),
+                  TrainersForm(trainer: trainer),
                 ],
               ),
             ),
