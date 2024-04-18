@@ -73,11 +73,15 @@ class _ExpensesPageState extends State<ExpensesPage> {
               columns: const [
                 DataColumn2(
                     label: Text(
+                  'Date',
+                )),
+                DataColumn2(
+                    label: Text(
                   'Type of Expense',
                 )),
                 DataColumn2(
                     label: Text(
-                  'Date',
+                  'Course',
                 )),
                 DataColumn2(
                     label: Text(
@@ -96,8 +100,9 @@ class _ExpensesPageState extends State<ExpensesPage> {
 
   DataRow2 buildRow(Expense expense) {
     return DataRow2(onSelectChanged: (selected) {}, cells: [
-      DataCell(Text(expense.name)),
       DataCell(Text(expense.date)),
+      DataCell(Text(expense.name)),
+      DataCell(Text(expense.courseName)),
       DataCell(Text(expense.cost.toString())),
       DataCell(
         editButton(),
@@ -160,7 +165,7 @@ class _ExpensesPageState extends State<ExpensesPage> {
         flex: 2,
         child: SizedBox(
           width: 380,
-          height: MediaQuery.of(context).size.height * 0.2,
+          height: MediaQuery.of(context).size.height * 0.3,
           child: const Padding(
             padding: EdgeInsets.fromLTRB(0, 0, 0, 0),
             child: SingleChildScrollView(
@@ -243,7 +248,7 @@ class _ExpensesPageState extends State<ExpensesPage> {
         flex: 1,
         child: SizedBox(
           width: 380,
-          height: MediaQuery.of(context).size.height * 0.2,
+          height: MediaQuery.of(context).size.height * 0.3,
           child: const Padding(
             padding: EdgeInsets.fromLTRB(0, 0, 0, 0),
             child: SingleChildScrollView(

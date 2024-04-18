@@ -24,6 +24,7 @@ dependencies:
   responsive_builder: ^0.7.0
   google_sign_in: ^6.2.1
   google_sign_in_web: ^0.12.4
+  email_validator: ^2.1.17
 
 dev_dependencies:
   flutter_test:
