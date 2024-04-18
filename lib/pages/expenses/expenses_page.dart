@@ -18,7 +18,7 @@ class _ExpensesPageState extends State<ExpensesPage> {
   @override
   void initState() {
     // TODO: implement initState for populating the table with data from the backend
-    expenses = Seeds.expenses;
+    // expenses = Seeds.expenses;
 
     super.initState();
   }

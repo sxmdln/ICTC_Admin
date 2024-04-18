@@ -21,7 +21,7 @@ class _ProgramsPageState extends State<ProgramsPage>
   @override
   void initState() {
     // TODO: implement initState
-    programs = Seeds.programs;
+    // programs = Seeds.programs;
     super.initState();
   }
 

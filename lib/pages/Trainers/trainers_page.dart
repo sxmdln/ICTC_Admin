@@ -1,10 +1,10 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:data_table_2/data_table_2.dart';
-import 'package:ictc_admin/models/seeds.dart';
 import 'package:ictc_admin/models/trainer.dart';
 import 'package:ictc_admin/pages/trainers/trainers_forms.dart';
 import 'package:ictc_admin/pages/trainers/trainers_viewMore.dart';
+import 'package:supabase_flutter/supabase_flutter.dart';
 
 class TrainersPage extends StatefulWidget {
   const TrainersPage({super.key});
@@ -29,12 +29,14 @@ class _TrainersPageState extends State<TrainersPage>
 //   void deleteItem(int id) {
 //     items.removeWhere((item) => item.id == id);
 //   }
-  late List<Trainer> trainers;
+  late Stream<List<Trainer>> _trainers;
 
   @override
   void initState() {
     // TODO: implement initState for populating the table with data from the backend
-    trainers = Seeds.trainers;
+    _trainers = Supabase.instance.client.from("trainer").stream(primaryKey: [
+      'id'
+    ]).map((data) => data.map((e) => Trainer.fromJson(e)).toList());
 
     super.initState();
   }
@@ -102,25 +104,37 @@ class _TrainersPageState extends State<TrainersPage>
   }
 
   Widget buildDataTable() {
-    return Expanded(
-      child: DataTable2(
-        showCheckboxColumn: false,
-        showBottomBorder: true,
-        horizontalMargin: 30,
-        isVerticalScrollBarVisible: true,
-        columns: const [
-          DataColumn2(
-              label: Text(
-            'Name of Trainer',
-          )),
-          DataColumn2(
-              label: Text(
-            'Actions',
-          )),
-        ],
-        rows: trainers.map((e) => buildRow(e)).toList(),
-      ),
-    );
+    return StreamBuilder(
+        stream: _trainers,
+        builder: (context, snapshot) {
+          if (!snapshot.hasData) {
+            return const Expanded(
+              child: Center(
+                child: CircularProgressIndicator(),
+              ),
+            );
+          }
+
+          return Expanded(
+            child: DataTable2(
+              showCheckboxColumn: false,
+              showBottomBorder: true,
+              horizontalMargin: 30,
+              isVerticalScrollBarVisible: true,
+              columns: const [
+                DataColumn2(
+                    label: Text(
+                  'Name of Trainer',
+                )),
+                DataColumn2(
+                    label: Text(
+                  'Actions',
+                )),
+              ],
+              rows: snapshot.data!.map((e) => buildRow(e)).toList(),
+            ),
+          );
+        });
   }
 
   DataRow2 buildRow(Trainer trainer) {

@@ -20,7 +20,7 @@ class _TraineesPageState extends State<TraineesPage>
   @override
   void initState() {
     // TODO: implement initState
-    trainees = Seeds.trainees;
+    // trainees = Seeds.trainees;
 
     super.initState();
   }

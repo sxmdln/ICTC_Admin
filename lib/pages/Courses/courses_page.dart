@@ -22,7 +22,7 @@ class _CoursesPageState extends State<CoursesPage>
   @override
   void initState() {
     // TODO: implement initState
-    courses = Seeds.courses;
+    // courses = Seeds.courses;
     super.initState();
   }
 

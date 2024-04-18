@@ -123,7 +123,7 @@ class _TrainerViewMoreState extends State<TrainerViewMore> {
                                     color: Colors.black87,
                                     fontWeight: FontWeight.w300),
                               ),
-                              Text(widget.trainer.emailAddress),
+                              Text(widget.trainer.email),
                             ],
                           ),
                         ]),
