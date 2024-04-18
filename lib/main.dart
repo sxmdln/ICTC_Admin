@@ -1,10 +1,7 @@
-import 'package:ictc_admin/main_screen.dart';
 import 'package:ictc_admin/pages/auth/auth_gate.dart';
-import 'package:ictc_admin/pages/auth/login_page.dart';
-import 'package:ictc_admin/pages/courses/courses_page.dart';
-import 'package:ictc_admin/pages/dashboard/dashboard.dart';
+
 import 'package:flutter/material.dart';
-import 'package:ictc_admin/pages/programs/programs_page.dart';
+
 import 'package:ictc_admin/supabase_options.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 // import 'package:responsive_builder/responsive_builder.dart';
