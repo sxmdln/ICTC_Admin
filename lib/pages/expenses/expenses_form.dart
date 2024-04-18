@@ -12,42 +12,75 @@ class ExpensesForm extends StatefulWidget {
 }
 
 class _ExpensesFormState extends State<ExpensesForm> {
-  TextEditingController datePickerController = TextEditingController();
+  @override
+  void initState() {
+    super.initState();
+
+    datePickerController = TextEditingController();
+    nameCon = TextEditingController();
+    courseCon = TextEditingController();
+    costCon = TextEditingController();
+
+
+  }
+
+  final formKey = GlobalKey<FormState>();
+  late TextEditingController datePickerController, nameCon, courseCon,costCon;
+
+  onTapFunction({required BuildContext context}) async {
+    DateTime? pickedDate = await showDatePicker(
+      context: context,
+      lastDate: DateTime.now(),
+      firstDate: DateTime(2024),
+      initialDate: DateTime.now(),
+    );
+    if (pickedDate == null) return;
+    datePickerController.text = DateFormat('yyyy-MM-dd').format(pickedDate);
+  }
+
   @override
   Widget build(BuildContext context) {
     return Form(
       child: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
-          TextField(
+          TextFormField(
+            style: TextStyle(
+                  color: Colors.black87,
+                  fontSize: 14,
+                  fontWeight: FontWeight.w400,
+                  height: 2),
             controller: datePickerController,
             readOnly: true,
             decoration: const InputDecoration(
               alignLabelWithHint: true,
-              hintText: "Date of Expense",
-              hintStyle: TextStyle(fontSize: 14,height: 2),
-              filled: true,
+              hintText: "Date of Expense: ",
+              hintStyle: TextStyle(
+                  color: Colors.black87,
+                  fontSize: 14,
+                  fontWeight: FontWeight.w400,
+                  height: 2),
+              filled: false,
               isDense: true,
               prefixIcon: Icon(Icons.calendar_month, size: 20),
             ),
             onTap: () => onTapFunction(context: context),
           ),
-          
-                const SizedBox(height: 10),
-    
+          const SizedBox(height: 10),
           CupertinoTextFormFieldRow(
+            controller: nameCon,
             prefix: const Row(
               children: [
-                Text("Total Cost",
+                Text("Name of Expense",
                     style: TextStyle(
                         color: Colors.black87,
                         fontSize: 14,
                         fontWeight: FontWeight.w400)),
-                SizedBox(width: 27),
+                SizedBox(width: 20),
               ],
             ),
             // padding: EdgeInsets.only(left: 90),
-            placeholder: "Enter total cost of expense.",
+            placeholder: "Enter name of expense",
             placeholderStyle: const TextStyle(
               fontSize: 14,
               fontWeight: FontWeight.w400,
@@ -68,7 +101,75 @@ class _ExpensesFormState extends State<ExpensesForm> {
               // prefixIcon: Icon(Icons.person)
             ),
           ),
-
+          CupertinoTextFormFieldRow(
+            controller: courseCon,
+            prefix: const Row(
+              children: [
+                Text("Course Name",
+                    style: TextStyle(
+                        color: Colors.black87,
+                        fontSize: 14,
+                        fontWeight: FontWeight.w400)),
+                SizedBox(width: 45),
+              ],
+            ),
+            // padding: EdgeInsets.only(left: 90),
+            placeholder: "Enter course name",
+            placeholderStyle: const TextStyle(
+              fontSize: 14,
+              fontWeight: FontWeight.w400,
+              color: Colors.black45,
+            ),
+            style: const TextStyle(
+              fontSize: 14,
+              fontWeight: FontWeight.w400,
+              color: Colors.black87,
+            ),
+            decoration: BoxDecoration(
+              // border: ,
+              border: Border.all(
+                color: Colors.black87,
+                width: 0.5,
+              ),
+              borderRadius: BorderRadius.circular(18),
+              // prefixIcon: Icon(Icons.person)
+            ),
+          ),
+          CupertinoTextFormFieldRow(
+            controller: costCon,
+            prefix: const Row(
+              children: [
+                Text("Total Cost",
+                    style: TextStyle(
+                        color: Colors.black87,
+                        fontSize: 14,
+                        fontWeight: FontWeight.w400)),
+                SizedBox(width: 66),
+              ],
+            ),
+            // padding: EdgeInsets.only(left: 90),
+            placeholder: "Enter total cost of expense",
+            placeholderStyle: const TextStyle(
+              fontSize: 14,
+              fontWeight: FontWeight.w400,
+              color: Colors.black45,
+            ),
+            style: const TextStyle(
+              fontSize: 14,
+              fontWeight: FontWeight.w400,
+              color: Colors.black87,
+            ),
+            decoration: BoxDecoration(
+              // border: ,
+              border: Border.all(
+                color: Colors.black87,
+                width: 0.5,
+              ),
+              borderRadius: BorderRadius.circular(18),
+              // prefixIcon: Icon(Icons.person)
+            ),
+          ),
+          
           const SizedBox(height: 20),
           Row(
             children: [
@@ -125,16 +226,5 @@ class _ExpensesFormState extends State<ExpensesForm> {
           "Delete",
           style: TextStyle(color: Colors.black87),
         ));
-  }
-
-  onTapFunction({required BuildContext context}) async {
-    DateTime? pickedDate = await showDatePicker(
-      context: context,
-      lastDate: DateTime.now(),
-      firstDate: DateTime(2024),
-      initialDate: DateTime.now(),
-    );
-    if (pickedDate == null) return;
-    datePickerController.text = DateFormat('yyyy-MM-dd').format(pickedDate);
   }
 }
