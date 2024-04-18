@@ -12,34 +12,6 @@ class AuthGate extends StatefulWidget {
 }
 
 class _AuthGateState extends State<AuthGate> {
-  _setupAuthListener() {
-    Supabase.instance.client.auth.onAuthStateChange.listen((data) async {
-      final event = data.event;
-
-      if (event == AuthChangeEvent.signedIn || data.session?.user != null) {
-        final type = await Supabase.instance.client
-            .rpc('get_my_claim', params: {"claim": "user_type"});
-
-        if (type != "ADMIN") {
-          await Supabase.instance.client.auth.signOut();
-
-          if (mounted) {
-            await showDialog(
-              context: context,
-              builder: (context) => const AlertDialog(
-                icon: Icon(Icons.warning),
-                title: Text("Not an Admin account"),
-                content: Text("The logged in account is not an admin account."),
-              ),
-            );
-
-            return;
-          }
-        }
-      }
-    });
-  }
-
   @override
   void initState() {
     super.initState();
