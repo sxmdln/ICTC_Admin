@@ -13,12 +13,13 @@ class ExpensesPage extends StatefulWidget {
 }
 
 class _ExpensesPageState extends State<ExpensesPage> {
-  late List<Expense> expenses;
+  late Stream<List<Expense>> _expenses;
 
   @override
   void initState() {
     // TODO: implement initState for populating the table with data from the backend
-    // expenses = Seeds.expenses;
+    // Currently a placeholder -- Aaron
+    _expenses = Seeds.expenseStream();
 
     super.initState();
   }
@@ -28,7 +29,7 @@ class _ExpensesPageState extends State<ExpensesPage> {
     return Row(
       children: [
         Flexible(
-          flex:1,
+          flex: 1,
           child: Column(
             mainAxisAlignment: MainAxisAlignment.end,
             children: [
@@ -52,33 +53,45 @@ class _ExpensesPageState extends State<ExpensesPage> {
   }
 
   Widget buildDataTable() {
-    return Expanded(
-      child: DataTable2(
-        showCheckboxColumn: false,
-        showBottomBorder: true,
-        horizontalMargin: 30,
-        isVerticalScrollBarVisible: true,
-        columns: const [
-          DataColumn2(
-              label: Text(
-            'Type of Expense',
-          )),
-          DataColumn2(
-              label: Text(
-            'Date',
-          )),
-          DataColumn2(
-              label: Text(
-            'Total Cost',
-          )),
-          DataColumn2(
-              label: Text(
-            'Actions',
-          )),
-        ],
-        rows: expenses.map((e) => buildRow(e)).toList(),
-      ),
-    );
+    return StreamBuilder(
+        stream: _expenses,
+        builder: (context, snapshot) {
+          if (!snapshot.hasData) {
+            return const Expanded(
+              child: Center(
+                child: CircularProgressIndicator(),
+              ),
+            );
+          }
+
+          return Expanded(
+            child: DataTable2(
+              showCheckboxColumn: false,
+              showBottomBorder: true,
+              horizontalMargin: 30,
+              isVerticalScrollBarVisible: true,
+              columns: const [
+                DataColumn2(
+                    label: Text(
+                  'Type of Expense',
+                )),
+                DataColumn2(
+                    label: Text(
+                  'Date',
+                )),
+                DataColumn2(
+                    label: Text(
+                  'Total Cost',
+                )),
+                DataColumn2(
+                    label: Text(
+                  'Actions',
+                )),
+              ],
+              rows: snapshot.data!.map((e) => buildRow(e)).toList(),
+            ),
+          );
+        });
   }
 
   DataRow2 buildRow(Expense expense) {
@@ -86,8 +99,9 @@ class _ExpensesPageState extends State<ExpensesPage> {
       DataCell(Text(expense.name)),
       DataCell(Text(expense.date)),
       DataCell(Text(expense.cost.toString())),
-
-      DataCell(editButton(),),
+      DataCell(
+        editButton(),
+      ),
     ]);
   }
 
@@ -115,7 +129,6 @@ class _ExpensesPageState extends State<ExpensesPage> {
           ],
         ));
   }
-
 
   Widget editDialog() {
     return AlertDialog(
@@ -179,7 +192,9 @@ class _ExpensesPageState extends State<ExpensesPage> {
       // shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10.0)),
       child: Container(
         constraints: const BoxConstraints(
-            maxWidth: 1000, minWidth: 100, minHeight: 36.0), // min sizes for Material buttons
+            maxWidth: 1000,
+            minWidth: 100,
+            minHeight: 36.0), // min sizes for Material buttons
         alignment: Alignment.center,
         child: const Row(children: [
           Icon(
@@ -198,7 +213,6 @@ class _ExpensesPageState extends State<ExpensesPage> {
     );
   }
 
-  
   Widget addDialog() {
     return AlertDialog(
       // shape: const RoundedRectangleBorder(
@@ -245,5 +259,5 @@ class _ExpensesPageState extends State<ExpensesPage> {
         ),
       ),
     );
-}
+  }
 }

@@ -11,6 +11,8 @@ class CourseForm extends StatefulWidget {
 }
 
 class _CourseFormState extends State<CourseForm> {
+  // TODO: texteditingcontroller for the textfields
+
   @override
   Widget build(BuildContext context) {
     return Form(
@@ -115,7 +117,6 @@ class _CourseFormState extends State<CourseForm> {
     );
   }
 
-
   Widget saveButton() {
     return FilledButton(
       style: ButtonStyle(
@@ -126,7 +127,9 @@ class _CourseFormState extends State<CourseForm> {
           return Colors.green;
         }),
       ),
-      onPressed: () {},
+      onPressed: () {
+        // TODO: backend functions for insert and update
+      },
       child: const Text(
         "Save",
         style: TextStyle(

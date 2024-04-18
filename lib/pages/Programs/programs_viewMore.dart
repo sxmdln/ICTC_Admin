@@ -52,7 +52,7 @@ class _ProgramViewMoreState extends State<ProgramViewMore> {
                             fontSize: 24, fontWeight: FontWeight.w600)),
                     const SizedBox(height: 20),
                     Text(
-                      widget.program.description,
+                      widget.program.description ?? "No description set",
                       maxLines: 3,
                       overflow: TextOverflow.ellipsis,
                       textHeightBehavior: const TextHeightBehavior(

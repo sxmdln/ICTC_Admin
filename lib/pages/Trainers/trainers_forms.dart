@@ -1,17 +1,20 @@
-
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:ictc_admin/models/trainer.dart';
+import 'package:supabase_flutter/supabase_flutter.dart';
 
 class TrainersForm extends StatefulWidget {
   const TrainersForm({super.key, this.trainer});
 
-  final Object? trainer;
+  final Trainer? trainer;
 
   @override
   State<TrainersForm> createState() => _TrainersFormState();
 }
 
 class _TrainersFormState extends State<TrainersForm> {
+  // TODO: texteditingcontroller for the textfields
+
   @override
   Widget build(BuildContext context) {
     return Form(
@@ -234,7 +237,17 @@ class _TrainersFormState extends State<TrainersForm> {
           return Colors.green;
         }),
       ),
-      onPressed: () {},
+      onPressed: () {
+        final supabase = Supabase.instance.client;
+        Trainer? trainer = widget.trainer;
+
+        if (trainer != null) {
+          supabase.from('trainer').update(trainer.toJson()).eq('id', trainer.id);
+        } else {
+          // TODO: code to insert new record
+          // trainer = Trainer(id: id, firstName: firstName, middleName: middleName, lastName: lastName, email: email, contactNumber: contactNumber);
+        }
+      },
       child: const Text(
         "Save",
         style: TextStyle(

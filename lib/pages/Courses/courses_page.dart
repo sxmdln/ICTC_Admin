@@ -2,9 +2,9 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:data_table_2/data_table_2.dart';
 import 'package:ictc_admin/models/course.dart';
-import 'package:ictc_admin/models/seeds.dart';
 import 'package:ictc_admin/pages/courses/course_viewMore.dart';
 import 'package:ictc_admin/pages/courses/course_forms.dart';
+import 'package:supabase_flutter/supabase_flutter.dart';
 
 class CoursesPage extends StatefulWidget {
   const CoursesPage({super.key});
@@ -17,12 +17,14 @@ class _CoursesPageState extends State<CoursesPage>
     with AutomaticKeepAliveClientMixin {
   CourseViewMore? courseProfileWidget;
 
-  late List<Course> courses;
+  late Stream<List<Course>> _courses;
 
   @override
   void initState() {
-    // TODO: implement initState
-    // courses = Seeds.courses;
+    _courses = Supabase.instance.client.from('course').stream(primaryKey: [
+      'id'
+    ]).map((data) => data.map((e) => Course.fromJson(e)).toList());
+
     super.initState();
   }
 
@@ -86,21 +88,33 @@ class _CoursesPageState extends State<CoursesPage>
   }
 
   Widget buildDataTable() {
-    return Expanded(
-      child: DataTable2(
-        showCheckboxColumn: false,
-        showBottomBorder: true,
-        horizontalMargin: 30,
-        isVerticalScrollBarVisible: true,
-        columns: const [
-          DataColumn2(label: Text('Title')),
-          DataColumn2(label: Text('Cost')),
-          DataColumn2(label: Text('')),
-          DataColumn2(label: Text('Option')),
-        ],
-        rows: courses.map((e) => buildRow(e)).toList(),
-      ),
-    );
+    return StreamBuilder(
+        stream: _courses,
+        builder: (context, snapshot) {
+          if (!snapshot.hasData) {
+            return const Expanded(
+              child: Center(
+                child: CircularProgressIndicator(),
+              ),
+            );
+          }
+
+          return Expanded(
+            child: DataTable2(
+              showCheckboxColumn: false,
+              showBottomBorder: true,
+              horizontalMargin: 30,
+              isVerticalScrollBarVisible: true,
+              columns: const [
+                DataColumn2(label: Text('Title')),
+                DataColumn2(label: Text('Cost')),
+                DataColumn2(label: Text('')),
+                DataColumn2(label: Text('Option')),
+              ],
+              rows: snapshot.data!.map((e) => buildRow(e)).toList(),
+            ),
+          );
+        });
   }
 
   DataRow2 buildRow(Course course) {
@@ -154,7 +168,6 @@ class _CoursesPageState extends State<CoursesPage>
     );
   }
 
-  
   Widget addDialog() {
     return AlertDialog(
       // shape: const RoundedRectangleBorder(
@@ -203,7 +216,6 @@ class _CoursesPageState extends State<CoursesPage>
     );
   }
 
-
   Widget editButton() {
     return TextButton(
         onPressed: () {
@@ -228,7 +240,6 @@ class _CoursesPageState extends State<CoursesPage>
           ],
         ));
   }
-
 
   Widget editDialog() {
     return AlertDialog(

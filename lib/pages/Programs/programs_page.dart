@@ -2,9 +2,9 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:data_table_2/data_table_2.dart';
 import 'package:ictc_admin/models/program.dart';
-import 'package:ictc_admin/models/seeds.dart';
 import 'package:ictc_admin/pages/programs/program_forms.dart';
 import 'package:ictc_admin/pages/programs/programs_viewMore.dart';
+import 'package:supabase_flutter/supabase_flutter.dart';
 
 class ProgramsPage extends StatefulWidget {
   const ProgramsPage({super.key});
@@ -16,12 +16,14 @@ class ProgramsPage extends StatefulWidget {
 class _ProgramsPageState extends State<ProgramsPage>
     with AutomaticKeepAliveClientMixin {
   ProgramViewMore? programProfileWidget;
-  late List<Program> programs;
+  late Stream<List<Program>> _programs;
 
   @override
   void initState() {
-    // TODO: implement initState
-    // programs = Seeds.programs;
+    _programs = Supabase.instance.client.from('program').stream(primaryKey: [
+      'id'
+    ]).map((data) => data.map((e) => Program.fromJson(e)).toList());
+
     super.initState();
   }
 
@@ -85,20 +87,32 @@ class _ProgramsPageState extends State<ProgramsPage>
   }
 
   Widget buildDataTable() {
-    return Expanded(
-      child: DataTable2(
-        showCheckboxColumn: false,
-        showBottomBorder: true,
-        horizontalMargin: 30,
-        isVerticalScrollBarVisible: true,
-        columns: const [
-          DataColumn2(label: Text('Title')),
-          DataColumn2(label: Text('')),
-          DataColumn2(label: Text('Option')),
-        ],
-        rows: programs.map((e) => buildRow(e)).toList(),
-      ),
-    );
+    return StreamBuilder(
+        stream: _programs,
+        builder: (context, snapshot) {
+          if (!snapshot.hasData) {
+            return const Expanded(
+              child: Center(
+                child: CircularProgressIndicator(),
+              ),
+            );
+          }
+
+          return Expanded(
+            child: DataTable2(
+              showCheckboxColumn: false,
+              showBottomBorder: true,
+              horizontalMargin: 30,
+              isVerticalScrollBarVisible: true,
+              columns: const [
+                DataColumn2(label: Text('Title')),
+                DataColumn2(label: Text('')),
+                DataColumn2(label: Text('Option')),
+              ],
+              rows: snapshot.data!.map((e) => buildRow(e)).toList(),
+            ),
+          );
+        });
   }
 
   DataRow2 buildRow(Program program) {
@@ -198,7 +212,6 @@ class _ProgramsPageState extends State<ProgramsPage>
       ),
     );
   }
-
 
   Widget editButton() {
     return TextButton(

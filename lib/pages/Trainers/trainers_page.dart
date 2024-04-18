@@ -33,7 +33,6 @@ class _TrainersPageState extends State<TrainersPage>
 
   @override
   void initState() {
-    // TODO: implement initState for populating the table with data from the backend
     _trainers = Supabase.instance.client.from("trainer").stream(primaryKey: [
       'id'
     ]).map((data) => data.map((e) => Trainer.fromJson(e)).toList());

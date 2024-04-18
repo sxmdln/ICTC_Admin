@@ -123,7 +123,7 @@ class _TraineeViewMoreState extends State<TraineeViewMore> {
                                     color: Colors.black87,
                                     fontWeight: FontWeight.w300),
                               ),
-                              Text(widget.trainee.emailAddress),
+                              Text(widget.trainee.email),
                             ],
                           ),
                         ]),

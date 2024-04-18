@@ -13,12 +13,13 @@ class SalesPage extends StatefulWidget {
 }
 
 class _SalesPageState extends State<SalesPage> {
-  late List<Sale> sales;
+  late Stream<List<Sale>> _sales;
 
   @override
   void initState() {
     // TODO: implement initState for populating the table with data from the backend
-    // sales = Seeds.sales;
+    // Currently a placeholder -- Aaron
+    _sales = Seeds.saleStream();
 
     super.initState();
   }
@@ -28,7 +29,7 @@ class _SalesPageState extends State<SalesPage> {
     return Row(
       children: [
         Flexible(
-          flex:1,
+          flex: 1,
           child: Column(
             mainAxisAlignment: MainAxisAlignment.end,
             children: [
@@ -52,41 +53,53 @@ class _SalesPageState extends State<SalesPage> {
   }
 
   Widget buildDataTable() {
-    return Expanded(
-      child: DataTable2(
-        showCheckboxColumn: false,
-        showBottomBorder: true,
-        horizontalMargin: 30,
-        isVerticalScrollBarVisible: true,
-        columns: const [
-          DataColumn2(
-              label: Text(
-            'Name of Trainer',
-          )),
-          DataColumn2(
-              label: Text(
-            'Schedule',
-          )),
-          DataColumn2(
-              label: Text(
-            'Total Students',
-          )),
-          DataColumn2(
-              label: Text(
-            'Total Sale',
-          )),
-          DataColumn2(
-              label: Text(
-            'Total Discount',
-          )),
-          DataColumn2(
-              label: Text(
-            'Actions',
-          )),
-        ],
-        rows: sales.map((e) => buildRow(e)).toList(),
-      ),
-    );
+    return StreamBuilder(
+        stream: _sales,
+        builder: (context, snapshot) {
+          if (!snapshot.hasData) {
+            return const Expanded(
+              child: Center(
+                child: CircularProgressIndicator(),
+              ),
+            );
+          }
+
+          return Expanded(
+            child: DataTable2(
+              showCheckboxColumn: false,
+              showBottomBorder: true,
+              horizontalMargin: 30,
+              isVerticalScrollBarVisible: true,
+              columns: const [
+                DataColumn2(
+                    label: Text(
+                  'Name of Trainer',
+                )),
+                DataColumn2(
+                    label: Text(
+                  'Schedule',
+                )),
+                DataColumn2(
+                    label: Text(
+                  'Total Students',
+                )),
+                DataColumn2(
+                    label: Text(
+                  'Total Sale',
+                )),
+                DataColumn2(
+                    label: Text(
+                  'Total Discount',
+                )),
+                DataColumn2(
+                    label: Text(
+                  'Actions',
+                )),
+              ],
+              rows: snapshot.data!.map((e) => buildRow(e)).toList(),
+            ),
+          );
+        });
   }
 
   DataRow2 buildRow(Sale sale) {
@@ -96,9 +109,6 @@ class _SalesPageState extends State<SalesPage> {
       DataCell(Text(sale.totalStudents.toString())),
       DataCell(Text(sale.saleTotal.toString())),
       DataCell(Text(sale.discountTotal.toString())),
-      
-
-
       DataCell(Row(
         children: [
           editButton(),
@@ -131,7 +141,6 @@ class _SalesPageState extends State<SalesPage> {
           ],
         ));
   }
-
 
   Widget editDialog() {
     return AlertDialog(
@@ -214,7 +223,6 @@ class _SalesPageState extends State<SalesPage> {
     );
   }
 
-  
   Widget addDialog() {
     return AlertDialog(
       // shape: const RoundedRectangleBorder(
@@ -262,5 +270,4 @@ class _SalesPageState extends State<SalesPage> {
       ),
     );
   }
-
 }

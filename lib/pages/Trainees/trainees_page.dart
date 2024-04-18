@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:data_table_2/data_table_2.dart';
-import 'package:ictc_admin/models/seeds.dart';
 import 'package:ictc_admin/models/trainee.dart';
 import 'package:ictc_admin/pages/trainees/trainees_viewMore.dart';
+import 'package:supabase_flutter/supabase_flutter.dart';
 
 class TraineesPage extends StatefulWidget {
   const TraineesPage({super.key});
@@ -15,12 +15,13 @@ class _TraineesPageState extends State<TraineesPage>
     with AutomaticKeepAliveClientMixin {
   TraineeViewMore? traineeProfileWidget;
 
-  late List<Trainee> trainees;
+  late Stream<List<Trainee>> _trainees;
 
   @override
   void initState() {
-    // TODO: implement initState
-    // trainees = Seeds.trainees;
+    _trainees = Supabase.instance.client.from('student').stream(primaryKey: [
+      'id'
+    ]).map((data) => data.map((e) => Trainee.fromJson(e)).toList());
 
     super.initState();
   }
@@ -71,12 +72,14 @@ class _TraineesPageState extends State<TraineesPage>
                   children: [
                     traineeProfileWidget!,
                     Container(
-                      margin: const EdgeInsets.only(top:45, right: 30),
+                      margin: const EdgeInsets.only(top: 45, right: 30),
                       alignment: Alignment.topRight,
                       child: IconButton(
                         splashRadius: 15,
-                          onPressed: closeProfile,
-                          icon: const Icon(Icons.close_outlined), color: Colors.black87,),
+                        onPressed: closeProfile,
+                        icon: const Icon(Icons.close_outlined),
+                        color: Colors.black87,
+                      ),
                     ),
                   ],
                 ),
@@ -87,21 +90,33 @@ class _TraineesPageState extends State<TraineesPage>
   }
 
   Widget buildDataTable() {
-    return Expanded(
-      child: DataTable2(
-        showCheckboxColumn: false,
-        showBottomBorder: true,
-        horizontalMargin: 30,
-        isVerticalScrollBarVisible: true,
-        columns: const [
-          DataColumn2(label: Text('Name')),
-          // DataColumn2(label: Text('Attended Programs')),
-          DataColumn2(label: Text('')),
-          DataColumn2(label: Text('Option')),
-        ],
-        rows: trainees.map((e) => buildRow(e)).toList(),
-      ),
-    );
+    return StreamBuilder(
+        stream: _trainees,
+        builder: (context, snapshot) {
+          if (!snapshot.hasData) {
+            return const Expanded(
+              child: Center(
+                child: CircularProgressIndicator(),
+              ),
+            );
+          }
+
+          return Expanded(
+            child: DataTable2(
+              showCheckboxColumn: false,
+              showBottomBorder: true,
+              horizontalMargin: 30,
+              isVerticalScrollBarVisible: true,
+              columns: const [
+                DataColumn2(label: Text('Name')),
+                // DataColumn2(label: Text('Attended Programs')),
+                DataColumn2(label: Text('')),
+                DataColumn2(label: Text('Option')),
+              ],
+              rows: snapshot.data!.map((e) => buildRow(e)).toList(),
+            ),
+          );
+        });
   }
 
   DataRow2 buildRow(Trainee trainee) {

@@ -74,7 +74,7 @@ class _CourseViewMoreState extends State<CourseViewMore> {
                     ),
                     const SizedBox(height: 20),
                     Text(
-                      widget.course.description,
+                      widget.course.description ?? "No description set",
                       maxLines: 3,
                       overflow: TextOverflow.ellipsis,
                       textHeightBehavior: const TextHeightBehavior(
