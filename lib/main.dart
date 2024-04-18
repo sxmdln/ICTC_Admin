@@ -4,6 +4,8 @@ import 'package:ictc_admin/pages/courses/courses_page.dart';
 import 'package:ictc_admin/pages/dashboard/dashboard.dart';
 import 'package:flutter/material.dart';
 import 'package:ictc_admin/pages/programs/programs_page.dart';
+import 'package:ictc_admin/supabase_options.dart';
+import 'package:supabase_flutter/supabase_flutter.dart';
 // import 'package:responsive_builder/responsive_builder.dart';
 // import 'package:firebase_core/firebase_core.dart';
 // import 'firebase_options.dart';
@@ -16,7 +18,11 @@ import 'package:ictc_admin/pages/programs/programs_page.dart';
 //   runApp(const MyApp());
 // }
 
-void main() {
+Future<void> main() async {
+  Supabase.initialize(
+      url: SupabaseOptions.SUPABASE_URL,
+      anonKey: SupabaseOptions.SUPABASE_ANON_KEY);
+
   runApp(const MyApp());
 }
 
@@ -80,17 +86,16 @@ class MyApp extends StatelessWidget {
         ),
         elevatedButtonTheme: ElevatedButtonThemeData(
           style: ButtonStyle(
-            backgroundColor: MaterialStateProperty.resolveWith(
-              (states) {
-                // If the button is pressed, return green, otherwise blue
-                if (states.contains(MaterialState.pressed)) {
-                  return Color.fromARGB(255, 57, 167, 74);
-                }
-                return Color.fromARGB(255, 33, 175, 23);
-              },
-            ),
-            fixedSize: MaterialStateProperty.all(Size.fromWidth(145))
-          ),
+              backgroundColor: MaterialStateProperty.resolveWith(
+                (states) {
+                  // If the button is pressed, return green, otherwise blue
+                  if (states.contains(MaterialState.pressed)) {
+                    return Color.fromARGB(255, 57, 167, 74);
+                  }
+                  return Color.fromARGB(255, 33, 175, 23);
+                },
+              ),
+              fixedSize: MaterialStateProperty.all(Size.fromWidth(145))),
         ),
         useMaterial3: false,
       ),

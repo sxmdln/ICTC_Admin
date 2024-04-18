@@ -18,17 +18,18 @@ dependencies:
   cupertino_icons: ^1.0.2
   font_awesome_flutter: ^10.7.0
   intl: ^0.19.0
+  supabase_flutter: ^2.5.1
+  json_annotation: ^4.8.0
+  data_table_2: ^2.5.10
+  responsive_builder: ^0.7.0
 
 dev_dependencies:
   flutter_test:
     sdk: flutter
-  firebase_core: ^2.24.2
-  firebase_auth: ^4.16.0
-  cloud_firestore: ^4.14.0
-  responsive_builder: ^0.7.0
   flutter_svg: ^2.0.9
   flutter_lints: ^2.0.0
-  data_table_2: ^2.5.10
+  build_runner: ^2.3.3
+  json_serializable: ^6.6.0
 
 flutter:
   fonts:
