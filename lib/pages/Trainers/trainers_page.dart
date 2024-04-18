@@ -292,7 +292,7 @@ class _TrainersPageState extends State<TrainersPage>
                 mainAxisSize: MainAxisSize.min,
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
-                  TrainersForm(trainer: true),
+                  TrainersForm(),
                 ],
               ),
             ),
