@@ -84,7 +84,7 @@ class Seeds {
   ];
 
   static final List<Expense> _expenses = [
-    Expense(id: 1, name: 'Snacks', date: 'March 4, 2023', cost: 1100)
+    Expense(id: 1, name: 'Snacks', courseName: 'Microcredentials', date: 'March 4, 2023', cost: 1000)
   ];
 
   static Stream<List<Sale>> saleStream() {
