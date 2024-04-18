@@ -9,6 +9,7 @@ import 'package:ictc_admin/pages/programs/programs_page.dart';
 import 'package:ictc_admin/pages/sales/sales_page.dart';
 import 'package:ictc_admin/pages/trainers/trainers_page.dart';
 import 'package:ictc_admin/pages/trainees/trainees_page.dart';
+import 'package:supabase_flutter/supabase_flutter.dart';
 
 class MainScreen extends StatefulWidget {
   const MainScreen({super.key});
@@ -37,9 +38,9 @@ class _MainScreenState extends State<MainScreen> {
     });
   }
 
-  // void logout() async {
-  //   await FirebaseAuth.instance.signOut();
-  // }
+  void logout() async {
+    await Supabase.instance.client.auth.signOut();
+  }
 
   String getSearchName() {
     List<String> pageNames = const [
@@ -238,55 +239,54 @@ class _MainScreenState extends State<MainScreen> {
         height: 80,
         child:
             Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
-           _selectedIndex != 0
-          ? AnimatedSwitcher(
-            duration: const Duration(milliseconds: 350),
-            transitionBuilder: (child, animation) => SlideTransition(
-                position: Tween<Offset>(
-                        begin: const Offset(0.0, -3),
-                        end: const Offset(0.0, 0.0))
-                    .animate(animation),
-                child: child),
-            child: Row(
-              children: [
-                Text(
-                  getSearchName(),
-                  key: ValueKey<String>(getSearchName()),
-                  style: const TextStyle(
-                      fontSize: 28,
-                      fontWeight: FontWeight.w700,
-                      color: Colors.black),
+          _selectedIndex != 0
+              ? AnimatedSwitcher(
+                  duration: const Duration(milliseconds: 350),
+                  transitionBuilder: (child, animation) => SlideTransition(
+                      position: Tween<Offset>(
+                              begin: const Offset(0.0, -3),
+                              end: const Offset(0.0, 0.0))
+                          .animate(animation),
+                      child: child),
+                  child: Row(
+                    children: [
+                      Text(
+                        getSearchName(),
+                        key: ValueKey<String>(getSearchName()),
+                        style: const TextStyle(
+                            fontSize: 28,
+                            fontWeight: FontWeight.w700,
+                            color: Colors.black),
+                      ),
+                      const SizedBox(
+                        width: 10,
+                      ),
+                      buildCounter(context),
+                      //TODO: need backend - FOR TOTAL# (remove it if page is on dashboard).
+                    ],
+                  ),
+                )
+              : AnimatedSwitcher(
+                  duration: const Duration(milliseconds: 350),
+                  transitionBuilder: (child, animation) => SlideTransition(
+                      position: Tween<Offset>(
+                              begin: const Offset(0.0, -3),
+                              end: const Offset(0.0, 0.0))
+                          .animate(animation),
+                      child: child),
+                  child: const Row(
+                    children: [
+                      Text(
+                        "Welcome, Admin",
+                        style: TextStyle(
+                            fontSize: 28,
+                            fontWeight: FontWeight.w700,
+                            color: Colors.black),
+                      ),
+                      //TODO: need backend - FOR TOTAL# (remove it if page is on dashboard).
+                    ],
+                  ),
                 ),
-                const SizedBox(
-                  width: 10,
-                ),
-                buildCounter(context),
-                //TODO: need backend - FOR TOTAL# (remove it if page is on dashboard).
-              ],
-            ),
-          ) : 
-          AnimatedSwitcher(
-            duration: const Duration(milliseconds: 350),
-            transitionBuilder: (child, animation) => SlideTransition(
-                position: Tween<Offset>(
-                        begin: const Offset(0.0, -3),
-                        end: const Offset(0.0, 0.0))
-                    .animate(animation),
-                child: child),
-            child: const Row(
-              children: [
-                Text(
-                  "Welcome, Admin",
-                  style: TextStyle(
-                      fontSize: 28,
-                      fontWeight: FontWeight.w700,
-                      color: Colors.black),
-                ),
-                //TODO: need backend - FOR TOTAL# (remove it if page is on dashboard).
-              ],
-            ),
-          )
-          ,
           Row(
             mainAxisSize: MainAxisSize.min,
             mainAxisAlignment: MainAxisAlignment.center,
@@ -462,14 +462,7 @@ class _MainScreenState extends State<MainScreen> {
                 color: Colors.white,
               ),
             ),
-            // onPressed: state.logout,
-            onPressed: () {
-              Navigator.of(context).push(
-                MaterialPageRoute(
-                  builder: (context) => const LoginPage(),
-                ),
-              );
-            },
+            onPressed: logout,
           ),
         ),
       ],

@@ -1,4 +1,5 @@
 import 'package:ictc_admin/main_screen.dart';
+import 'package:ictc_admin/pages/auth/auth_gate.dart';
 import 'package:ictc_admin/pages/auth/login_page.dart';
 import 'package:ictc_admin/pages/courses/courses_page.dart';
 import 'package:ictc_admin/pages/dashboard/dashboard.dart';
@@ -15,19 +16,23 @@ import 'package:supabase_flutter/supabase_flutter.dart';
 //     options: DefaultFirebaseOptions.currentPlatform,
 //   );
 
-//   runApp(const MyApp());
+//   runApp(const ICTCApp());
 // }
 
 Future<void> main() async {
-  Supabase.initialize(
-      url: SupabaseOptions.SUPABASE_URL,
-      anonKey: SupabaseOptions.SUPABASE_ANON_KEY);
+  WidgetsFlutterBinding.ensureInitialized();
 
-  runApp(const MyApp());
+  await Supabase.initialize(
+    url: SupabaseOptions.SUPABASE_URL,
+    anonKey: SupabaseOptions.SUPABASE_ANON_KEY,
+    debug: true,
+  );
+
+  runApp(const ICTCApp());
 }
 
-class MyApp extends StatelessWidget {
-  const MyApp({super.key});
+class ICTCApp extends StatelessWidget {
+  const ICTCApp({super.key});
 
   // This widget is the root of your application.
   @override
@@ -99,26 +104,15 @@ class MyApp extends StatelessWidget {
         ),
         useMaterial3: false,
       ),
-      routes: {
-        '/dashboard': (context) => const DashboardPage(),
-        '/programs': (context) => const ProgramsPage(),
-        '/courses': (context) => const CoursesPage(),
-        '/home': (context) => const MainScreen(),
-        '/login': (context) => const LoginPage(),
-      },
-      home: const MainApp(),
+      // routes: {
+      //   '/dashboard': (context) => const DashboardPage(),
+      //   '/programs': (context) => const ProgramsPage(),
+      //   '/courses': (context) => const CoursesPage(),
+      //   '/home': (context) => const MainScreen(),
+      //   '/login': (context) => const LoginPage(),
+      // },
+      home: const AuthGate(),
       debugShowCheckedModeBanner: false,
-    );
-  }
-}
-
-class MainApp extends StatelessWidget {
-  const MainApp({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return const Scaffold(
-      body: MainScreen(),
     );
   }
 }
