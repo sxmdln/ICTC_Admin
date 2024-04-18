@@ -70,9 +70,9 @@ class MyApp extends StatelessWidget {
           headingRowColor: MaterialStateColor.resolveWith((states) {
             // If the button is pressed, return size 40, otherwise 20
             if (states.contains(MaterialState.hovered)) {
-              return Color(0xff19306B);
+              return const Color(0xff19306B);
             }
-            return Color(0xff19306B);
+            return const Color(0xff19306B);
           }),
           headingTextStyle: const TextStyle(
               fontSize: 16, color: Colors.white, fontWeight: FontWeight.w800),
@@ -90,12 +90,12 @@ class MyApp extends StatelessWidget {
                 (states) {
                   // If the button is pressed, return green, otherwise blue
                   if (states.contains(MaterialState.pressed)) {
-                    return Color.fromARGB(255, 57, 167, 74);
+                    return const Color.fromARGB(255, 57, 167, 74);
                   }
-                  return Color.fromARGB(255, 33, 175, 23);
+                  return const Color.fromARGB(255, 33, 175, 23);
                 },
               ),
-              fixedSize: MaterialStateProperty.all(Size.fromWidth(145))),
+              fixedSize: MaterialStateProperty.all(const Size.fromWidth(145))),
         ),
         useMaterial3: false,
       ),

@@ -172,7 +172,7 @@ class _TrainersPageState extends State<TrainersPage>
     return AlertDialog(
       // shape: const RoundedRectangleBorder(
       //     borderRadius: BorderRadius.all(Radius.circular(30))),
-      contentPadding: EdgeInsets.only(left: 20, right: 30, top: 40),
+      contentPadding: const EdgeInsets.only(left: 20, right: 30, top: 40),
       title: Column(
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
@@ -245,7 +245,7 @@ class _TrainersPageState extends State<TrainersPage>
     return AlertDialog(
       // shape: const RoundedRectangleBorder(
       //     borderRadius: BorderRadius.all(Radius.circular(30))),
-      contentPadding: EdgeInsets.only(left: 20, right: 30, top: 40),
+      contentPadding: const EdgeInsets.only(left: 20, right: 30, top: 40),
       title: Column(
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [

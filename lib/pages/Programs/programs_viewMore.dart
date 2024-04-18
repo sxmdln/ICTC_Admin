@@ -15,8 +15,8 @@ class _ProgramViewMoreState extends State<ProgramViewMore> {
     return Column(
       mainAxisAlignment: MainAxisAlignment.start,
       children: [
-        SizedBox(height: 45),
-        Row(
+        const SizedBox(height: 45),
+        const Row(
           mainAxisAlignment: MainAxisAlignment.center,
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
@@ -24,7 +24,7 @@ class _ProgramViewMoreState extends State<ProgramViewMore> {
                 style: TextStyle(fontWeight: FontWeight.w500, fontSize: 24)),
           ],
         ),
-        SizedBox(height: 45),
+        const SizedBox(height: 45),
         SizedBox(
           width: 400,
           height: 500,

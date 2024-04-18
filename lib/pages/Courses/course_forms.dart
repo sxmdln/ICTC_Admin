@@ -143,7 +143,7 @@ class _CourseFormState extends State<CourseForm> {
             if (states.contains(MaterialState.pressed)) {
               return Colors.white70;
             }
-            return Color.fromARGB(255, 226, 226, 226);
+            return const Color.fromARGB(255, 226, 226, 226);
           }),
         ),
         onPressed: () {},

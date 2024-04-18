@@ -1,8 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:ictc_admin/pages/dashboard/card_button.dart';
-import 'package:ictc_admin/pages/dashboard/card_courses.dart';
-import 'package:ictc_admin/pages/dashboard/card_programs.dart';
-import 'package:ictc_admin/pages/dashboard/card_student.dart';
 import 'package:ictc_admin/pages/dashboard/monthly_report.dart';
 import 'package:ictc_admin/pages/dashboard/weekly_report.dart';
 

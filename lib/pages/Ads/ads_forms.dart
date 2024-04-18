@@ -10,7 +10,7 @@ class AdsForm extends StatefulWidget {
 class _AdsFormState extends State<AdsForm> {
   @override
   Widget build(BuildContext context) {
-    return Form(
+    return const Form(
       child: Column(
         mainAxisSize: MainAxisSize.min,
         children: [

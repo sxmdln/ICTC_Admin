@@ -1,6 +1,5 @@
 // import 'dart:async';
 // import 'package:firebase_auth/firebase_auth.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:ictc_admin/pages/auth/login_page.dart';
 import 'package:ictc_admin/pages/courses/courses_page.dart';
@@ -274,11 +273,11 @@ class _MainScreenState extends State<MainScreen> {
                         end: const Offset(0.0, 0.0))
                     .animate(animation),
                 child: child),
-            child: Row(
+            child: const Row(
               children: [
                 Text(
                   "Welcome, Admin",
-                  style: const TextStyle(
+                  style: TextStyle(
                       fontSize: 28,
                       fontWeight: FontWeight.w700,
                       color: Colors.black),
@@ -296,7 +295,7 @@ class _MainScreenState extends State<MainScreen> {
               buildSearchBar(context),
               SizedBox(width: MediaQuery.of(context).size.width * 0.2),
               Container(
-                padding: EdgeInsets.all(8),
+                padding: const EdgeInsets.all(8),
                 decoration: BoxDecoration(
                   borderRadius: BorderRadius.circular(24),
                 ),

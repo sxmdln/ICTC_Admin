@@ -1,8 +1,6 @@
-import 'dart:developer';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 
 class TrainersForm extends StatefulWidget {
   const TrainersForm({super.key, this.trainer});
@@ -205,7 +203,7 @@ class _TrainersFormState extends State<TrainersForm> {
           ),
 
           // TODO: add a dropdown on picking a course for the trainer!
-          SizedBox(height: 20),
+          const SizedBox(height: 20),
           Row(
             children: [
               // Expanded(child: SizedBox(child: cancelButton())),
@@ -253,7 +251,7 @@ class _TrainersFormState extends State<TrainersForm> {
             if (states.contains(MaterialState.pressed)) {
               return Colors.white70;
             }
-            return Color.fromARGB(255, 226, 226, 226);
+            return const Color.fromARGB(255, 226, 226, 226);
           }),
         ),
         onPressed: () {},

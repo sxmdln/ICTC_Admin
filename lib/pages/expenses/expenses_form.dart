@@ -1,8 +1,6 @@
-import 'dart:developer';
 import 'package:intl/intl.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 
 class ExpensesForm extends StatefulWidget {
   const ExpensesForm({super.key, this.expense});
@@ -35,7 +33,7 @@ class _ExpensesFormState extends State<ExpensesForm> {
             onTap: () => onTapFunction(context: context),
           ),
           
-                SizedBox(height: 10),
+                const SizedBox(height: 10),
     
           CupertinoTextFormFieldRow(
             prefix: const Row(

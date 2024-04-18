@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:data_table_2/data_table_2.dart';
 import 'package:ictc_admin/models/expense.dart';
 import 'package:ictc_admin/models/seeds.dart';
-import 'package:ictc_admin/models/sale.dart';
 import 'package:ictc_admin/pages/expenses/expenses_form.dart';
 
 class ExpensesPage extends StatefulWidget {
@@ -122,7 +121,7 @@ class _ExpensesPageState extends State<ExpensesPage> {
     return AlertDialog(
       // shape: const RoundedRectangleBorder(
       //     borderRadius: BorderRadius.all(Radius.circular(30))),
-      contentPadding: EdgeInsets.only(left: 20, right: 30, top: 40),
+      contentPadding: const EdgeInsets.only(left: 20, right: 30, top: 40),
       title: Column(
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
