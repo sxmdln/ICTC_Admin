@@ -153,10 +153,11 @@ class _TraineeViewMoreState extends State<TraineeViewMore> {
                               const Text(
                                 "Phone",
                                 style: TextStyle(
-                                    color: Colors.black87,
-                                    fontWeight: FontWeight.w300),
+                                  color: Colors.black87,
+                                  fontWeight: FontWeight.w300,
+                                ),
                               ),
-                              Text(widget.trainee.contactNumber),
+                              Text(widget.trainee.contactNumber ?? 'No contact number'),
                             ],
                           ),
                         ]),
