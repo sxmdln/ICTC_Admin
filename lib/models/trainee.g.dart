@@ -12,11 +12,12 @@ Trainee _$TraineeFromJson(Map<String, dynamic> json) => Trainee(
       middleName: json['middle_name'] as String,
       lastName: json['last_name'] as String,
       email: json['email'] as String,
-      contactNumber: json['contact_number'] as String,
+      contactNumber: json['contact_number'] as String?,
       school: json['school'] as String?,
       office: json['office'] as String?,
       designation: json['designation'] as String?,
       yearLevel: json['year_level'] as int?,
+      uuid: json['uuid'] as String?,
     )..course = json['course'] as String?;
 
 Map<String, dynamic> _$TraineeToJson(Trainee instance) => <String, dynamic>{
@@ -30,5 +31,6 @@ Map<String, dynamic> _$TraineeToJson(Trainee instance) => <String, dynamic>{
       'course': instance.course,
       'office': instance.office,
       'designation': instance.designation,
+      'uuid': instance.uuid,
       'year_level': instance.yearLevel,
     };

@@ -16,7 +16,7 @@ class Trainee {
   String lastName;
 
   @JsonKey(name: "contact_number")
-  String contactNumber;
+  String? contactNumber;
 
   String email;
 
@@ -28,23 +28,26 @@ class Trainee {
 
   String? designation;
 
+  String? uuid;
+
   @JsonKey(name: "year_level")
   int? yearLevel;
 
-  Trainee({
-    required this.id,
-    required this.firstName,
-    required this.middleName,
-    required this.lastName,
-    required this.email,
-    required this.contactNumber,
-    this.school,
-    this.office,
-    this.designation,
-    this.yearLevel,
-  });
+  Trainee(
+      {required this.id,
+      required this.firstName,
+      required this.middleName,
+      required this.lastName,
+      required this.email,
+      this.contactNumber,
+      this.school,
+      this.office,
+      this.designation,
+      this.yearLevel,
+      this.uuid});
 
-  factory Trainee.fromJson(Map<String, dynamic> json) => _$TraineeFromJson(json);
+  factory Trainee.fromJson(Map<String, dynamic> json) =>
+      _$TraineeFromJson(json);
 
   Map<String, dynamic> toJson() => _$TraineeToJson(this);
 

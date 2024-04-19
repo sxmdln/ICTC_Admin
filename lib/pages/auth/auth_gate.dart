@@ -27,8 +27,7 @@ class _AuthGateState extends State<AuthGate> {
 
             if (data.session?.user != null) {
               final type = data.session!.user.appMetadata['user_type'];
-              print(type);
-
+              
               if (type == "ADMIN") {
                 return const MainScreen();
               } else {
