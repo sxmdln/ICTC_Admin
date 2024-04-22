@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:ictc_admin/models/course.dart';
 import 'package:ictc_admin/models/trainer.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
@@ -13,7 +14,20 @@ class TrainersForm extends StatefulWidget {
 }
 
 class _TrainersFormState extends State<TrainersForm> {
-  // TODO: texteditingcontroller for the textfields
+  @override
+  void initState() {
+    super.initState();
+
+    firstNameCon = TextEditingController();
+    lastNameCon = TextEditingController();
+    contactCon = TextEditingController();
+    emailCon = TextEditingController();
+  }
+
+  Course? selectedCourse;
+
+  final formKey = GlobalKey<FormState>();
+  late TextEditingController firstNameCon, lastNameCon, contactCon, emailCon;
 
   @override
   Widget build(BuildContext context) {
@@ -61,6 +75,7 @@ class _TrainersFormState extends State<TrainersForm> {
             children: <Widget>[
               Flexible(
                 child: CupertinoTextFormFieldRow(
+                  controller: firstNameCon,
                   prefix: const Row(
                     children: [
                       Text("First Name",
@@ -98,6 +113,7 @@ class _TrainersFormState extends State<TrainersForm> {
               // LAST NAME
               Flexible(
                 child: CupertinoTextFormFieldRow(
+                  controller: lastNameCon,
                   prefix: const Row(
                     children: [
                       Text("Last Name",
@@ -136,6 +152,8 @@ class _TrainersFormState extends State<TrainersForm> {
 
           //EMAIL ADDRESS
           CupertinoTextFormFieldRow(
+            controller: emailCon,
+
             prefix: const Row(
               children: [
                 Text("Email Address",
@@ -172,6 +190,8 @@ class _TrainersFormState extends State<TrainersForm> {
           // CONTACT NUMBER
 
           CupertinoTextFormFieldRow(
+            controller: contactCon,
+
             prefix: const Row(
               children: [
                 Text("Contact Number",
@@ -205,11 +225,22 @@ class _TrainersFormState extends State<TrainersForm> {
             ),
           ),
 
-          // TODO: add a dropdown on picking a course for the trainer!
+          DropdownButton(
+            isExpanded: false,
+            isDense: false,
+            borderRadius: BorderRadius.circular(18),
+            disabledHint: const Text(
+              "No courses yet.",
+              style: TextStyle(fontSize: 14),
+            ),
+            onChanged: (course) => setState(() => selectedCourse = course),
+            value: selectedCourse,
+            items:
+                null, //TODO: Dynamically populate dropdown items with courses
+          ),
           const SizedBox(height: 20),
           Row(
             children: [
-              // Expanded(child: SizedBox(child: cancelButton())),
               if (widget.trainer != null)
                 Expanded(
                   flex: 1,
@@ -242,9 +273,12 @@ class _TrainersFormState extends State<TrainersForm> {
         Trainer? trainer = widget.trainer;
 
         if (trainer != null) {
-          supabase.from('trainer').update(trainer.toJson()).eq('id', trainer.id);
+          supabase
+              .from('trainer')
+              .update(trainer.toJson())
+              .eq('id', trainer.id);
         } else {
-          // TODO: code to insert new record
+          // TODO: Add code to insert new record
           // trainer = Trainer(id: id, firstName: firstName, middleName: middleName, lastName: lastName, email: email, contactNumber: contactNumber);
         }
       },

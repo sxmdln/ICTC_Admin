@@ -87,11 +87,18 @@ class Seeds {
     Expense(id: 1, name: 'Snacks', courseName: 'Microcredentials', date: 'March 4, 2023', cost: 1000)
   ];
 
+  static Stream<List<Trainer>> trainerStream() {
+    return Stream.value(_trainers);
+  }
+
   static Stream<List<Sale>> saleStream() {
     return Stream.value(_sales);
   }
 
   static Stream<List<Expense>> expenseStream() {
     return Stream.value(_expenses);
+  }
+  static Stream<List<Course>> courseStream() {
+    return Stream.value(_courses);
   }
 }

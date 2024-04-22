@@ -11,7 +11,16 @@ class ProgramForm extends StatefulWidget {
 }
 
 class _ProgramFormState extends State<ProgramForm> {
-  // TODO: texteditingcontroller for the textfields
+  @override
+  void initState() {
+    super.initState();
+
+    progTitleCon = TextEditingController();
+    progDescriptionCon = TextEditingController();
+  }
+
+  final formKey = GlobalKey<FormState>();
+  late TextEditingController progTitleCon, progDescriptionCon;
 
   @override
   Widget build(BuildContext context) {
@@ -21,6 +30,7 @@ class _ProgramFormState extends State<ProgramForm> {
         children: [
           Flexible(
             child: CupertinoTextFormFieldRow(
+              controller: progTitleCon,
               prefix: const Row(
                 children: [
                   Text("Program Title",
@@ -58,6 +68,8 @@ class _ProgramFormState extends State<ProgramForm> {
           // DESCRIPTION
           Flexible(
             child: CupertinoTextFormFieldRow(
+              controller: progDescriptionCon,
+
               expands: true,
               keyboardType: TextInputType.multiline,
               minLines: null,

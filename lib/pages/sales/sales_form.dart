@@ -1,3 +1,4 @@
+import 'package:ictc_admin/models/trainer.dart';
 import 'package:intl/intl.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -12,7 +13,26 @@ class SalesForm extends StatefulWidget {
 }
 
 class _SalesFormState extends State<SalesForm> {
-  TextEditingController datePickerController = TextEditingController();
+  @override
+  void initState() {
+    super.initState();
+
+    datePickerController = TextEditingController();
+    totalStudentsCon = TextEditingController();
+    totalSaleCon = TextEditingController();
+    totalDiscountCon = TextEditingController();
+    totalIncomeCon = TextEditingController();
+  }
+
+  Trainer? selectedTrainer;
+
+  final formKey = GlobalKey<FormState>();
+  late TextEditingController datePickerController,
+      totalStudentsCon,
+      totalSaleCon,
+      totalDiscountCon,
+      totalIncomeCon;
+
   @override
   Widget build(BuildContext context) {
     return Form(
@@ -25,14 +45,13 @@ class _SalesFormState extends State<SalesForm> {
             decoration: const InputDecoration(
               alignLabelWithHint: true,
               hintText: "Date of Sale",
-              hintStyle: TextStyle(fontSize: 14,height: 2),
+              hintStyle: TextStyle(fontSize: 14, height: 2),
               filled: true,
               isDense: true,
               prefixIcon: Icon(Icons.calendar_month, size: 20),
             ),
             onTap: () => onTapFunction(context: context),
           ),
-          
           Row(
             mainAxisAlignment: MainAxisAlignment.start,
             crossAxisAlignment: CrossAxisAlignment.center,
@@ -55,14 +74,16 @@ class _SalesFormState extends State<SalesForm> {
                   "No trainers yet.",
                   style: TextStyle(fontSize: 14),
                 ),
-                onChanged: null,
-                value: null,
-                items: null,
+                onChanged: (trainer) =>
+                    setState(() => selectedTrainer = trainer),
+                value: selectedTrainer,
+                items:
+                    null, //TODO: Dynamically populate dropdown items with trainer names
               ),
             ],
           ),
-
           CupertinoTextFormFieldRow(
+            controller: totalStudentsCon,
             prefix: const Row(
               children: [
                 Text("Total Students",
@@ -95,8 +116,8 @@ class _SalesFormState extends State<SalesForm> {
               // prefixIcon: Icon(Icons.person)
             ),
           ),
-
           CupertinoTextFormFieldRow(
+            controller: totalSaleCon,
             prefix: const Row(
               children: [
                 Text("Total Sale",
@@ -129,8 +150,8 @@ class _SalesFormState extends State<SalesForm> {
               // prefixIcon: Icon(Icons.person)
             ),
           ),
-
           CupertinoTextFormFieldRow(
+            controller: totalDiscountCon,
             prefix: const Row(
               children: [
                 Text("Total Discount",
@@ -163,8 +184,9 @@ class _SalesFormState extends State<SalesForm> {
               // prefixIcon: Icon(Icons.person)
             ),
           ),
-
           CupertinoTextFormFieldRow(
+            controller: totalIncomeCon,
+
             prefix: const Row(
               children: [
                 Text("Total Income",
@@ -197,7 +219,6 @@ class _SalesFormState extends State<SalesForm> {
               // prefixIcon: Icon(Icons.person)
             ),
           ),
-
           const SizedBox(height: 20),
           Row(
             children: [

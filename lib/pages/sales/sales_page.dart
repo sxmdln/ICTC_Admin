@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:data_table_2/data_table_2.dart';
 import 'package:ictc_admin/models/seeds.dart';
 import 'package:ictc_admin/models/sale.dart';
+import 'package:ictc_admin/models/trainer.dart';
 import 'package:ictc_admin/pages/sales/sales_form.dart';
 
 class SalesPage extends StatefulWidget {
@@ -14,12 +15,15 @@ class SalesPage extends StatefulWidget {
 
 class _SalesPageState extends State<SalesPage> {
   late Stream<List<Sale>> _sales;
+  late Stream<List<Trainer>> _trainers;
+
 
   @override
   void initState() {
     // TODO: implement initState for populating the table with data from the backend
     // Currently a placeholder -- Aaron
     _sales = Seeds.saleStream();
+    _trainers = Seeds.trainerStream();
 
     super.initState();
   }
@@ -105,7 +109,7 @@ class _SalesPageState extends State<SalesPage> {
   DataRow2 buildRow(Sale sale) {
     return DataRow2(onSelectChanged: (selected) {}, cells: [
       DataCell(Text(sale.toString())),
-      DataCell(Text(sale.schedule)),
+      DataCell(Text(sale.schedule)), //TODO: Add trainer name in table
       DataCell(Text(sale.totalStudents.toString())),
       DataCell(Text(sale.saleTotal.toString())),
       DataCell(Text(sale.discountTotal.toString())),

@@ -11,7 +11,17 @@ class CourseForm extends StatefulWidget {
 }
 
 class _CourseFormState extends State<CourseForm> {
-  // TODO: texteditingcontroller for the textfields
+  @override
+  void initState() {
+    super.initState();
+
+    courseTitleCon = TextEditingController();
+    descriptionCon = TextEditingController();
+  }
+
+  final formKey = GlobalKey<FormState>();
+  late TextEditingController courseTitleCon, descriptionCon;
+
 
   @override
   Widget build(BuildContext context) {
@@ -21,6 +31,7 @@ class _CourseFormState extends State<CourseForm> {
         children: [
           Flexible(
             child: CupertinoTextFormFieldRow(
+              controller: courseTitleCon,
               prefix: const Row(
                 children: [
                   Text("Course Title",
@@ -58,6 +69,7 @@ class _CourseFormState extends State<CourseForm> {
           // DESCRIPTION
           Flexible(
             child: CupertinoTextFormFieldRow(
+              controller: descriptionCon,
               expands: true,
               keyboardType: TextInputType.multiline,
               minLines: null,
