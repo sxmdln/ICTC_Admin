@@ -219,8 +219,9 @@ class _SalesFormState extends State<SalesForm> {
               // prefixIcon: Icon(Icons.person)
             ),
           ),
-          const SizedBox(height: 20),
+          const SizedBox(height: 90),
           Row(
+            mainAxisAlignment: MainAxisAlignment.end,
             children: [
               // Expanded(child: SizedBox(child: cancelButton())),
               if (widget.sale != null)

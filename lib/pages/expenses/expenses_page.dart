@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:data_table_2/data_table_2.dart';
 import 'package:ictc_admin/models/expense.dart';
 import 'package:ictc_admin/models/seeds.dart';
-import 'package:ictc_admin/pages/expenses/expenses_form.dart';
+import 'package:ictc_admin/pages/finance/forms/expenses_form.dart';
 
 class ExpensesPage extends StatefulWidget {
   const ExpensesPage({super.key});

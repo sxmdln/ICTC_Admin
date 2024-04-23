@@ -1,7 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:ictc_admin/pages/dashboard/month_report.dart';
 import 'package:ictc_admin/pages/dashboard/monthly_report.dart';
-import 'package:ictc_admin/pages/dashboard/week_report.dart';
 import 'package:ictc_admin/pages/dashboard/weekly_report.dart';
 
 class DashboardPage extends StatefulWidget {
@@ -44,7 +42,7 @@ class _DashboardPageState extends State<DashboardPage> {
                 ),
                 width: MediaQuery.sizeOf(context).width * 0.4,
                 height: MediaQuery.sizeOf(context).height * 0.8,
-                child: const WeekReport(),
+                child: const WeeklyReport(),
               ),
             ],
           ),
@@ -76,7 +74,7 @@ class _DashboardPageState extends State<DashboardPage> {
                 ),
                 width: MediaQuery.sizeOf(context).width * 0.4,
                 height: MediaQuery.sizeOf(context).height * 0.8,
-                child: const MonthReport(),
+                child: const MonthlyReport(),
               ),
             ],
           ),
