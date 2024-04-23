@@ -2,15 +2,17 @@ import 'package:json_annotation/json_annotation.dart';
 
 part 'trainer.g.dart';
 
-@JsonSerializable()
+@JsonSerializable(
+  includeIfNull: false
+)
 class Trainer {
-  int id;
+  final int? id;
 
   @JsonKey(name: "first_name")
   String firstName;
 
   @JsonKey(name: "middle_name")
-  String middleName;
+  String? middleName;
 
   @JsonKey(name: "last_name")
   String lastName;
@@ -20,10 +22,12 @@ class Trainer {
 
   String email;
 
+  // TODO: course fields
+
   Trainer({
-    required this.id,
+    this.id,
     required this.firstName,
-    required this.middleName,
+    this.middleName,
     required this.lastName,
     required this.email,
     required this.contactNumber,

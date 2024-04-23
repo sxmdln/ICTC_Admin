@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 import 'package:ictc_admin/models/course.dart';
 import 'package:ictc_admin/models/trainer.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
@@ -18,10 +19,14 @@ class _TrainersFormState extends State<TrainersForm> {
   void initState() {
     super.initState();
 
-    firstNameCon = TextEditingController();
-    lastNameCon = TextEditingController();
-    contactCon = TextEditingController();
-    emailCon = TextEditingController();
+    print("trainer ${widget.trainer?.id}");
+
+    firstNameCon = TextEditingController(text: widget.trainer?.firstName);
+    lastNameCon = TextEditingController(text: widget.trainer?.lastName);
+    contactCon = TextEditingController(text: widget.trainer?.contactNumber);
+    emailCon = TextEditingController(text: widget.trainer?.email);
+    // TODO: set current course if this is called with a trainer
+    // selectedCourse = widget.trainer?.course;
   }
 
   Course? selectedCourse;
@@ -225,19 +230,33 @@ class _TrainersFormState extends State<TrainersForm> {
             ),
           ),
 
-          DropdownButton(
-            isExpanded: false,
-            isDense: false,
-            borderRadius: BorderRadius.circular(18),
-            disabledHint: const Text(
-              "No courses yet.",
-              style: TextStyle(fontSize: 14),
-            ),
-            onChanged: (course) => setState(() => selectedCourse = course),
-            value: selectedCourse,
-            items:
-                null, //TODO: Dynamically populate dropdown items with courses
-          ),
+          FutureBuilder(
+              future: Supabase.instance.client
+                  .from('course')
+                  .select()
+                  .withConverter(
+                      (data) => data.map((e) => Course.fromJson(e)).toList()),
+              builder: (context, snapshot) {
+                if (!snapshot.hasData) {
+                  return const CircularProgressIndicator();
+                }
+
+                return DropdownButton(
+                  isExpanded: false,
+                  isDense: false,
+                  borderRadius: BorderRadius.circular(18),
+                  disabledHint: const Text(
+                    "No courses yet.",
+                    style: TextStyle(fontSize: 14),
+                  ),
+                  onChanged: (course) =>
+                      setState(() => selectedCourse = course),
+                  value: selectedCourse,
+                  items: snapshot.data
+                      ?.map((e) => DropdownMenuItem(child: Text(e.title)))
+                      .toList(),
+                );
+              }),
           const SizedBox(height: 20),
           Row(
             children: [
@@ -270,17 +289,25 @@ class _TrainersFormState extends State<TrainersForm> {
       ),
       onPressed: () {
         final supabase = Supabase.instance.client;
-        Trainer? trainer = widget.trainer;
+        Trainer trainer = Trainer(
+          id: widget.trainer?.id,
+          firstName: firstNameCon.text,
+          // TODO: middle name texteditingcontroller
+          // middleName: /* controller */,
+          lastName: lastNameCon.text,
+          email: emailCon.text,
+          contactNumber: contactCon.text,
+        );
 
-        if (trainer != null) {
-          supabase
-              .from('trainer')
-              .update(trainer.toJson())
-              .eq('id', trainer.id);
-        } else {
-          // TODO: Add code to insert new record
-          // trainer = Trainer(id: id, firstName: firstName, middleName: middleName, lastName: lastName, email: email, contactNumber: contactNumber);
-        }
+        supabase.from('trainer').upsert(trainer.toJson()).whenComplete(() {
+          ScaffoldMessenger.of(context)
+              .showSnackBar(const SnackBar(content: Text("Upsert successful!")));
+
+          Navigator.of(context).pop();
+        }).catchError((_) {
+          ScaffoldMessenger.of(context)
+              .showSnackBar(const SnackBar(content: Text("An error occured.")));
+        });
       },
       child: const Text(
         "Save",
@@ -301,7 +328,20 @@ class _TrainersFormState extends State<TrainersForm> {
             return const Color.fromARGB(255, 226, 226, 226);
           }),
         ),
-        onPressed: () {},
+        onPressed: () {
+          final supabase = Supabase.instance.client;
+          final id = widget.trainer!.id!;
+
+          supabase.from('trainer').delete().eq('id', id).whenComplete(() {
+            ScaffoldMessenger.of(context).showSnackBar(
+                const SnackBar(content: Text("Delete successful!")));
+
+            Navigator.of(context).pop();
+          }).catchError((_) {
+            ScaffoldMessenger.of(context)
+              .showSnackBar(const SnackBar(content: Text("An error occured.")));
+          });
+        },
         child: const Text(
           "Delete",
           style: TextStyle(color: Colors.black87),
