@@ -2,7 +2,9 @@ import 'package:json_annotation/json_annotation.dart';
 
 part 'trainee.g.dart';
 
-@JsonSerializable()
+@JsonSerializable(
+  includeIfNull: false
+)
 class Trainee {
   int id;
 
@@ -10,7 +12,7 @@ class Trainee {
   String firstName;
 
   @JsonKey(name: "middle_name")
-  String middleName;
+  String? middleName;
 
   @JsonKey(name: "last_name")
   String lastName;
@@ -36,7 +38,7 @@ class Trainee {
   Trainee(
       {required this.id,
       required this.firstName,
-      required this.middleName,
+      this.middleName,
       required this.lastName,
       required this.email,
       this.contactNumber,

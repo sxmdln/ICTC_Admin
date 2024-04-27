@@ -19,9 +19,17 @@ class _TraineesPageState extends State<TraineesPage>
 
   @override
   void initState() {
-    _trainees = Supabase.instance.client.from('student').stream(primaryKey: [
+    _trainees = Supabase.instance.client.from("student").stream(primaryKey: [
       'id'
     ]).map((data) => data.map((e) => Trainee.fromJson(e)).toList());
+
+    Supabase.instance.client
+        .from("student")
+        .select()
+        .withConverter((data) => data.map(
+              (e) => Trainee.fromJson(e),
+            ))
+        .then((value) => print(value));
 
     super.initState();
   }
