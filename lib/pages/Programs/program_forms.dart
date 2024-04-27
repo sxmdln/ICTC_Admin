@@ -1,10 +1,12 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:ictc_admin/models/program.dart';
+import 'package:supabase_flutter/supabase_flutter.dart';
 
 class ProgramForm extends StatefulWidget {
   const ProgramForm({super.key, this.program});
 
-  final Object? program;
+  final Program? program;
 
   @override
   State<ProgramForm> createState() => _ProgramFormState();
@@ -15,8 +17,10 @@ class _ProgramFormState extends State<ProgramForm> {
   void initState() {
     super.initState();
 
-    progTitleCon = TextEditingController();
-    progDescriptionCon = TextEditingController();
+    print("program ${widget.program?.id}");
+
+    progTitleCon = TextEditingController(text: widget.program?.title);
+    progDescriptionCon = TextEditingController(text: widget.program?.description);
   }
 
   final formKey = GlobalKey<FormState>();
@@ -131,7 +135,8 @@ class _ProgramFormState extends State<ProgramForm> {
   }
 
   Widget saveButton() {
-    return FilledButton(
+
+    return ElevatedButton(
       style: ButtonStyle(
         backgroundColor: MaterialStateProperty.resolveWith((states) {
           if (states.contains(MaterialState.pressed)) {
@@ -140,9 +145,30 @@ class _ProgramFormState extends State<ProgramForm> {
           return Colors.green;
         }),
       ),
+      
       onPressed: () {
-        // TODO: backend functions for insert and update
+        final supabase = Supabase.instance.client;
+        Program program = Program(
+          id: widget.program?.id,
+          title: progTitleCon.text,
+          description: progDescriptionCon.text,
+        );
+
+        print(program.toJson());
+
+        supabase.from('program').upsert(program.toJson()).whenComplete(() {
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(content: Text("Upsert successful!")),
+          );
+
+          Navigator.of(context).pop();
+        }).catchError((_) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(content: Text("An error occurred.")),
+          );
+        });
       },
+
       child: const Text(
         "Save",
         style: TextStyle(
@@ -150,10 +176,12 @@ class _ProgramFormState extends State<ProgramForm> {
         ),
       ),
     );
+
   }
 
+  
   Widget deleteButton() {
-    return FilledButton(
+    return ElevatedButton(
         style: ButtonStyle(
           backgroundColor: MaterialStateProperty.resolveWith((states) {
             if (states.contains(MaterialState.pressed)) {
@@ -162,7 +190,20 @@ class _ProgramFormState extends State<ProgramForm> {
             return const Color.fromARGB(255, 226, 226, 226);
           }),
         ),
-        onPressed: () {},
+        onPressed: () {
+          final supabase = Supabase.instance.client;
+          final id = widget.program!.id!;
+
+          supabase.from('program').delete().eq('id', id).whenComplete(() {
+            ScaffoldMessenger.of(context).showSnackBar(
+                const SnackBar(content: Text("Delete successful!")));
+
+            Navigator.of(context).pop();
+          }).catchError((_) {
+            ScaffoldMessenger.of(context)
+              .showSnackBar(const SnackBar(content: Text("An error occured.")));
+          });
+        },
         child: const Text(
           "Delete",
           style: TextStyle(color: Colors.black87),

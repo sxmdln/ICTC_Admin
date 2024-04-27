@@ -121,7 +121,7 @@ class _ProgramsPageState extends State<ProgramsPage>
       const DataCell(Text('')),
       DataCell(Row(
         children: [
-          editButton(),
+          editButton(program),
           const Padding(padding: EdgeInsets.all(5)),
           viewButton(program)
         ],
@@ -213,13 +213,13 @@ class _ProgramsPageState extends State<ProgramsPage>
     );
   }
 
-  Widget editButton() {
+  Widget editButton(Program program) {
     return TextButton(
         onPressed: () {
           showDialog(
             context: context,
             builder: (context) {
-              return editDialog();
+              return editDialog(program);
             },
           );
         },
@@ -238,7 +238,7 @@ class _ProgramsPageState extends State<ProgramsPage>
         ));
   }
 
-  Widget editDialog() {
+  Widget editDialog(Program program) {
     return AlertDialog(
       // shape: const RoundedRectangleBorder(
       //     borderRadius: BorderRadius.all(Radius.circular(30))),
@@ -269,14 +269,14 @@ class _ProgramsPageState extends State<ProgramsPage>
         child: SizedBox(
           width: 550,
           height: MediaQuery.of(context).size.height * 0.4,
-          child: const Padding(
-            padding: EdgeInsets.fromLTRB(0, 0, 0, 0),
+          child: Padding(
+            padding: const EdgeInsets.fromLTRB(0, 0, 0, 0),
             child: SingleChildScrollView(
               child: Column(
                 mainAxisSize: MainAxisSize.min,
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
-                  ProgramForm(),
+                  ProgramForm(program: program),
                 ],
               ),
             ),

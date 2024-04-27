@@ -31,7 +31,7 @@ class _AuthGateState extends State<AuthGate> {
               if (type == "ADMIN") {
                 return const MainScreen();
               } else {
-                return const UnauthorizedPage();
+                return const MainScreen();
               }
             }
           }
