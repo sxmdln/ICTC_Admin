@@ -119,16 +119,10 @@ class _CoursesPageState extends State<CoursesPage>
 
   DataRow2 buildRow(Course course) {
     return DataRow2(onSelectChanged: (selected) {}, cells: [
-      DataCell(Text(course.title)),
+      DataCell(Text(course.title.toString())),
       DataCell(Text(course.cost.toString())),
-      const DataCell(Text('')),
-      DataCell(Row(
-        children: [
-          editButton(),
-          const Padding(padding: EdgeInsets.all(5)),
-          viewButton(course)
-        ],
-      )),
+      DataCell(editButton()),
+      DataCell(viewButton(course)),
     ]);
   }
 
@@ -186,7 +180,7 @@ class _CoursesPageState extends State<CoursesPage>
             ),
           ),
           const Text(
-            "Add a Program",
+            "Add a Course",
             style: TextStyle(
                 color: Colors.black87,
                 fontSize: 24,

@@ -2,33 +2,35 @@ import 'package:json_annotation/json_annotation.dart';
 
 part 'course.g.dart';
 
-@JsonSerializable()
+@JsonSerializable(
+    includeIfNull: false
+)
 class Course {
-  int id;
+  final int? id;
 
   @JsonKey(name: 'program_id')
-  int programId;
+  int? programId;
 
   @JsonKey(name: 'trainer_id')
   int? trainerId;
 
-  String title;
+  String? title;
   String? description;
-  int cost;
-  String duration;
-  String schedule;
-  String venue;
+  int? cost;
+  String? duration;
+  String? schedule;
+  String? venue;
 
   Course({
-    required this.id,
+    this.id,
     required this.programId,
     this.trainerId,
-    required this.title,
+    this.title,
     this.description,
-    required this.cost,
-    required this.duration,
-    required this.schedule,
-    required this.venue,
+    this.cost,
+    this.duration,
+    this.schedule,
+    this.venue,
   });
 
   factory Course.fromJson(Map<String, dynamic> json) => _$CourseFromJson(json);

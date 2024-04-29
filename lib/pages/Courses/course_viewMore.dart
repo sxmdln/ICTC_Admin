@@ -51,7 +51,7 @@ class _CourseViewMoreState extends State<CourseViewMore> {
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
-                        Text(widget.course.title,
+                        Text(widget.course.title.toString(),
                             style: const TextStyle(
                                 fontSize: 24, fontWeight: FontWeight.w600)),
                         Row(

@@ -253,7 +253,7 @@ class _TrainersFormState extends State<TrainersForm> {
                       setState(() => selectedCourse = course),
                   value: selectedCourse,
                   items: snapshot.data
-                      ?.map((e) => DropdownMenuItem(child: Text(e.title)))
+                      ?.map((e) => DropdownMenuItem(child: Text(e.title.toString())))
                       .toList(),
                 );
               }),

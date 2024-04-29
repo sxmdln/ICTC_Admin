@@ -21,6 +21,7 @@ class _ProgramFormState extends State<ProgramForm> {
 
     progTitleCon = TextEditingController(text: widget.program?.title);
     progDescriptionCon = TextEditingController(text: widget.program?.description);
+    
   }
 
   final formKey = GlobalKey<FormState>();
@@ -193,6 +194,7 @@ class _ProgramFormState extends State<ProgramForm> {
         onPressed: () {
           final supabase = Supabase.instance.client;
           final id = widget.program!.id!;
+          
 
           supabase.from('program').delete().eq('id', id).whenComplete(() {
             ScaffoldMessenger.of(context).showSnackBar(

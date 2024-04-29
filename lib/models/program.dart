@@ -22,6 +22,8 @@ class Program {
 
   factory Program.fromJson(Map<String, dynamic> json) => _$ProgramFromJson(json);
 
+  get first_name => null;
+
   Map<String, dynamic> toJson() => _$ProgramToJson(this);
 
   @override
