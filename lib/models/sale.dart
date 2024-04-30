@@ -1,12 +1,12 @@
-class Sale {
+class Income {
   int id;
   String firstName, middleName, lastName;
   String schedule;
   int totalStudents;
-  int saleTotal;
+  int incomeTotal;
   int discountTotal;
 
-  Sale(
+  Income(
     {
       required this.id,
       required this.firstName,
@@ -14,7 +14,7 @@ class Sale {
       required this.lastName,
       required this.schedule,
       required this.totalStudents,
-      required this.saleTotal,
+      required this.incomeTotal,
       required this.discountTotal,
     }
   );
