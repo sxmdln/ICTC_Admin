@@ -19,15 +19,15 @@ class _ProgramViewMoreState extends State<ProgramViewMore> {
         const Row(
           mainAxisAlignment: MainAxisAlignment.center,
           crossAxisAlignment: CrossAxisAlignment.center,
-          children: [
-            Text("Preview",
-                style: TextStyle(fontWeight: FontWeight.w500, fontSize: 24)),
-          ],
+          // children: [
+          //   Text("Preview",
+          //       style: TextStyle(fontWeight: FontWeight.w500, fontSize: 24)),
+          // ],
         ),
-        const SizedBox(height: 45),
+        const SizedBox(height: 10),
         SizedBox(
           width: 400,
-          height: 500,
+          height: 320,
           child: Card(
             clipBehavior: Clip.antiAlias,
             shape: RoundedRectangleBorder(
@@ -73,9 +73,9 @@ class _ProgramViewMoreState extends State<ProgramViewMore> {
                       ],
                     ),
                     Padding(
-                      padding: const EdgeInsets.only(top: 40),
+                      padding: const EdgeInsets.only(top: 20),
                       child: AspectRatio(
-                        aspectRatio: 20 / 10,
+                        aspectRatio: 5 / 2,
                         child: Image.asset(
                           'assets/images/program1.png',
                           fit: BoxFit.fitWidth,
@@ -86,7 +86,94 @@ class _ProgramViewMoreState extends State<ProgramViewMore> {
                 )),
           ),
         ),
+
+        const SizedBox(
+            height: 20,
+          ),
+
+        buildCourses()
       ],
+    );
+  }
+
+    Widget buildCourses() {
+    return Flexible(
+      flex: 8,
+      child: Container(
+        padding: const EdgeInsets.only(top: 0, left: 25, right: 25),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.start,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            //title
+            const Text(
+              softWrap: true,
+              //name
+              "Courses",
+              style: TextStyle(
+                  fontSize: 14,
+                  color: Color.fromARGB(221, 16, 16, 16),
+                  fontWeight: FontWeight.w600),
+            ),
+            const SizedBox(
+              height: 4,
+            ),
+            //courses
+            Expanded(
+                flex: 2,
+                child: ListView(
+                    padding: const EdgeInsets.only(left: 13),
+                    children: [
+                      programCourseCard(),
+                      programCourseCard(),
+                      programCourseCard(),
+                      programCourseCard(),
+                      programCourseCard(),
+                      programCourseCard(),
+                    ])),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget programCourseCard() {
+    return Container(
+      margin: const EdgeInsets.only(bottom: 2),
+      padding: const EdgeInsets.all(0),
+      child: const SizedBox(
+          width: 240,
+          height: 60,
+          child: Card(
+              elevation: 0.5,
+              shape: RoundedRectangleBorder(
+                  side: BorderSide(color: Colors.black12),
+                  borderRadius: BorderRadius.all(Radius.circular(10))),
+              color: Color.fromARGB(255, 247, 247, 247),
+              child: Padding(
+                padding: EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    Text(
+                      " Introduction to Cybersecurity", //TODO: add courses of trainer (connected)
+                      style: TextStyle(
+                        fontSize: 14,
+                        fontWeight: FontWeight.w500,
+                        color: Colors.black,
+                      ),
+                    ),
+                    Text(
+                      "01/01/2024-02/1/2024",
+                      style: TextStyle(
+                          fontSize: 12,
+                          color: Colors.black54,
+                          fontWeight: FontWeight.w300),
+                    ),
+                  ],
+                ),
+              ))),
     );
   }
 }

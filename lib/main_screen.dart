@@ -3,9 +3,8 @@
 import 'package:flutter/material.dart';
 import 'package:ictc_admin/pages/courses/courses_page.dart';
 import 'package:ictc_admin/pages/dashboard/dashboard.dart';
-import 'package:ictc_admin/pages/expenses/expenses_page.dart';
+import 'package:ictc_admin/pages/finance/finance_page.dart';
 import 'package:ictc_admin/pages/programs/programs_page.dart';
-import 'package:ictc_admin/pages/sales/sales_page.dart';
 import 'package:ictc_admin/pages/trainers/trainers_page.dart';
 import 'package:ictc_admin/pages/trainees/trainees_page.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
@@ -48,8 +47,6 @@ class _MainScreenState extends State<MainScreen> {
       "Trainees",
       "Programs",
       "Courses",
-      "Sales",
-      "Expenses",
     ];
 
     return pageNames[_selectedIndex];
@@ -58,13 +55,11 @@ class _MainScreenState extends State<MainScreen> {
   @override
   Widget build(BuildContext context) {
     List<Widget> views = [
-      const DashboardPage(),
+      const FinancePage(),
       const TrainersPage(),
       const TraineesPage(),
       const ProgramsPage(),
       const CoursesPage(),
-      const SalesPage(),
-      const ExpensesPage(),
     ];
 
     List<NavigationRailDestination> destinations = const [
@@ -80,7 +75,7 @@ class _MainScreenState extends State<MainScreen> {
           size: 30,
         ),
         label: Text(
-          "Dashboard",
+          "Reports",
           style: TextStyle(
             fontSize: 16,
             fontWeight: FontWeight.w400,
@@ -168,46 +163,7 @@ class _MainScreenState extends State<MainScreen> {
           ),
         ),
       ),
-      NavigationRailDestination(
-        icon: Icon(
-          Icons.monetization_on_outlined,
-          color: Colors.white,
-          size: 30,
-        ),
-        selectedIcon: Icon(
-          Icons.monetization_on,
-          color: Colors.white,
-          size: 30,
-        ),
-        label: Text(
-          "Sales",
-          style: TextStyle(
-            fontSize: 16,
-            fontWeight: FontWeight.w400,
-            color: Colors.white,
-          ),
-        ),
-      ),
-      NavigationRailDestination(
-        icon: Icon(
-          Icons.money_off_rounded,
-          color: Colors.white,
-          size: 30,
-        ),
-        selectedIcon: Icon(
-          Icons.money_off_csred,
-          color: Colors.white,
-          size: 30,
-        ),
-        label: Text(
-          "Expenses",
-          style: TextStyle(
-            fontSize: 16,
-            fontWeight: FontWeight.w400,
-            color: Colors.white,
-          ),
-        ),
-      ),
+      
     ];
 
     return Scaffold(
