@@ -170,10 +170,6 @@ class _CourseFormState extends State<CourseForm> {
           //   );
           // }),
 
-          const SizedBox(
-            height: 6,
-          ),
-
           // dropdown for trainers
           // FutureBuilder (
           //   future: fetchTrainers(),
@@ -229,6 +225,12 @@ class _CourseFormState extends State<CourseForm> {
 
           DropdownSearch<Program>(
             asyncItems: (filter) => fetchPrograms(),
+            dropdownDecoratorProps: DropDownDecoratorProps(
+              dropdownSearchDecoration: InputDecoration(
+                labelText: "Program",
+                filled: true,
+              ),
+            ),
             onChanged: (value) => setState(() => selectedProgram = value),
             selectedItem: selectedProgram,
             popupProps: const PopupProps.dialog(showSearchBox: true),
@@ -241,11 +243,23 @@ class _CourseFormState extends State<CourseForm> {
               return null;
             },
           ),
+
+          const SizedBox(
+            height: 6,
+          ),
+
           DropdownSearch<Trainer>(
             asyncItems: (filter) => fetchTrainers(),
+            dropdownDecoratorProps: DropDownDecoratorProps(
+              dropdownSearchDecoration: InputDecoration(
+                labelText: "Trainer",
+                filled: true,
+              ),
+            ),
             onChanged: (value) => setState(() => selectedTrainer = value),
             selectedItem: selectedTrainer,
             popupProps: const PopupProps.dialog(showSearchBox: true),
+            
             compareFn: (item1, item2) => item1.id == item2.id,
             validator: (value) {
               if (value == null) {
@@ -255,6 +269,11 @@ class _CourseFormState extends State<CourseForm> {
               return null;
             },
           ),
+
+          const SizedBox(
+            height: 6,
+          ),
+          
           Flexible(
             child: CupertinoTextFormFieldRow(
               controller: courseTitleCon,
