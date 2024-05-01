@@ -8,11 +8,11 @@ part of 'course.dart';
 
 Course _$CourseFromJson(Map<String, dynamic> json) => Course(
       id: json['id'] as int?,
-      programId: json['program_id'] as int,
+      programId: json['program_id'] as int?,
       trainerId: json['trainer_id'] as int?,
-      title: json['title'] as String?,
+      title: json['title'] as String,
       description: json['description'] as String?,
-      cost: json['cost'] as int?,
+      cost: json['cost'] as int,
       duration: json['duration'] as String?,
       schedule: json['schedule'] as String?,
       venue: json['venue'] as String?,
@@ -28,11 +28,11 @@ Map<String, dynamic> _$CourseToJson(Course instance) {
   }
 
   writeNotNull('id', instance.id);
-  val['program_id'] = instance.programId;
+  writeNotNull('program_id', instance.programId);
   writeNotNull('trainer_id', instance.trainerId);
-  writeNotNull('title', instance.title);
+  val['title'] = instance.title;
   writeNotNull('description', instance.description);
-  writeNotNull('cost', instance.cost);
+  val['cost'] = instance.cost;
   writeNotNull('duration', instance.duration);
   writeNotNull('schedule', instance.schedule);
   writeNotNull('venue', instance.venue);

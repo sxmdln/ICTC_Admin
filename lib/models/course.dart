@@ -14,9 +14,10 @@ class Course {
   @JsonKey(name: 'trainer_id')
   int? trainerId;
 
-  String? title;
+  // TODO: set nullable and not nullable variables
+  String title;
   String? description;
-  int? cost;
+  int cost;
   String? duration;
   String? schedule;
   String? venue;
@@ -25,9 +26,9 @@ class Course {
     this.id,
     required this.programId,
     this.trainerId,
-    this.title,
+    required this.title,
     this.description,
-    this.cost,
+    required this.cost,
     this.duration,
     this.schedule,
     this.venue,

@@ -535,7 +535,7 @@ class _CourseFormState extends State<CourseForm> {
           trainerId: selectedTrainer!.id,
           title: courseTitleCon.text,
           description: descriptionCon.text,
-          cost: int.tryParse(costCon.text),
+          cost: int.tryParse(costCon.text)!,
           duration: durationCon.text,
           schedule: scheduleCon.text,
           venue: venueCon.text,
