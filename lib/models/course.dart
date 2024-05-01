@@ -22,6 +22,8 @@ class Course {
   String? schedule;
   String? venue;
 
+  var students;
+
   Course({
     this.id,
     required this.programId,

@@ -163,27 +163,49 @@ class _MainScreenState extends State<MainScreen> {
           ),
         ),
       ),
-      
     ];
 
-    return Scaffold(
-      backgroundColor: const Color(0xfff1f5fb),
-      body: Row(
-        children: [
-          Container(
-              // decoration: const BoxDecoration(
-              //     border: Border(bottom: BorderSide(width: 2))),
-              child: buildNavRail(destinations)),
-          Expanded(
-            child: Column(
+    return LayoutBuilder(
+      builder: (context, constraints) {
+        if (true) {
+          return Scaffold(
+            backgroundColor: const Color(0xfff1f5fb),
+            body: Row(
               children: [
-                buildBar(context),
-                buildPageView(views),
+                Container(
+                    // decoration: const BoxDecoration(
+                    //     border: Border(bottom: BorderSide(width: 2))),
+                    child: buildNavRail(destinations)),
+                Expanded(
+                  child: Column(
+                    children: [
+                      buildBar(context),
+                      buildPageView(views),
+                    ],
+                  ),
+                )
               ],
             ),
-          )
-        ],
-      ),
+          );
+        }
+
+        return Scaffold(
+          body: buildPageView(views),
+          bottomNavigationBar: BottomNavigationBar(
+            items: const [
+              BottomNavigationBarItem(icon: Icon(Icons.home), label: "Reports"),
+              BottomNavigationBarItem(
+                  icon: Icon(Icons.person), label: "Trainers"),
+              BottomNavigationBarItem(
+                  icon: Icon(Icons.group), label: "Students"),
+              BottomNavigationBarItem(
+                  icon: Icon(Icons.grid_view), label: "Programs"),
+              BottomNavigationBarItem(icon: Icon(Icons.book), label: "Courses"),
+            ],
+            onTap: onDestinationChanged,
+          ),
+        );
+      },
     );
   }
 

@@ -2,6 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:data_table_2/data_table_2.dart';
 import 'package:ictc_admin/models/course.dart';
+import 'package:ictc_admin/pages/Courses/course_details.dart';
 import 'package:ictc_admin/pages/courses/course_viewMore.dart';
 import 'package:ictc_admin/pages/courses/course_forms.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
@@ -288,17 +289,11 @@ class _CoursesPageState extends State<CoursesPage>
   Widget viewButton(Course course) {
     return TextButton(
         onPressed: () {
-          onListRowTap(course);
-          // showDialog(
-          //   context: context,
-          //   builder: (context) {
-          //     return AlertDialog(
-          //       contentPadding: const EdgeInsets.all(0),
-          //       backgroundColor: Colors.transparent,
-          //       content: CourseViewMore(course: course),
-          //     );
-          //   },
-          // );
+          Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (context) => CourseDetails(course: course),
+              ));
         },
         child: const Row(
           children: [
