@@ -28,7 +28,7 @@ class Program {
 
   @override
   String toString() {
-    return "$title $description";
+    return title;
   }
 
 }

@@ -121,7 +121,7 @@ class _CoursesPageState extends State<CoursesPage>
     return DataRow2(onSelectChanged: (selected) {}, cells: [
       DataCell(Text(course.title.toString())),
       DataCell(Text(course.cost.toString())),
-      DataCell(editButton()),
+      DataCell(editButton(course)),
       DataCell(viewButton(course)),
     ]);
   }
@@ -210,13 +210,13 @@ class _CoursesPageState extends State<CoursesPage>
     );
   }
 
-  Widget editButton() {
+  Widget editButton(Course course) {
     return TextButton(
         onPressed: () {
           showDialog(
             context: context,
             builder: (context) {
-              return editDialog();
+              return editDialog(course);
             },
           );
         },
@@ -235,7 +235,7 @@ class _CoursesPageState extends State<CoursesPage>
         ));
   }
 
-  Widget editDialog() {
+  Widget editDialog(Course course) {
     return AlertDialog(
       // shape: const RoundedRectangleBorder(
       //     borderRadius: BorderRadius.all(Radius.circular(30))),
@@ -253,7 +253,7 @@ class _CoursesPageState extends State<CoursesPage>
             ),
           ),
           const Text(
-            "Edit a Program",
+            "Edit a Course",
             style: TextStyle(
                 color: Colors.black87,
                 fontSize: 24,
@@ -266,14 +266,16 @@ class _CoursesPageState extends State<CoursesPage>
         child: SizedBox(
           width: 550,
           height: MediaQuery.of(context).size.height * 0.4,
-          child: const Padding(
-            padding: EdgeInsets.fromLTRB(0, 0, 0, 0),
+          child: Padding(
+            padding: const EdgeInsets.fromLTRB(0, 0, 0, 0),
             child: SingleChildScrollView(
               child: Column(
                 mainAxisSize: MainAxisSize.min,
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
-                  CourseForm(),
+                  CourseForm(
+                    course: course,
+                  ),
                 ],
               ),
             ),

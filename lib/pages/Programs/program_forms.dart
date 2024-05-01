@@ -4,17 +4,21 @@ import 'package:ictc_admin/models/program.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
 class ProgramForm extends StatefulWidget {
+
   const ProgramForm({super.key, this.program});
 
   final Program? program;
 
   @override
   State<ProgramForm> createState() => _ProgramFormState();
+
 }
 
 class _ProgramFormState extends State<ProgramForm> {
+
   @override
   void initState() {
+
     super.initState();
 
     print("program ${widget.program?.id}");
@@ -49,7 +53,7 @@ class _ProgramFormState extends State<ProgramForm> {
               // padding: EdgeInsets.only(left: 90),
               placeholder: "e.g. Microcredentials",
               placeholderStyle: const TextStyle(
-                fontSize: 14, //
+                fontSize: 14,
                 fontWeight: FontWeight.w400,
                 color: Colors.black45,
               ),
@@ -74,7 +78,6 @@ class _ProgramFormState extends State<ProgramForm> {
           Flexible(
             child: CupertinoTextFormFieldRow(
               controller: progDescriptionCon,
-
               expands: true,
               keyboardType: TextInputType.multiline,
               minLines: null,
@@ -136,7 +139,6 @@ class _ProgramFormState extends State<ProgramForm> {
   }
 
   Widget saveButton() {
-
     return ElevatedButton(
       style: ButtonStyle(
         backgroundColor: MaterialStateProperty.resolveWith((states) {
@@ -179,7 +181,6 @@ class _ProgramFormState extends State<ProgramForm> {
     );
 
   }
-
   
   Widget deleteButton() {
     return ElevatedButton(

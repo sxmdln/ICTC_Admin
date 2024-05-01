@@ -230,33 +230,34 @@ class _TrainersFormState extends State<TrainersForm> {
             ),
           ),
 
-          FutureBuilder(
-              future: Supabase.instance.client
-                  .from('course')
-                  .select()
-                  .withConverter(
-                      (data) => data.map((e) => Course.fromJson(e)).toList()),
-              builder: (context, snapshot) {
-                if (!snapshot.hasData) {
-                  return const CircularProgressIndicator();
-                }
+          // FutureBuilder(
+          //     future: Supabase.instance.client
+          //         .from('course')
+          //         .select()
+          //         .withConverter(
+          //             (data) => data.map((e) => Course.fromJson(e)).toList()),
+          //     builder: (context, snapshot) {
+          //       if (!snapshot.hasData) {
+          //         return const CircularProgressIndicator();
+          //       }
 
-                return DropdownButton(
-                  isExpanded: false,
-                  isDense: false,
-                  borderRadius: BorderRadius.circular(18),
-                  disabledHint: const Text(
-                    "No courses yet.",
-                    style: TextStyle(fontSize: 14),
-                  ),
-                  onChanged: (course) =>
-                      setState(() => selectedCourse = course),
-                  value: selectedCourse,
-                  items: snapshot.data
-                      ?.map((e) => DropdownMenuItem(child: Text(e.title.toString())))
-                      .toList(),
-                );
-              }),
+          //       return DropdownButton(
+          //         isExpanded: false,
+          //         isDense: false,
+          //         borderRadius: BorderRadius.circular(18),
+          //         disabledHint: const Text(
+          //           "No courses yet.",
+          //           style: TextStyle(fontSize: 14),
+          //         ),
+          //         onChanged: (course) =>
+          //             setState(() => selectedCourse = course),
+          //         value: selectedCourse,
+          //         items: snapshot.data
+          //             ?.map((e) => DropdownMenuItem(child: Text(e.title.toString())))
+          //             .toList(),
+          //       );
+          //     }),
+          
           const SizedBox(height: 20),
           Row(
             children: [
