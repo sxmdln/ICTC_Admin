@@ -122,8 +122,12 @@ class _CoursesPageState extends State<CoursesPage>
     return DataRow2(onSelectChanged: (selected) {}, cells: [
       DataCell(Text(course.title.toString())),
       DataCell(Text(course.cost.toString())),
-      DataCell(editButton(course)),
-      DataCell(viewButton(course)),
+      const DataCell(Text('')),
+      DataCell(Row(
+        children: [editButton(course),
+          viewButton(course),
+        ],
+      )),
     ]);
   }
 
