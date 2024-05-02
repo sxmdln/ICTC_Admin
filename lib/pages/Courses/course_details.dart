@@ -3,6 +3,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:ictc_admin/models/course.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
+import 'package:html_unescape/html_unescape.dart';
 
 class CourseDetails extends StatefulWidget {
   const CourseDetails({super.key, required this.course});
@@ -11,9 +12,11 @@ class CourseDetails extends StatefulWidget {
 
   @override
   State<CourseDetails> createState() => _CourseDetailsState();
+
 }
 
 class _CourseDetailsState extends State<CourseDetails> {
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -88,10 +91,12 @@ class _CourseDetailsState extends State<CourseDetails> {
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
                     Text(
-                      "Description: ${widget.course.description}",style: const TextStyle(
-                      color: Colors.white,
-                      fontSize: 18,
-                      fontWeight: FontWeight.w400),
+                      "Description: ${HtmlUnescape().convert("${widget.course.description}")}",
+                      style: const TextStyle(
+                        color: Colors.white,
+                        fontSize: 18,
+                        fontWeight: FontWeight.w400,
+                      ),
                     ),
                   ],
                 ),

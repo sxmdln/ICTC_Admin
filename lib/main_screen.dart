@@ -8,6 +8,7 @@ import 'package:ictc_admin/pages/programs/programs_page.dart';
 import 'package:ictc_admin/pages/trainers/trainers_page.dart';
 import 'package:ictc_admin/pages/trainees/trainees_page.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
+import 'package:html_unescape/html_unescape.dart';
 
 class MainScreen extends StatefulWidget {
   const MainScreen({super.key});
@@ -26,6 +27,7 @@ class _MainScreenState extends State<MainScreen> {
   PageController pageController = PageController(
     keepPage: true,
   );
+
   SearchController searchController = SearchController();
 
   void onDestinationChanged(int value) {
@@ -209,6 +211,30 @@ class _MainScreenState extends State<MainScreen> {
     );
   }
 
+  
+  String getTableName() {
+    switch (_selectedIndex) {
+      case 1:
+        return "trainer";
+      case 2:
+        return "student";
+      case 3:
+        return "program";
+      case 4:
+        return "course";
+      default:
+        return "";
+    }
+  }
+
+
+Future<int> getCount(String tableName) async {
+  final supabase = Supabase.instance.client;
+  final count = await supabase.from(tableName).count();
+  return count;
+}
+
+
   Container buildBar(BuildContext context) {
     return Container(
         color: const Color(0xfff1f5fb),
@@ -238,7 +264,7 @@ class _MainScreenState extends State<MainScreen> {
                       const SizedBox(
                         width: 10,
                       ),
-                      buildCounter(context),
+                      buildCounter(context, getCount(getTableName())),
                       //TODO: need backend - FOR TOTAL# (remove it if page is on dashboard).
                     ],
                   ),
@@ -315,7 +341,7 @@ class _MainScreenState extends State<MainScreen> {
           )
         ]));
   }
-
+              
   Widget buildSearchBar(BuildContext context) {
     const key = ValueKey("searchbar");
     return AnimatedSwitcher(
@@ -346,23 +372,34 @@ class _MainScreenState extends State<MainScreen> {
           : Container(key: key),
     );
   }
+  
 
-  Widget buildCounter(BuildContext context) {
-    const key = ValueKey("counter");
-    return AnimatedSwitcher(
-      key: key,
-      duration: const Duration(milliseconds: 350),
-      child: _selectedIndex != 0
-          ? const Text(
-              "15",
-              style: TextStyle(
-                  fontSize: 28,
-                  fontWeight: FontWeight.bold,
-                  color: Colors.black26),
-            )
-          : Container(key: key),
-    );
-  }
+Widget buildCounter(BuildContext context, Future<int> count) {
+  const key = ValueKey("counter");
+
+  return AnimatedSwitcher(
+    key: key,
+    duration: const Duration(milliseconds: 350),
+    child: FutureBuilder(
+      future: count,
+      builder: (context, snapshot) {
+        if (snapshot.hasData) {
+          return snapshot.data != 0
+            ? Text(
+                  snapshot.data.toString(),
+                  style: const TextStyle(
+                      fontSize: 28,
+                      fontWeight: FontWeight.bold,
+                      color: Colors.black26),
+                )
+            : Container(key: key);
+        } else {
+          return Container(key: key);
+        }
+      },
+    ),
+  );
+}
 
   NavigationRail buildNavRail(List<NavigationRailDestination> destinations) {
     return NavigationRail(
