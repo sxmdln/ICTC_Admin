@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:ictc_admin/models/trainer.dart';
+import 'package:ictc_admin/models/course.dart';
+import 'package:supabase_flutter/supabase_flutter.dart';
 
 class TrainerViewMore extends StatefulWidget {
   final Trainer trainer;
@@ -11,30 +13,55 @@ class TrainerViewMore extends StatefulWidget {
 }
 
 class _TrainerViewMoreState extends State<TrainerViewMore> {
+
+  late final Future<List<Course>> programCourses;
+
+  @override
+  void initState() {
+    programCourses = Supabase.instance.client
+        .from('course')
+        .select()
+        .eq('trainer_id', widget.trainer.id!)
+        .withConverter((data) => data.map((e) => Course.fromJson(e)).toList());
+
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
-    return Container(
-      margin: const EdgeInsets.only(bottom: 20, top: 33.5, right: 12),
-      decoration: const BoxDecoration(
-        // border: Border(bottom: BorderSide(width: 1)),
-        // color: Color(0xfff1f5fb),
-        borderRadius: BorderRadius.all(Radius.circular(24)),
-        color: Colors.white,
-      ),
-      child: Column(
-        mainAxisSize: MainAxisSize.min,
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          trainerHeader(),
-          const SizedBox(height: 8),
-          const Divider(thickness: 0.5, color: Colors.black87),
-          const SizedBox(height: 8),
-          buildCourses(),
-          const Spacer(
-            flex: 2,
-          ),
-        ],
-      ),
+    return FutureBuilder(
+      future: programCourses,
+      builder: (context, snapshot) {
+        if (snapshot.connectionState == ConnectionState.waiting) {
+          return const Center(
+            child: CircularProgressIndicator(),
+          );
+        }
+      return Container(
+        margin: const EdgeInsets.only(bottom: 20, top: 33.5, right: 12),
+        decoration: const BoxDecoration(
+          // border: Border(bottom: BorderSide(width: 1)),
+          // color: Color(0xfff1f5fb),
+          borderRadius: BorderRadius.all(Radius.circular(24)),
+          color: Colors.white,
+        ),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            trainerHeader(),
+            const SizedBox(height: 8),
+            const Divider(thickness: 0.5, color: Colors.black87),
+            const SizedBox(height: 8),
+            if (snapshot.hasData) buildCourses(snapshot.data!)
+              else const CircularProgressIndicator(),
+            const Spacer(
+              flex: 2,
+            ),
+          ],
+        ),
+      );
+      },
     );
   }
 
@@ -171,85 +198,79 @@ class _TrainerViewMoreState extends State<TrainerViewMore> {
       // ),
     );
   }
-
-  Widget buildCourses() {
-    return Flexible(
-      flex: 8,
-      child: Container(
-        padding: const EdgeInsets.only(top: 0, left: 25, right: 25),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.start,
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            //title
-            const Text(
-              softWrap: true,
-              //name
-              "Courses",
-              style: TextStyle(
-                  fontSize: 16,
-                  color: Colors.black87,
-                  fontWeight: FontWeight.w600),
-            ),
-            const SizedBox(
-              height: 15,
-            ),
-            //courses
-            Expanded(
-                flex: 2,
-                child: ListView(
-                    padding: const EdgeInsets.only(left: 13),
-                    shrinkWrap: true,
-                    children: [
-                      trainerCourseCard(),
-                      trainerCourseCard(),
-                      trainerCourseCard(),
-                      trainerCourseCard(),
-                      trainerCourseCard(),
-                    ])),
-          ],
-        ),
+Widget buildCourses(List<Course> courses) {
+  return Flexible(
+    flex: 8,
+    child: Container(
+      padding: const EdgeInsets.only(top: 0, left: 25, right: 25),
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.start,
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          //title
+          const Text(
+            softWrap: true,
+            //name
+            "Courses",
+            style: TextStyle(
+                fontSize: 16,
+                color: Colors.black87,
+                fontWeight: FontWeight.w600),
+          ),
+          const SizedBox(
+            height: 15,
+          ),
+          //courses
+          Expanded(
+              flex: 2,
+              child: ListView.builder(
+                itemBuilder: (context, index) =>
+                    trainerCourseCard(courses[index]),
+                itemCount: courses.length,
+              )),
+        ],
       ),
-    );
-  }
+    ),
+  );
+}
 
-  Widget trainerCourseCard() {
-    return const Padding(
-      padding: EdgeInsets.all(0),
-      child: SizedBox(
-          width: 240,
-          height: 60,
-          child: Card(
-              elevation: 0.5,
-              shape: RoundedRectangleBorder(
-                  side: BorderSide(color: Colors.black12),
-                  borderRadius: BorderRadius.all(Radius.circular(10))),
-              color: Color.fromARGB(255, 247, 247, 247),
-              child: Padding(
-                padding: EdgeInsets.symmetric(horizontal: 10, vertical: 5),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  children: [
-                    Text(
-                      " Introduction to Cybersecurity", //TODO: add courses of trainer (connected)
-                      style: TextStyle(
-                        fontSize: 14,
-                        fontWeight: FontWeight.w500,
-                        color: Colors.black,
-                      ),
+Widget trainerCourseCard(Course course) {
+  return Padding(
+    padding: const EdgeInsets.all(0),
+    child: SizedBox(
+        width: 240,
+        height: 60,
+        child: Card(
+            elevation: 0.5,
+            shape: const RoundedRectangleBorder(
+                side: BorderSide(color: Colors.black12),
+                borderRadius: BorderRadius.all(Radius.circular(10))),
+            color: const Color.fromARGB(255, 247, 247, 247),
+            child: Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  Text(
+                    course.title, 
+                    style: const TextStyle(
+                      fontSize: 14,
+                      fontWeight: FontWeight.w500,
+                      color: Colors.black,
                     ),
-                    SizedBox(height: 5),
-                    Text(
-                      "01/01/2024-02/1/2024",
-                      style: TextStyle(
-                          fontSize: 12,
-                          color: Colors.black54,
-                          fontWeight: FontWeight.w300),
-                    ),
-                  ],
-                ),
-              ))),
-    );
-  }
+                  ),
+                  const SizedBox(height: 5),
+                  Text(
+                    course.schedule ?? "Not set",
+                    style: const TextStyle(
+                        fontSize: 12,
+                        color: Colors.black54,
+                        fontWeight: FontWeight.w300),
+                  ),
+                ],
+              ),
+            ))),
+  );
+}
 }

@@ -211,7 +211,7 @@ class _MainScreenState extends State<MainScreen> {
     );
   }
 
-  
+
   String getTableName() {
     switch (_selectedIndex) {
       case 1:
@@ -228,11 +228,13 @@ class _MainScreenState extends State<MainScreen> {
   }
 
 
-Future<int> getCount(String tableName) async {
-  final supabase = Supabase.instance.client;
-  final count = await supabase.from(tableName).count();
-  return count;
-}
+  Future<int> getCount(String tableName) async {
+
+    final supabase = Supabase.instance.client;
+    final count = await supabase.from(tableName).count();
+    
+    return count;
+  }
 
 
   Container buildBar(BuildContext context) {
@@ -265,7 +267,6 @@ Future<int> getCount(String tableName) async {
                         width: 10,
                       ),
                       buildCounter(context, getCount(getTableName())),
-                      //TODO: need backend - FOR TOTAL# (remove it if page is on dashboard).
                     ],
                   ),
                 )
@@ -286,7 +287,6 @@ Future<int> getCount(String tableName) async {
                             fontWeight: FontWeight.w700,
                             color: Colors.black),
                       ),
-                      //TODO: need backend - FOR TOTAL# (remove it if page is on dashboard).
                     ],
                   ),
                 ),
@@ -374,32 +374,32 @@ Future<int> getCount(String tableName) async {
   }
   
 
-Widget buildCounter(BuildContext context, Future<int> count) {
-  const key = ValueKey("counter");
+  Widget buildCounter(BuildContext context, Future<int> count) {
+    const key = ValueKey("counter");
 
-  return AnimatedSwitcher(
-    key: key,
-    duration: const Duration(milliseconds: 350),
-    child: FutureBuilder(
-      future: count,
-      builder: (context, snapshot) {
-        if (snapshot.hasData) {
-          return snapshot.data != 0
-            ? Text(
-                  snapshot.data.toString(),
-                  style: const TextStyle(
-                      fontSize: 28,
-                      fontWeight: FontWeight.bold,
-                      color: Colors.black26),
-                )
-            : Container(key: key);
-        } else {
-          return Container(key: key);
-        }
-      },
-    ),
-  );
-}
+    return AnimatedSwitcher(
+      key: key,
+      duration: const Duration(milliseconds: 350),
+      child: FutureBuilder(
+        future: count,
+        builder: (context, snapshot) {
+          if (snapshot.hasData) {
+            return snapshot.data != 0
+              ? Text(
+                    snapshot.data.toString(),
+                    style: const TextStyle(
+                        fontSize: 28,
+                        fontWeight: FontWeight.bold,
+                        color: Colors.black26),
+                  )
+              : Container(key: key);
+          } else {
+            return Container(key: key);
+          }
+        },
+      ),
+    );
+  }
 
   NavigationRail buildNavRail(List<NavigationRailDestination> destinations) {
     return NavigationRail(

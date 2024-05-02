@@ -5,6 +5,7 @@ import 'package:supabase_flutter/supabase_flutter.dart';
 
 class ProgramViewMore extends StatefulWidget {
   final Program program;
+  
   const ProgramViewMore({required this.program, super.key});
 
   @override

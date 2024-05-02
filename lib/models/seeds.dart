@@ -54,6 +54,7 @@ class Seeds {
     Course(
       id: 1,
       programId: -1,
+      trainerId: -1,
       title: 'Hacking Course',
       description: 'Lorem ipsum please enroll now',
       cost: 20,

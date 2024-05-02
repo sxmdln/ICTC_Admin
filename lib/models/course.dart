@@ -27,7 +27,7 @@ class Course {
   Course({
     this.id,
     required this.programId,
-    this.trainerId,
+    required this.trainerId,
     required this.title,
     this.description,
     required this.cost,
