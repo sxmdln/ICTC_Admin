@@ -99,7 +99,7 @@ class _ProgramViewMoreState extends State<ProgramViewMore> {
                         Padding(
                           padding: const EdgeInsets.only(top: 20),
                           child: AspectRatio(
-                            aspectRatio: 5 / 2,
+                            aspectRatio: 6 / 1,
                             child: Image.asset(
                               'assets/images/program1.png',
                               fit: BoxFit.fitWidth,
@@ -111,7 +111,7 @@ class _ProgramViewMoreState extends State<ProgramViewMore> {
               ),
             ),
             const SizedBox(
-              height: 20,
+              height: 30,
             ),
             if (snapshot.hasData) buildCourses(snapshot.data!)
             else const CircularProgressIndicator()

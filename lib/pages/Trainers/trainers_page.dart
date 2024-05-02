@@ -210,8 +210,8 @@ class _TrainersPageState extends State<TrainersPage>
       content: Flexible(
         flex: 2,
         child: SizedBox(
-          width: 550,
-          height: MediaQuery.of(context).size.height * 0.4,
+          width: 500,
+          height: MediaQuery.of(context).size.height * 0.28,
           child: const Padding(
             padding: EdgeInsets.fromLTRB(0, 0, 0, 0),
             child: SingleChildScrollView(
@@ -283,8 +283,8 @@ class _TrainersPageState extends State<TrainersPage>
       content: Flexible(
         flex: 2,
         child: SizedBox(
-          width: 550,
-          height: MediaQuery.of(context).size.height * 0.4,
+          width: 500,
+          height: MediaQuery.of(context).size.height * 0.28,
           child: Padding(
             padding: const EdgeInsets.fromLTRB(0, 0, 0, 0),
             child: SingleChildScrollView(
