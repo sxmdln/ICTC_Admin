@@ -5,6 +5,7 @@ import 'package:ictc_admin/pages/courses/courses_page.dart';
 import 'package:ictc_admin/pages/dashboard/dashboard.dart';
 import 'package:ictc_admin/pages/finance/finance_page.dart';
 import 'package:ictc_admin/pages/programs/programs_page.dart';
+import 'package:ictc_admin/pages/reports/reports_page.dart';
 import 'package:ictc_admin/pages/trainers/trainers_page.dart';
 import 'package:ictc_admin/pages/trainees/trainees_page.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
@@ -44,11 +45,12 @@ class _MainScreenState extends State<MainScreen> {
 
   String getSearchName() {
     List<String> pageNames = const [
-      "Dashboard",
+      "Reports",
       "Trainers",
       "Trainees",
       "Programs",
       "Courses",
+      "Finance",
     ];
 
     return pageNames[_selectedIndex];
@@ -57,11 +59,12 @@ class _MainScreenState extends State<MainScreen> {
   @override
   Widget build(BuildContext context) {
     List<Widget> views = [
-      const FinancePage(),
+      const ReportsPage(),
       const TrainersPage(),
       const TraineesPage(),
       const ProgramsPage(),
       const CoursesPage(),
+      const FinancePage(),
     ];
 
     List<NavigationRailDestination> destinations = const [
@@ -165,6 +168,26 @@ class _MainScreenState extends State<MainScreen> {
           ),
         ),
       ),
+      NavigationRailDestination(
+        icon: Icon(
+          Icons.home_outlined,
+          color: Colors.white,
+          size: 30,
+        ),
+        selectedIcon: Icon(
+          Icons.home_rounded,
+          color: Colors.white,
+          size: 30,
+        ),
+        label: Text(
+          "Finance",
+          style: TextStyle(
+            fontSize: 16,
+            fontWeight: FontWeight.w400,
+            color: Colors.white,
+          ),
+        ),
+      ),
     ];
 
     return LayoutBuilder(
@@ -190,27 +213,9 @@ class _MainScreenState extends State<MainScreen> {
             ),
           );
         }
-
-        return Scaffold(
-          body: buildPageView(views),
-          bottomNavigationBar: BottomNavigationBar(
-            items: const [
-              BottomNavigationBarItem(icon: Icon(Icons.home), label: "Reports"),
-              BottomNavigationBarItem(
-                  icon: Icon(Icons.person), label: "Trainers"),
-              BottomNavigationBarItem(
-                  icon: Icon(Icons.group), label: "Students"),
-              BottomNavigationBarItem(
-                  icon: Icon(Icons.grid_view), label: "Programs"),
-              BottomNavigationBarItem(icon: Icon(Icons.book), label: "Courses"),
-            ],
-            onTap: onDestinationChanged,
-          ),
-        );
       },
     );
   }
-
 
   String getTableName() {
     switch (_selectedIndex) {
@@ -281,7 +286,7 @@ class _MainScreenState extends State<MainScreen> {
                   child: const Row(
                     children: [
                       Text(
-                        "Welcome, Admin",
+                        "List of Reports",
                         style: TextStyle(
                             fontSize: 28,
                             fontWeight: FontWeight.w700,
@@ -302,41 +307,9 @@ class _MainScreenState extends State<MainScreen> {
                 decoration: BoxDecoration(
                   borderRadius: BorderRadius.circular(24),
                 ),
-                // child: Row(
-                //   mainAxisAlignment: MainAxisAlignment.center,
-                //   crossAxisAlignment: CrossAxisAlignment.center,
-                //   children: [
-                //     FilledButton.icon(
-                //       style: ButtonStyle(
-                //         enableFeedback: false,
-                //         splashFactory: NoSplash.splashFactory,
-                //         iconSize: MaterialStateProperty.all(23),
-                //         maximumSize: MaterialStateProperty.all(Size.fromWidth(
-                //             MediaQuery.of(context).size.height * 1)),
-                //         backgroundColor: MaterialStateProperty.all(
-                //           Color(0xfff1f5fb),
-                //         ),
-                //         elevation: MaterialStateProperty.all(0.5),
-                //       ),
 
-                //       label: const Text(
-                //         "Welcome, Admin",
-                //         style: TextStyle(color: Colors.black, fontSize: 14),
-                //       ),
-                //       icon: Icon(
-                //         CupertinoIcons.person_alt_circle,
-                //         color: Color(0xff19306B),
-                //       ),
-                //       // child: ,
-                //       onPressed:
-                // () {}, //TODO: Add a dropdown for profile settings: to change admin pass and user
-                //     ),
-                //   ],
-                // ),
               ),
-              // ProfileDropdown(
-              //   onSettingsTap: state.openSettings,
-              // )
+
             ],
           )
         ]));
@@ -492,56 +465,5 @@ class _MainScreenState extends State<MainScreen> {
         children: views,
       ),
     );
-  }
-}
-
-class ProfileDropdown extends StatefulWidget {
-  const ProfileDropdown({
-    super.key,
-    required this.onSettingsTap,
-  });
-
-  final Function()? onSettingsTap;
-
-  @override
-  State<ProfileDropdown> createState() => _ProfileDropdownState();
-}
-
-class _ProfileDropdownState extends State<ProfileDropdown> {
-  @override
-  void initState() {
-    super.initState();
-  }
-
-  @override
-  void dispose() {
-    super.dispose();
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return Row(
-        mainAxisSize: MainAxisSize.min,
-        crossAxisAlignment: CrossAxisAlignment.center,
-        mainAxisAlignment: MainAxisAlignment.start,
-        children: <Widget>[
-          PopupMenuButton<String>(
-            offset: Offset.zero,
-            position: PopupMenuPosition.under,
-            icon: const Icon(Icons.arrow_drop_down, size: 25),
-            tooltip: 'Profile',
-            itemBuilder: (BuildContext context) {
-              return [
-                PopupMenuItem(
-                  onTap: widget.onSettingsTap,
-                  child: const Text(
-                    "Settings",
-                    style: TextStyle(fontWeight: FontWeight.w400, fontSize: 15),
-                  ),
-                ),
-              ];
-            },
-          ),
-        ]);
   }
 }
