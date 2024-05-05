@@ -1,15 +1,19 @@
 class Expense {
   int id;
-  String name;
+  String particular;
+  String programName;
   String courseName;
-  String date;
-  int cost;
+  DateTime orDate;
+  String orNumber;
+  int amount;
 
   Expense({
     required this.id,
-    required this.name,
+    required this.particular,
+    required this.programName,
     required this.courseName,
-    required this.date,
-    required this.cost,
+    required this.orDate,
+    required this.orNumber,
+    required this.amount,
   });
 }
