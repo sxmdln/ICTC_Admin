@@ -97,7 +97,7 @@ class _FinancePageState extends State<FinancePage>
             showDialog(
               context: context,
               builder: (context) {
-                return addSaleDialog();
+                return addPaymentDialog();
               },
             );
           },
@@ -107,13 +107,13 @@ class _FinancePageState extends State<FinancePage>
   }
 
   //BUTTONS
-  Widget editSaleButton() {
+  Widget editPaymentButton() {
     return TextButton(
         onPressed: () {
           showDialog(
             context: context,
             builder: (context) {
-              return editSaleDialog();
+              return editPaymentDialog();
             },
           );
         },
@@ -132,7 +132,7 @@ class _FinancePageState extends State<FinancePage>
         ));
   }
 
-  Widget editSaleDialog() {
+  Widget editPaymentDialog() {
     return AlertDialog(
       // shape: const RoundedRectangleBorder(
       //     borderRadius: BorderRadius.all(Radius.circular(30))),
@@ -150,7 +150,7 @@ class _FinancePageState extends State<FinancePage>
             ),
           ),
           const Text(
-            "Edit a Sale",
+            "Edit a Payment",
             style: TextStyle(
                 color: Colors.black87,
                 fontSize: 24,
@@ -170,7 +170,7 @@ class _FinancePageState extends State<FinancePage>
                 mainAxisSize: MainAxisSize.min,
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
-                  SalesForm(sale: true),
+                  PaymentForm(payment: true),
                 ],
               ),
             ),
@@ -180,7 +180,7 @@ class _FinancePageState extends State<FinancePage>
     );
   }
 
-  Widget addSaleButton() {
+  Widget addPaymentButton() {
     return ElevatedButton(
       style: ButtonStyle(
           backgroundColor:
@@ -193,7 +193,7 @@ class _FinancePageState extends State<FinancePage>
         showDialog(
           context: context,
           builder: (context) {
-            return addSaleDialog();
+            return addPaymentDialog();
           },
         );
       },
@@ -220,7 +220,7 @@ class _FinancePageState extends State<FinancePage>
     );
   }
 
-  Widget addSaleDialog() {
+  Widget addPaymentDialog() {
     return AlertDialog(
       // shape: const RoundedRectangleBorder(
       //     borderRadius: BorderRadius.all(Radius.circular(30))),
@@ -258,7 +258,7 @@ class _FinancePageState extends State<FinancePage>
                 mainAxisSize: MainAxisSize.min,
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
-                  SalesForm(),
+                  PaymentForm(),
                 ],
               ),
             ),

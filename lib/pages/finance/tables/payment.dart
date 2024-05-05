@@ -112,7 +112,7 @@ class _PaymentTableState extends State<PaymentTable> {
                 mainAxisSize: MainAxisSize.min,
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
-                  SalesForm(),
+                  PaymentForm(),
                 ],
               ),
             ),
@@ -205,7 +205,7 @@ class _PaymentTableState extends State<PaymentTable> {
                 mainAxisSize: MainAxisSize.min,
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
-                  SalesForm(),
+                  PaymentForm(),
                 ],
               ),
             ),
@@ -274,14 +274,10 @@ class _PaymentTableState extends State<PaymentTable> {
       type: PlutoColumnType.number(),
     ),
     PlutoColumn(
-      title: 'Total',
+      title: 'Approved?',
       field: 'isApproved',
       readOnly: true,
-      type: PlutoColumnType.select(<String>[
-            'approved',
-            'ongoing',
-            'pending',
-          ], enableColumnFilter: true, popupIcon: Icons.abc),
+      type: PlutoColumnType.text()
     ),
   ];
 

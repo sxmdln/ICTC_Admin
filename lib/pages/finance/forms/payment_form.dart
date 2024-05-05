@@ -3,16 +3,16 @@ import 'package:intl/intl.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
-class SalesForm extends StatefulWidget {
-  const SalesForm({super.key, this.sale});
+class PaymentForm extends StatefulWidget {
+  const PaymentForm({super.key, this.payment});
 
-  final Object? sale;
+  final Object? payment;
 
   @override
-  State<SalesForm> createState() => _SalesFormState();
+  State<PaymentForm> createState() => _PaymentFormState();
 }
 
-class _SalesFormState extends State<SalesForm> {
+class _PaymentFormState extends State<PaymentForm> {
   @override
   void initState() {
     super.initState();
@@ -134,7 +134,7 @@ class _SalesFormState extends State<SalesForm> {
               ],
             ),
             // padding: EdgeInsets.only(left: 90),
-            placeholder: "Enter the total sale acquired",
+            placeholder: "Enter the total payment acquired",
             placeholderStyle: const TextStyle(
               fontSize: 14,
               fontWeight: FontWeight.w400,
@@ -229,7 +229,7 @@ class _SalesFormState extends State<SalesForm> {
             mainAxisAlignment: MainAxisAlignment.end,
             children: [
               // Expanded(child: SizedBox(child: cancelButton())),
-              if (widget.sale != null)
+              if (widget.payment != null)
                 Expanded(
                   flex: 1,
                   child: SizedBox(child: deleteButton()),
