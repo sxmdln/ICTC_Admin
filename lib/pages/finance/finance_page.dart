@@ -3,14 +3,12 @@ import 'dart:async';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:ictc_admin/models/expense.dart';
-import 'package:ictc_admin/models/finance.dart';
-import 'package:ictc_admin/models/sale.dart';
+import 'package:ictc_admin/models/payment.dart';
 import 'package:ictc_admin/models/seeds.dart';
 import 'package:ictc_admin/pages/finance/forms/expenses_form.dart';
 import 'package:ictc_admin/pages/finance/tables/expense.dart';
-import 'package:ictc_admin/pages/finance/tables/finance.dart';
-import 'package:ictc_admin/pages/finance/tables/income.dart';
-import 'package:ictc_admin/pages/finance/forms/sales_form.dart';
+import 'package:ictc_admin/pages/finance/tables/payment.dart';
+import 'package:ictc_admin/pages/finance/forms/payment_form.dart';
 import 'package:pluto_grid/pluto_grid.dart';
 
 class FinancePage extends StatefulWidget {
@@ -26,14 +24,12 @@ class _FinancePageState extends State<FinancePage>
   @override
   bool get wantKeepAlive => true;
 
-  late Stream<List<Finance>> _finances;
-  late Stream<List<Income>> _incomes;
+  late Stream<List<Payment>> _payments;
   late Stream<List<Expense>> _expenses;
 
   @override
   void initState() {
-    _finances = Seeds.financeStream();
-    _incomes = Seeds.incomeStream();
+    _payments = Seeds.paymentStream();
     _expenses = Seeds.expenseStream();
 
     super.initState();
@@ -58,7 +54,6 @@ class _FinancePageState extends State<FinancePage>
             title: const TabBar(
               overlayColor: MaterialStatePropertyAll(Color(0xfff1f5fb)),
               tabs: [
-                Tab(text: 'Finance'),
                 Tab(text: 'Income'),
                 Tab(text: 'Expense'),
               ],
@@ -72,8 +67,7 @@ class _FinancePageState extends State<FinancePage>
                   physics: NeverScrollableScrollPhysics(),
                   viewportFraction: 0.9,
                   children: [
-                    FinanceTable(),
-                    IncomeTable(),
+                    PaymentTable(),
                     ExpenseTable(),
                   ],
                 ),
