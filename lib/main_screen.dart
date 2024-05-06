@@ -2,14 +2,12 @@
 // import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:ictc_admin/pages/courses/courses_page.dart';
-import 'package:ictc_admin/pages/dashboard/dashboard.dart';
 import 'package:ictc_admin/pages/finance/finance_page.dart';
 import 'package:ictc_admin/pages/programs/programs_page.dart';
 import 'package:ictc_admin/pages/reports/reports_page.dart';
 import 'package:ictc_admin/pages/trainers/trainers_page.dart';
 import 'package:ictc_admin/pages/trainees/trainees_page.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
-import 'package:html_unescape/html_unescape.dart';
 
 class MainScreen extends StatefulWidget {
   const MainScreen({super.key});

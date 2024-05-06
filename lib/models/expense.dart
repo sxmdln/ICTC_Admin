@@ -1,6 +1,6 @@
 class Expense {
   int id;
-  String particular;
+  String particulars;
   String programName;
   String courseName;
   DateTime orDate;
@@ -9,7 +9,7 @@ class Expense {
 
   Expense({
     required this.id,
-    required this.particular,
+    required this.particulars,
     required this.programName,
     required this.courseName,
     required this.orDate,

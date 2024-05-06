@@ -1,10 +1,12 @@
+import 'dart:convert';
+import 'package:file_saver/file_saver.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:ictc_admin/models/report.dart';
 import 'package:ictc_admin/models/seeds.dart';
-import 'package:ictc_admin/pages/Courses/course_details.dart';
 import 'package:ictc_admin/pages/reports/report_details.dart';
-import 'package:pluto_grid/pluto_grid.dart';
+import 'package:pluto_grid_plus/pluto_grid_plus.dart';
+import 'package:pluto_grid_plus_export/pluto_grid_plus_export.dart' as pluto_grid_plus_export;
 
 class ReportTable extends StatefulWidget {
   const ReportTable({super.key});
@@ -21,7 +23,14 @@ class _ReportTableState extends State<ReportTable> {
 
     super.initState();
   }
+ late final PlutoGridStateManager stateManager;
 
+    void _defaultExportGridAsCSV() async {
+    String title = "pluto_grid_plus_export";
+    var exported = const Utf8Encoder().convert(
+        pluto_grid_plus_export.PlutoGridExport.exportCSV(stateManager));
+    await FileSaver.instance.saveFile(name: "$title.csv", ext: ".csv", bytes: exported );
+  }
   @override
   Widget build(BuildContext context) {
     return Scaffold(

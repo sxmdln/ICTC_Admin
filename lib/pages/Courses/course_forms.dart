@@ -225,7 +225,7 @@ class _CourseFormState extends State<CourseForm> {
 
           DropdownSearch<Program>(
             asyncItems: (filter) => fetchPrograms(),
-            dropdownDecoratorProps: DropDownDecoratorProps(
+            dropdownDecoratorProps: const DropDownDecoratorProps(
               dropdownSearchDecoration: InputDecoration(
                 labelText: "Program",
                 filled: true,
@@ -250,7 +250,7 @@ class _CourseFormState extends State<CourseForm> {
 
           DropdownSearch<Trainer>(
             asyncItems: (filter) => fetchTrainers(),
-            dropdownDecoratorProps: DropDownDecoratorProps(
+            dropdownDecoratorProps: const DropDownDecoratorProps(
               dropdownSearchDecoration: InputDecoration(
                 labelText: "Trainer",
                 filled: true,

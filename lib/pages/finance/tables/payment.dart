@@ -1,9 +1,13 @@
+import 'dart:convert';
+import 'package:file_saver/file_saver.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:ictc_admin/models/payment.dart';
 import 'package:ictc_admin/models/seeds.dart';
 import 'package:ictc_admin/pages/finance/forms/payment_form.dart';
-import 'package:pluto_grid/pluto_grid.dart';
+import 'package:pluto_grid_plus/pluto_grid_plus.dart';
+import 'package:pluto_grid_plus_export/pluto_grid_plus_export.dart' as pluto_grid_plus_export;
+
 
 class PaymentTable extends StatefulWidget {
   const PaymentTable({super.key});
@@ -20,6 +24,15 @@ class _PaymentTableState extends State<PaymentTable> {
 
     super.initState();
   }
+  late final PlutoGridStateManager stateManager;
+
+    void _defaultExportGridAsCSV() async {
+    String title = "pluto_grid_plus_export";
+    var exported = const Utf8Encoder().convert(
+        pluto_grid_plus_export.PlutoGridExport.exportCSV(stateManager));
+    await FileSaver.instance.saveFile(name: "$title.csv", ext: ".csv", bytes: exported );
+  }
+
 
   @override
   Widget build(BuildContext context) {
@@ -38,6 +51,7 @@ class _PaymentTableState extends State<PaymentTable> {
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
                     addButton(),
+                    csvButton()
                   ],
                 ),
               ),
@@ -48,6 +62,11 @@ class _PaymentTableState extends State<PaymentTable> {
       ],
     );
   }
+Widget csvButton() {
+  return ElevatedButton(
+            onPressed: _defaultExportGridAsCSV,
+            child: const Text("Export to CSV"));
+}
 
   Widget editButton() {
     return TextButton(
@@ -103,8 +122,8 @@ class _PaymentTableState extends State<PaymentTable> {
       content: Flexible(
         flex: 2,
         child: SizedBox(
-          width: 380,
-          height: MediaQuery.of(context).size.height * 0.3,
+          width:450,
+          height: MediaQuery.of(context).size.height * 0.5,
           child: const Padding(
             padding: EdgeInsets.fromLTRB(0, 0, 0, 0),
             child: SingleChildScrollView(
@@ -169,6 +188,7 @@ class _PaymentTableState extends State<PaymentTable> {
 
   Widget addDialog() {
     return AlertDialog(
+      surfaceTintColor: Colors.white,
       // shape: const RoundedRectangleBorder(
       //     borderRadius: BorderRadius.all(Radius.circular(30))),
       contentPadding: const EdgeInsets.only(left: 20, right: 30, top: 40),
@@ -185,7 +205,7 @@ class _PaymentTableState extends State<PaymentTable> {
             ),
           ),
           const Text(
-            "Add an Report",
+            "Add an Income",
             style: TextStyle(
                 color: Colors.black87,
                 fontSize: 24,
@@ -196,8 +216,8 @@ class _PaymentTableState extends State<PaymentTable> {
       content: Flexible(
         flex: 1,
         child: SizedBox(
-          width: 380,
-          height: MediaQuery.of(context).size.height * 0.3,
+          width: 450,
+          height: MediaQuery.of(context).size.height * 0.5,
           child: const Padding(
             padding: EdgeInsets.fromLTRB(0, 0, 0, 0),
             child: SingleChildScrollView(
@@ -319,6 +339,7 @@ class _PaymentTableState extends State<PaymentTable> {
                     print(event);
                   },
                   onLoaded: (PlutoGridOnLoadedEvent event) {
+                      stateManager = event.stateManager;
                     event.stateManager.setShowColumnFilter(true);
                   },
                   configuration: PlutoGridConfiguration(

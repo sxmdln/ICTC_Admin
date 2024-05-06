@@ -1,5 +1,4 @@
 import 'package:data_table_2/data_table_2.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:ictc_admin/models/course.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
@@ -37,7 +36,7 @@ class _CourseDetailsState extends State<CourseDetails> {
       children: [
         Center(
           child: Container(
-            margin: EdgeInsets.symmetric(vertical: 40),
+            margin: const EdgeInsets.symmetric(vertical: 40),
             child: Column(
               children: [
                 Text(
@@ -47,7 +46,7 @@ class _CourseDetailsState extends State<CourseDetails> {
                       fontSize: 45,
                       fontWeight: FontWeight.w600),
                 ),
-                SizedBox(height: 14,),
+                const SizedBox(height: 14,),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   crossAxisAlignment: CrossAxisAlignment.center,
@@ -66,7 +65,7 @@ class _CourseDetailsState extends State<CourseDetails> {
                     ),
                   ],
                 ),
-                SizedBox(height: 8,),
+                const SizedBox(height: 8,),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   crossAxisAlignment: CrossAxisAlignment.center,
@@ -85,7 +84,7 @@ class _CourseDetailsState extends State<CourseDetails> {
                     ),
                   ],
                 ),
-                SizedBox(height: 8,),
+                const SizedBox(height: 8,),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   crossAxisAlignment: CrossAxisAlignment.center,

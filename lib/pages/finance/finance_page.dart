@@ -1,5 +1,4 @@
 import 'dart:async';
-
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:ictc_admin/models/expense.dart';
@@ -9,7 +8,7 @@ import 'package:ictc_admin/pages/finance/forms/expenses_form.dart';
 import 'package:ictc_admin/pages/finance/tables/expense.dart';
 import 'package:ictc_admin/pages/finance/tables/payment.dart';
 import 'package:ictc_admin/pages/finance/forms/payment_form.dart';
-import 'package:pluto_grid/pluto_grid.dart';
+
 
 class FinancePage extends StatefulWidget {
   const FinancePage({Key? key}) : super(key: key);
@@ -67,7 +66,7 @@ class _FinancePageState extends State<FinancePage>
                   physics: NeverScrollableScrollPhysics(),
                   viewportFraction: 0.9,
                   children: [
-                    PaymentTable(),
+                   PaymentTable(),
                     ExpenseTable(),
                   ],
                 ),

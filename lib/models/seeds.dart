@@ -92,7 +92,7 @@ class Seeds {
   static final List<Expense> _expenses = [
     Expense(
       id: 1, 
-      particular: 'Foodpanda Snacks',
+      particulars: 'Foodpanda Snacks',
       programName: 'Microcredentials', 
       courseName: 'Fundamentals to UI/UX', 
       orNumber: 'FOODPANDA1234',

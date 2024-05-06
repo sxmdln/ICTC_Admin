@@ -71,7 +71,7 @@ class _ExpensesFormState extends State<ExpensesForm> {
             controller: nameCon,
             prefix: const Row(
               children: [
-                Text("Name of Expense",
+                Text("Particulars",
                     style: TextStyle(
                         color: Colors.black87,
                         fontSize: 14,
@@ -80,7 +80,7 @@ class _ExpensesFormState extends State<ExpensesForm> {
               ],
             ),
             // padding: EdgeInsets.only(left: 90),
-            placeholder: "Enter name of expense",
+            placeholder: "Particulars",
             placeholderStyle: const TextStyle(
               fontSize: 14,
               fontWeight: FontWeight.w400,
