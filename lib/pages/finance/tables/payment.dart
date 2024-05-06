@@ -513,7 +513,7 @@ class _PaymentTableState extends State<PaymentTable> {
                               height: 23,
                             ),
                             Text(
-                              'Crunching data...',
+                              'Crunching data for you...',
                               style: TextStyle(fontSize: 12),
                             ),
                           ],

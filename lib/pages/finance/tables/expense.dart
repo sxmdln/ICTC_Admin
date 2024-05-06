@@ -274,7 +274,7 @@ class _ExpenseTableState extends State<ExpenseTable> {
                               height: 23,
                             ),
                             Text(
-                              'Crunching data...',
+                              'Crunching data for you...',
                               style: TextStyle(fontSize: 12),
                             ),
                           ],
