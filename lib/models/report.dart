@@ -3,13 +3,13 @@ class Report {
   String date;
   int totalIncome;
   int totalExpense;
-  int netWorth;
+  int netIncome;
 
   Report({
     required this.id,
     required this.date,
     required this.totalIncome,
     required this.totalExpense,
-    required this.netWorth,
+    required this.netIncome,
   });
 }

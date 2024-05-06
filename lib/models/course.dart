@@ -39,4 +39,9 @@ class Course {
   factory Course.fromJson(Map<String, dynamic> json) => _$CourseFromJson(json);
 
   Map<String, dynamic> toJson() => _$CourseToJson(this);
+
+  @override
+  String toString() {
+    return title;
+  }
 }

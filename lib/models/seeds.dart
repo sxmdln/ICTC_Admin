@@ -90,6 +90,8 @@ class Seeds {
     Expense(
       id: 1,
       particulars: 'Foodpanda Snacks',
+      programId: _programs[0].id!,
+      courseId: _courses[0].id!,
       orNumber: 'FOODPANDA1234',
       orDate: DateTime.utc(2024, 4, 1),
       amount: 1000,
@@ -102,7 +104,7 @@ class Seeds {
       date: 'December',
       totalIncome: 16,
       totalExpense: 6,
-      netWorth: 10,
+      netIncome: 10,
     ),
   ];
 
