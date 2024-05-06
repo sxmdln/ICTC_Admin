@@ -45,7 +45,7 @@ class _PaymentTableState extends State<PaymentTable> {
     return rows;
   }
 
-  late final PlutoGridStateManager stateManager;
+  late PlutoGridStateManager stateManager;
 
   void _defaultExportGridAsCSV() async {
     String title = "pluto_grid_plus_export";
@@ -86,13 +86,13 @@ class _PaymentTableState extends State<PaymentTable> {
         onPressed: _defaultExportGridAsCSV, child: const Text("Export to CSV"));
   }
 
-  Widget editButton() {
+  Widget editButton(Payment payment) {
     return TextButton(
         onPressed: () {
           showDialog(
             context: context,
             builder: (context) {
-              return editDialog();
+              return editDialog(payment);
             },
           );
         },
@@ -111,8 +111,9 @@ class _PaymentTableState extends State<PaymentTable> {
         ));
   }
 
-  Widget editDialog() {
+  Widget editDialog(Payment payment) {
     return AlertDialog(
+      surfaceTintColor: Colors.white,
       // shape: const RoundedRectangleBorder(
       //     borderRadius: BorderRadius.all(Radius.circular(30))),
       contentPadding: const EdgeInsets.only(left: 20, right: 30, top: 40),
@@ -129,7 +130,7 @@ class _PaymentTableState extends State<PaymentTable> {
             ),
           ),
           const Text(
-            "Edit an ",
+            "Edit Income",
             style: TextStyle(
                 color: Colors.black87,
                 fontSize: 24,
@@ -142,14 +143,14 @@ class _PaymentTableState extends State<PaymentTable> {
         child: SizedBox(
           width: 450,
           height: MediaQuery.of(context).size.height * 0.5,
-          child: const Padding(
+          child: Padding(
             padding: EdgeInsets.fromLTRB(0, 0, 0, 0),
             child: SingleChildScrollView(
               child: Column(
                 mainAxisSize: MainAxisSize.min,
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
-                  PaymentForm(),
+                  PaymentForm(payment: payment),
                 ],
               ),
             ),
@@ -256,66 +257,172 @@ class _PaymentTableState extends State<PaymentTable> {
   // IN (Income)
   List<PlutoColumn> inColumns = [
     PlutoColumn(
+      hide: true,
       title: 'ID',
       field: 'id',
       type: PlutoColumnType.number(),
       minWidth: 50,
       width: 90,
       enableDropToResize: false,
+      titleTextAlign: PlutoColumnTextAlign.center,
+      enableEditingMode: false,
     ),
     PlutoColumn(
       title: 'Program Name',
       field: 'progName',
+      filterHintText: 'Search Program',
       readOnly: true,
       type: PlutoColumnType.text(),
+      titleTextAlign: PlutoColumnTextAlign.center,
+      enableEditingMode: false,
     ),
     PlutoColumn(
       title: 'Course Name',
       field: 'courseName',
       readOnly: true,
+      filterHintText: 'Search Course',
       type: PlutoColumnType.text(),
+      textAlign: PlutoColumnTextAlign.right,
+      titleTextAlign: PlutoColumnTextAlign.center,
+      enableEditingMode: false,
     ),
     PlutoColumn(
       title: 'Name',
       field: 'name',
       readOnly: true,
       type: PlutoColumnType.text(),
+      filterHintText: 'Search Trainer',
+      textAlign: PlutoColumnTextAlign.right,
+      titleTextAlign: PlutoColumnTextAlign.center,
+      enableEditingMode: false,
     ),
     PlutoColumn(
       title: 'Training Fee',
       field: 'trainingFee',
       readOnly: true,
+      filterWidget: Container(
+        color: Colors.white,
+      ),
+      enableFilterMenuItem: false,
       type: PlutoColumnType.number(),
+      textAlign: PlutoColumnTextAlign.right,
+      titleTextAlign: PlutoColumnTextAlign.center,
+      enableEditingMode: false,
     ),
     PlutoColumn(
       title: 'Discount',
       field: 'discount',
       readOnly: true,
       type: PlutoColumnType.number(),
+      filterWidget: Container(
+        color: Colors.white,
+      ),
+      enableFilterMenuItem: false,
+      textAlign: PlutoColumnTextAlign.right,
+      titleTextAlign: PlutoColumnTextAlign.center,
+      minWidth: 50,
+      width: 120,
+      enableEditingMode: false,
+    ),
+    PlutoColumn(
+      title: 'Amount',
+      field: 'amount',
+      readOnly: true,
+      type: PlutoColumnType.number(),
+      backgroundColor: Colors.green.withOpacity(0.1),
+      filterWidget: Container(
+        color: Colors.white,
+      ),
+      enableFilterMenuItem: false,
+      footerRenderer: (rendererContext) {
+        return PlutoAggregateColumnFooter(
+          rendererContext: rendererContext,
+          type: PlutoAggregateColumnType.sum,
+          format: 'P#,###',
+          alignment: Alignment.center,
+          titleSpanBuilder: (text) {
+            return [
+              const TextSpan(
+                text: 'Total Income',
+                style: TextStyle(color: Colors.green),
+              ),
+              const TextSpan(text: ' : '),
+              TextSpan(
+                  text: text,
+                  style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16)),
+            ];
+          },
+        );
+      },
+      textAlign: PlutoColumnTextAlign.right,
+      titleTextAlign: PlutoColumnTextAlign.center,
+      enableEditingMode: false,
+      enableDropToResize: false,
+      minWidth: 50,
+      width: 120,
+    ),
+    PlutoColumn(
+      enableEditingMode: false,
+      enableDropToResize: false,
+      filterWidget: Container(
+        color: Colors.white,
+      ),
+      enableFilterMenuItem: false,
+      title: 'Approved?',
+      field: 'isApproved',
+      readOnly: true,
+      type: PlutoColumnType.text(),
+      titleTextAlign: PlutoColumnTextAlign.center,
+      renderer: (rendererContext) => rendererContext.cell.value == true
+          ? const Icon(
+              Icons.check,
+              color: Colors.green,
+            )
+          : const Icon(
+              Icons.close,
+              color: Colors.red,
+            ),
+      minWidth: 50,
+      width: 90,
     ),
     PlutoColumn(
       title: 'OR Date',
       field: 'orDate',
       readOnly: true,
+      filterHintText: 'Search by date',
       type: PlutoColumnType.date(),
+      titleTextAlign: PlutoColumnTextAlign.center,
+      enableEditingMode: false,
     ),
     PlutoColumn(
       title: 'OR Number',
+      filterHintText: 'Search an OR #',
       field: 'orNumber',
       readOnly: true,
       type: PlutoColumnType.text(),
+      titleTextAlign: PlutoColumnTextAlign.center,
+      enableEditingMode: false,
     ),
     PlutoColumn(
-      title: 'Total',
-      field: 'amount',
       readOnly: true,
-      type: PlutoColumnType.number(),
+      title: 'Actions',
+      field: 'actions',
+      renderer: (rendererContext) => rendererContext.cell.value as Widget,
+      type: PlutoColumnType.text(),
+      enableEditingMode: false,
+      enableAutoEditing: false,
+      filterWidget: Container(
+        color: Colors.white,
+      ),
+      enableFilterMenuItem: false,
+      enableRowDrag: false,
+      enableRowChecked: false,
+      minWidth: 50,
+      width: 120,
+      textAlign: PlutoColumnTextAlign.center,
+      titleTextAlign: PlutoColumnTextAlign.center,
+      enableDropToResize: false,
     ),
-    PlutoColumn(
-        title: 'Approved?',
-        field: 'isApproved',
-        readOnly: true,
-        type: PlutoColumnType.text()),
   ];
 
   PlutoRow buildInRow(
@@ -326,15 +433,23 @@ class _PaymentTableState extends State<PaymentTable> {
     return PlutoRow(
       cells: {
         'id': PlutoCell(value: payment.id),
-        'name': PlutoCell(value: payment.toString()),
+        'name': PlutoCell(value: student.toString()),
         'progName': PlutoCell(value: program.title),
         'courseName': PlutoCell(value: course.title),
         'trainingFee': PlutoCell(value: course.cost),
         'discount': PlutoCell(value: payment.discount),
-        'orDate': PlutoCell(value: payment.orDate),
-        'orNumber': PlutoCell(value: payment.orNumber),
         'amount': PlutoCell(value: payment.totalAmount),
         'isApproved': PlutoCell(value: payment.approved),
+        'orDate': PlutoCell(value: payment.orDate),
+        'orNumber': PlutoCell(value: payment.orNumber),
+        'actions': PlutoCell(value: Builder(builder: (context) {
+          return Row(
+            //TODO: HINDI PA GUMAGANA PLS MAKE IT WORK :<
+            children: [
+              editButton(payment),
+            ],
+          );
+        })),
       },
     );
   }
@@ -348,16 +463,37 @@ class _PaymentTableState extends State<PaymentTable> {
             builder: (context, snapshot) {
               if (snapshot.connectionState == ConnectionState.waiting) {
                 return const Expanded(
-                  child: Center(
-                    child: CircularProgressIndicator(),
-                  ),
-                );
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: <Widget>[
+                            CircularProgressIndicator.adaptive(
+                                valueColor: AlwaysStoppedAnimation<Color>(
+                                    Color(0xff153faa))),
+                            SizedBox(
+                              height: 23,
+                            ),
+                            Text(
+                              'Please wait...',
+                              style: TextStyle(fontSize: 12),
+                            ),
+                          ],
+                        ),
+                      );
               }
 
               if (snapshot.data!.isEmpty) {
                 return const Expanded(
                     child: Center(
-                  child: Text("No entries."),
+                  child: Column(
+                    children: [
+                      Icon(
+                        Icons.hourglass_empty,
+                        size: 50,
+                        color: Colors.grey,
+                      ),
+                      Text("No entries found."),
+                    ],
+                  ),
                 ));
               }
 
@@ -367,7 +503,21 @@ class _PaymentTableState extends State<PaymentTable> {
                   if (snapshot.connectionState == ConnectionState.waiting) {
                     return const Expanded(
                       child: Center(
-                        child: CircularProgressIndicator(),
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: <Widget>[
+                            CircularProgressIndicator.adaptive(
+                                valueColor: AlwaysStoppedAnimation<Color>(
+                                    Color(0xff153faa))),
+                            SizedBox(
+                              height: 23,
+                            ),
+                            Text(
+                              'Crunching data...',
+                              style: TextStyle(fontSize: 12),
+                            ),
+                          ],
+                        ),
                       ),
                     );
                   }
@@ -380,7 +530,14 @@ class _PaymentTableState extends State<PaymentTable> {
                       },
                       onLoaded: (PlutoGridOnLoadedEvent event) {
                         stateManager = event.stateManager;
-                        event.stateManager.setShowColumnFilter(true);
+                        stateManager.setShowColumnFilter(true);
+                      },
+                      rowColorCallback: (rowColorContext) {
+                        if (rowColorContext.rowIdx % 2 != 0) {
+                          return Colors.grey.withOpacity(0.1);
+                        } else {
+                          return Colors.transparent;
+                        }
                       },
                       configuration: PlutoGridConfiguration(
                         columnFilter: PlutoGridColumnFilterConfig(

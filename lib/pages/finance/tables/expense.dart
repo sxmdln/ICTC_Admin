@@ -13,7 +13,10 @@ import 'package:pluto_grid_plus_export/pluto_grid_plus_export.dart'
 import 'package:supabase_flutter/supabase_flutter.dart';
 
 class ExpenseTable extends StatefulWidget {
-  const ExpenseTable({super.key});
+  const ExpenseTable({super.key, this.expense});
+
+  final Expense? expense;
+
   @override
   State<ExpenseTable> createState() => _ExpenseTableState();
 }
@@ -79,6 +82,7 @@ class _ExpenseTableState extends State<ExpenseTable> {
   // OUT (Expenses)
   List<PlutoColumn> outColumns = [
     PlutoColumn(
+      hide: true,
       title: 'ID',
       field: 'id',
       type: PlutoColumnType.number(),
@@ -92,36 +96,98 @@ class _ExpenseTableState extends State<ExpenseTable> {
       field: 'particulars',
       readOnly: true,
       type: PlutoColumnType.text(),
+      textAlign: PlutoColumnTextAlign.center,
+      titleTextAlign: PlutoColumnTextAlign.center,
     ),
     PlutoColumn(
       title: 'Program Name',
       field: 'progName',
       readOnly: true,
       type: PlutoColumnType.text(),
+      textAlign: PlutoColumnTextAlign.center,
+      titleTextAlign: PlutoColumnTextAlign.center,
     ),
     PlutoColumn(
       title: 'Course Name',
       field: 'courseName',
       readOnly: true,
       type: PlutoColumnType.text(),
+      textAlign: PlutoColumnTextAlign.center,
+      titleTextAlign: PlutoColumnTextAlign.center,
+      minWidth: 100,
+      width: 300,
+    ),
+    PlutoColumn(
+      title: 'Amount',
+      field: 'amount',
+      readOnly: true,
+      filterWidget: Container(
+        color: Colors.white,
+      ),
+      enableFilterMenuItem: false,
+      type: PlutoColumnType.number(),
+      textAlign: PlutoColumnTextAlign.right,
+      titleTextAlign: PlutoColumnTextAlign.center,
+      backgroundColor: Colors.red.withOpacity(0.1),
+      footerRenderer: (rendererContext) {
+        return PlutoAggregateColumnFooter(
+          rendererContext: rendererContext,
+          type: PlutoAggregateColumnType.sum,
+          format: 'P#,###',
+          alignment: Alignment.center,
+          titleSpanBuilder: (text) {
+            return [
+              const TextSpan(
+                text: 'Total Expenses',
+                style: TextStyle(color: Colors.red),
+              ),
+              const TextSpan(text: ' : '),
+              TextSpan(
+                text: text,
+                style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
+              ),
+            ];
+          },
+        );
+      },
+      minWidth: 50,
+      width: 140,
     ),
     PlutoColumn(
       title: 'OR Date',
       field: 'orDate',
       readOnly: true,
       type: PlutoColumnType.date(),
+      textAlign: PlutoColumnTextAlign.right,
+      titleTextAlign: PlutoColumnTextAlign.center,
     ),
     PlutoColumn(
       title: 'OR Number',
       field: 'orNumber',
       readOnly: true,
       type: PlutoColumnType.text(),
+      textAlign: PlutoColumnTextAlign.right,
+      titleTextAlign: PlutoColumnTextAlign.center,
     ),
     PlutoColumn(
-      title: 'Cost',
-      field: 'cost',
       readOnly: true,
-      type: PlutoColumnType.number(),
+      title: 'Actions',
+      field: 'actions',
+      renderer: (rendererContext) => rendererContext.cell.value as Widget,
+      type: PlutoColumnType.text(),
+      enableEditingMode: false,
+      enableAutoEditing: false,
+      enableRowDrag: false,
+      filterWidget: Container(
+        color: Colors.white,
+      ),
+      enableFilterMenuItem: false,
+      enableRowChecked: false,
+      minWidth: 50,
+      width: 120,
+      textAlign: PlutoColumnTextAlign.center,
+      titleTextAlign: PlutoColumnTextAlign.center,
+      enableDropToResize: false,
     ),
   ];
 
@@ -133,9 +199,17 @@ class _ExpenseTableState extends State<ExpenseTable> {
         'particulars': PlutoCell(value: expense.particulars),
         'progName': PlutoCell(value: program?.title ?? "N/A"),
         'courseName': PlutoCell(value: course?.title ?? "N/A"),
+        'amount': PlutoCell(value: expense.amount),
         'orDate': PlutoCell(value: expense.orDate ?? "N/A"),
         'orNumber': PlutoCell(value: expense.orNumber ?? "N/A"),
-        'cost': PlutoCell(value: expense.amount),
+        'actions': PlutoCell(value: Builder(builder: (context) {
+          return Row(
+            //TODO: HINDI PA GUMAGANA PLS MAKE IT WORK :<
+            children: [
+              editButton(expense),
+            ],
+          );
+        })),
       },
     );
   }
@@ -151,16 +225,37 @@ class _ExpenseTableState extends State<ExpenseTable> {
               builder: (context, snapshot) {
                 if (snapshot.connectionState == ConnectionState.waiting) {
                   return const Expanded(
-                    child: Center(
-                      child: CircularProgressIndicator(),
-                    ),
-                  );
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: <Widget>[
+                            CircularProgressIndicator.adaptive(
+                                valueColor: AlwaysStoppedAnimation<Color>(
+                                    Color(0xff153faa))),
+                            SizedBox(
+                              height: 23,
+                            ),
+                            Text(
+                              'Please wait...',
+                              style: TextStyle(fontSize: 12),
+                            ),
+                          ],
+                        ),
+                      );
                 }
 
                 if (snapshot.data!.isEmpty) {
                   return const Expanded(
                       child: Center(
-                    child: Text("No entries."),
+                    child: Column(
+                      children: [
+                        Icon(
+                          Icons.hourglass_empty,
+                          size: 50,
+                          color: Colors.grey,
+                        ),
+                        Text("No entries found."),
+                      ],
+                    ),
                   ));
                 }
 
@@ -169,8 +264,20 @@ class _ExpenseTableState extends State<ExpenseTable> {
                   builder: (context, snapshot) {
                     if (snapshot.connectionState == ConnectionState.waiting) {
                       return const Expanded(
-                        child: Center(
-                          child: CircularProgressIndicator(),
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: <Widget>[
+                            CircularProgressIndicator.adaptive(
+                                valueColor: AlwaysStoppedAnimation<Color>(
+                                    Color(0xff153faa))),
+                            SizedBox(
+                              height: 23,
+                            ),
+                            Text(
+                              'Crunching data...',
+                              style: TextStyle(fontSize: 12),
+                            ),
+                          ],
                         ),
                       );
                     }
@@ -185,6 +292,13 @@ class _ExpenseTableState extends State<ExpenseTable> {
                         onLoaded: (PlutoGridOnLoadedEvent event) {
                           stateManager = event.stateManager;
                           event.stateManager.setShowColumnFilter(true);
+                        },
+                        rowColorCallback: (rowColorContext) {
+                          if (rowColorContext.rowIdx % 2 != 0) {
+                            return Colors.grey.withOpacity(0.1);
+                          } else {
+                            return Colors.transparent;
+                          }
                         },
                         configuration: PlutoGridConfiguration(
                           columnFilter: PlutoGridColumnFilterConfig(
@@ -226,13 +340,13 @@ class _ExpenseTableState extends State<ExpenseTable> {
         onPressed: _defaultExportGridAsCSV, child: const Text("Export to CSV"));
   }
 
-  Widget editButton() {
+  Widget editButton(Expense expense) {
     return TextButton(
         onPressed: () {
           showDialog(
             context: context,
             builder: (context) {
-              return editDialog();
+              return editDialog(expense);
             },
           );
         },
@@ -251,8 +365,9 @@ class _ExpenseTableState extends State<ExpenseTable> {
         ));
   }
 
-  Widget editDialog() {
+  Widget editDialog(Expense expense) {
     return AlertDialog(
+      surfaceTintColor: Colors.white,
       // shape: const RoundedRectangleBorder(
       //     borderRadius: BorderRadius.all(Radius.circular(30))),
       contentPadding: const EdgeInsets.only(left: 20, right: 30, top: 40),
@@ -281,15 +396,15 @@ class _ExpenseTableState extends State<ExpenseTable> {
         flex: 2,
         child: SizedBox(
           width: 380,
-          height: MediaQuery.of(context).size.height * 0.3,
-          child: const Padding(
+          height: MediaQuery.of(context).size.height * 0.5,
+          child: Padding(
             padding: EdgeInsets.fromLTRB(0, 0, 0, 0),
             child: SingleChildScrollView(
               child: Column(
                 mainAxisSize: MainAxisSize.min,
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
-                  ExpensesForm(expense: true),
+                  ExpensesForm(expense: expense),
                 ],
               ),
             ),
@@ -346,6 +461,7 @@ class _ExpenseTableState extends State<ExpenseTable> {
 
   Widget addDialog() {
     return AlertDialog(
+      surfaceTintColor: Colors.white,
       // shape: const RoundedRectangleBorder(
       //     borderRadius: BorderRadius.all(Radius.circular(30))),
       contentPadding: const EdgeInsets.only(left: 20, right: 30, top: 40),
@@ -374,7 +490,7 @@ class _ExpenseTableState extends State<ExpenseTable> {
         flex: 1,
         child: SizedBox(
           width: 380,
-          height: MediaQuery.of(context).size.height * 0.3,
+          height: MediaQuery.of(context).size.height * 0.5,
           child: const Padding(
             padding: EdgeInsets.fromLTRB(0, 0, 0, 0),
             child: SingleChildScrollView(

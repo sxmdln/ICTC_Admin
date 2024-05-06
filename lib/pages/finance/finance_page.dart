@@ -54,7 +54,7 @@ class _FinancePageState extends State<FinancePage>
               overlayColor: MaterialStatePropertyAll(Color(0xfff1f5fb)),
               tabs: [
                 Tab(text: 'Income'),
-                Tab(text: 'Expense'),
+                Tab(text: 'Expenses'),
               ],
             ),
           ),
@@ -106,13 +106,13 @@ class _FinancePageState extends State<FinancePage>
   }
 
   //BUTTONS
-  Widget editPaymentButton() {
+  Widget editPaymentButton(Payment payment) {
     return TextButton(
         onPressed: () {
           showDialog(
             context: context,
             builder: (context) {
-              return editPaymentDialog();
+              return editPaymentDialog(payment);
             },
           );
         },
@@ -131,7 +131,7 @@ class _FinancePageState extends State<FinancePage>
         ));
   }
 
-  Widget editPaymentDialog() {
+  Widget editPaymentDialog(Payment payment) {
     return AlertDialog(
       // shape: const RoundedRectangleBorder(
       //     borderRadius: BorderRadius.all(Radius.circular(30))),
@@ -162,14 +162,14 @@ class _FinancePageState extends State<FinancePage>
         child: SizedBox(
           width: 380,
           height: MediaQuery.of(context).size.height * 0.4,
-          child: const Padding(
-            padding: EdgeInsets.fromLTRB(0, 0, 0, 0),
+          child:  Padding(
+            padding: const EdgeInsets.fromLTRB(0, 0, 0, 0),
             child: SingleChildScrollView(
               child: Column(
                 mainAxisSize: MainAxisSize.min,
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
-                  PaymentForm(payment: true),
+                  PaymentForm(payment: payment),
                 ],
               ),
             ),
@@ -269,13 +269,13 @@ class _FinancePageState extends State<FinancePage>
 
   // BUTTONS (Expenses)
 
-  Widget editExpenseButton() {
+  Widget editExpenseButton(Expense expense) {
     return TextButton(
         onPressed: () {
           showDialog(
             context: context,
             builder: (context) {
-              return editExpenseDialog();
+              return editExpenseDialog(expense);
             },
           );
         },
@@ -294,7 +294,7 @@ class _FinancePageState extends State<FinancePage>
         ));
   }
 
-  Widget editExpenseDialog() {
+  Widget editExpenseDialog(Expense expense) {
     return AlertDialog(
       // shape: const RoundedRectangleBorder(
       //     borderRadius: BorderRadius.all(Radius.circular(30))),
@@ -325,14 +325,14 @@ class _FinancePageState extends State<FinancePage>
         child: SizedBox(
           width: 380,
           height: MediaQuery.of(context).size.height * 0.3,
-          child: const Padding(
-            padding: EdgeInsets.fromLTRB(0, 0, 0, 0),
+          child: Padding(
+            padding: const EdgeInsets.fromLTRB(0, 0, 0, 0),
             child: SingleChildScrollView(
               child: Column(
                 mainAxisSize: MainAxisSize.min,
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
-                  ExpensesForm(expense: true),
+                  ExpensesForm(expense: expense),
                 ],
               ),
             ),

@@ -1,41 +1,36 @@
+import 'package:dropdown_search/dropdown_search.dart';
 import 'package:ictc_admin/models/course.dart';
+import 'package:ictc_admin/models/payment.dart';
 import 'package:ictc_admin/models/trainer.dart';
 import 'package:ictc_admin/models/program.dart';
 import 'package:intl/intl.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:supabase_flutter/supabase_flutter.dart';
 
 class PaymentForm extends StatefulWidget {
-  const PaymentForm({super.key, this.payment});
-
-  final Object? payment;
+  const PaymentForm({super.key, this.payment, this.course, this.program});
+  final Program? program;
+  final Course? course;
+  final Payment? payment;
 
   @override
   State<PaymentForm> createState() => _PaymentFormState();
 }
 
 class _PaymentFormState extends State<PaymentForm> {
-  @override
-  void initState() {
-    super.initState();
-
-    datePickerController = TextEditingController();
-    totalStudentsCon = TextEditingController();
-    totalSaleCon = TextEditingController();
-    totalDiscountCon = TextEditingController();
-    totalIncomeCon = TextEditingController();
-  }
-
   Trainer? selectedTrainer;
   Program? selectedProgram;
   Course? selectedCourse;
 
   final formKey = GlobalKey<FormState>();
-  late TextEditingController datePickerController,
-      totalStudentsCon,
-      totalSaleCon,
-      totalDiscountCon,
-      totalIncomeCon;
+
+  late TextEditingController orDateCon,
+      orNumberCon,
+      courseCostCon,
+      discountCon,
+      totalAmountCon,
+      approvedCon;
 
   @override
   void dispose() {
@@ -43,103 +38,171 @@ class _PaymentFormState extends State<PaymentForm> {
   }
 
   @override
+  void initState() {
+    super.initState();
+
+    orDateCon = TextEditingController(
+        text: widget.payment?.orDate.toString() ??
+            DateFormat('yyyy-MM-dd').format(DateTime.now()));
+    orNumberCon = TextEditingController(text: widget.payment?.orNumber ?? "");
+    courseCostCon =
+        TextEditingController(text: widget.course?.cost.toString() ?? "0.0");
+    discountCon = TextEditingController(
+        text: widget.payment?.discount.toString() ?? "0.0");
+    totalAmountCon = TextEditingController(
+        text:
+            (double.parse(courseCostCon.text) - double.parse(discountCon.text))
+                    .toString() ??
+                "0.0");
+    approvedCon = TextEditingController(
+        text: widget.payment?.approved.toString() ?? "false");
+
+    if (widget.payment != null) {
+      Supabase.instance.client
+          .from('program')
+          .select()
+          .eq('id', widget.course!.programId!)
+          .limit(1)
+          .withConverter((data) => Program.fromJson(data.first))
+          .then((value) => setState(() => selectedProgram = value));
+      Supabase.instance.client
+          .from('course')
+          .select()
+          .eq('trainer_id', widget.course!.trainerId!)
+          .limit(1)
+          .withConverter((data) => Trainer.fromJson(data.first))
+          .then((value) => setState(() => selectedTrainer = value));
+      Supabase.instance.client
+          .from('course')
+          .select()
+          .eq('program_id', widget.program!.id!)
+          .withConverter((data) => Course.fromJson(data.first))
+          .then((value) => setState(() => selectedCourse = value));
+    }
+  }
+
+// PROGRAMS
+  Future<List<Program>> fetchPrograms({String? filter}) async {
+    final supabase = Supabase.instance.client;
+    List<Program> programs = await supabase
+        .from('program')
+        .select()
+        .withConverter((data) => data.map((e) => Program.fromJson(e)).toList());
+
+    return filter == null
+        ? programs
+        : programs.where((element) => element.title.contains(filter)).toList();
+  }
+
+// TRAINERS
+  Future<List<Trainer>> fetchTrainers({String? filter}) async {
+    final supabase = Supabase.instance.client;
+    List<Trainer> trainers;
+    trainers = await supabase
+        .from('trainer')
+        .select()
+        .withConverter((data) => data.map((e) => Trainer.fromJson(e)).toList());
+
+    return filter == null
+        ? trainers
+        : trainers
+            .where((element) => element.toString().contains(filter))
+            .toList();
+  }
+
+// COURSES
+  Future<List<Course>> fetchCourses({String? filter}) async {
+    final supabase = Supabase.instance.client;
+    late final List<Course> programCourses;
+    programCourses = await supabase
+        .from('course')
+        .select()
+        .eq('program_id', selectedProgram!.id!)
+        .withConverter((data) => data.map((e) => Course.fromJson(e)).toList());
+    return filter == null
+        ? programCourses
+        : programCourses
+            .where((element) => element.toString().contains(filter))
+            .toList();
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Form(
+      key: formKey,
       child: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
-          Row(
-            mainAxisAlignment: MainAxisAlignment.start,
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: [
-              const SizedBox(
-                width: 19,
+          DropdownSearch<Program>(
+            asyncItems: (filter) => fetchPrograms(),
+            dropdownDecoratorProps: const DropDownDecoratorProps(
+              dropdownSearchDecoration: InputDecoration(
+                labelText: "Program",
+                filled: false,
               ),
-              const Text(
-                "Name of Program",
-                style: TextStyle(fontSize: 14),
-              ),
-              const SizedBox(
-                width: 12,
-              ),
-              DropdownButton(
-                isExpanded: false,
-                isDense: false,
-                borderRadius: BorderRadius.circular(18),
-                disabledHint: const Text(
-                  "No programs yet.",
-                  style: TextStyle(fontSize: 14),
-                ),
-                onChanged: (program) =>
-                    setState(() => selectedProgram = program),
-                value: selectedProgram,
-                items:
-                    null, //TODO: Dynamically populate dropdown items with program names
-              ),
-            ],
+            ),
+            onChanged: (value) => setState(() => selectedProgram = value),
+            selectedItem: selectedProgram,
+            popupProps: const PopupProps.dialog(showSearchBox: true),
+            compareFn: (item1, item2) => item1.id == item2.id,
+            validator: (value) {
+              if (value == null) {
+                return "Select a program.";
+              }
+              return null;
+            },
           ),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.start,
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: [
-              const SizedBox(
-                width: 19,
-              ),
-              const Text(
-                "Name of Course",
-                style: TextStyle(fontSize: 14),
-              ),
-              const SizedBox(
-                width: 12,
-              ),
-              DropdownButton(
-                isExpanded: false,
-                isDense: false,
-                borderRadius: BorderRadius.circular(18),
-                disabledHint: const Text(
-                  "No courses under this program yet.",
-                  style: TextStyle(fontSize: 14),
-                ),
-                onChanged: (course) =>
-                    setState(() => selectedCourse = course),
-                value: selectedCourse,
-                items:
-                    null, //TODO: Dynamically populate dropdown items with: (courses under a program) names
-              ),
-            ],
+          const SizedBox(
+            height: 6,
           ),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.start,
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: [
-              const SizedBox(
-                width: 19,
+          DropdownSearch<Course>(
+            asyncItems: (filter) => fetchCourses(),
+            dropdownDecoratorProps: const DropDownDecoratorProps(
+              dropdownSearchDecoration: InputDecoration(
+                labelText: "Course",
+                filled: false,
               ),
-              const Text(
-                "Name of Trainer",
-                style: TextStyle(fontSize: 14),
+            ),
+            onChanged: (value) {
+              setState(() => selectedCourse = value);
+              setState(() {
+                courseCostCon.text = selectedCourse!.cost.toString();
+              });
+            },
+            selectedItem: selectedCourse,
+            popupProps: const PopupProps.dialog(showSearchBox: true),
+            compareFn: (item1, item2) => item1.id == item2.id,
+            validator: (value) {
+              if (value == null) {
+                return "Select a course.";
+              }
+              return null;
+            },
+          ),
+          const SizedBox(
+            height: 6,
+          ),
+          DropdownSearch<Trainer>(
+            asyncItems: (filter) => fetchTrainers(),
+            dropdownDecoratorProps: const DropDownDecoratorProps(
+              dropdownSearchDecoration: InputDecoration(
+                labelText: "Trainer",
+                filled: false,
               ),
-              const SizedBox(
-                width: 12,
-              ),
-              DropdownButton(
-                isExpanded: false,
-                isDense: false,
-                borderRadius: BorderRadius.circular(18),
-                disabledHint: const Text(
-                  "No trainers yet.",
-                  style: TextStyle(fontSize: 14),
-                ),
-                onChanged: (trainer) =>
-                    setState(() => selectedTrainer = trainer),
-                value: selectedTrainer,
-                items:
-                    null, //TODO: Dynamically populate dropdown items with trainer names
-              ),
-            ],
+            ),
+            onChanged: (value) => setState(() => selectedTrainer = value),
+            selectedItem: selectedTrainer,
+            popupProps: const PopupProps.dialog(showSearchBox: true),
+            compareFn: (item1, item2) => item1.id == item2.id,
+            validator: (value) {
+              if (value == null) {
+                return "Select a trainer.";
+              }
+              return null;
+            },
           ),
           TextField(
-            controller: datePickerController,
+            controller: orDateCon,
             readOnly: true,
             decoration: const InputDecoration(
               alignLabelWithHint: true,
@@ -152,7 +215,7 @@ class _PaymentFormState extends State<PaymentForm> {
             onTap: () => onTapFunction(context: context),
           ),
           CupertinoTextFormFieldRow(
-            controller: totalDiscountCon,
+            controller: orNumberCon,
             prefix: const Row(
               children: [
                 Text("OR Number",
@@ -185,12 +248,12 @@ class _PaymentFormState extends State<PaymentForm> {
               // prefixIcon: Icon(Icons.person)
             ),
           ),
-          
           CupertinoTextFormFieldRow(
-            controller: totalStudentsCon,
+            readOnly: true,
+            controller: courseCostCon,
             prefix: const Row(
               children: [
-                Text("Training Fee",
+                Text("Course Cost",
                     style: TextStyle(
                         color: Colors.black87,
                         fontSize: 14,
@@ -198,13 +261,8 @@ class _PaymentFormState extends State<PaymentForm> {
                 SizedBox(width: 18),
               ],
             ),
-            // padding: EdgeInsets.only(left: 90),
-            placeholder: "", //TODO: Automatically get the COURSE Cost or the course registration fee.
-            placeholderStyle: const TextStyle(
-              fontSize: 14,
-              fontWeight: FontWeight.w400,
-              color: Colors.black45,
-            ),
+            //TODO: Automatically get the COURSE Cost or the course registration fee.
+
             style: const TextStyle(
               fontSize: 14,
               fontWeight: FontWeight.w400,
@@ -221,7 +279,14 @@ class _PaymentFormState extends State<PaymentForm> {
             ),
           ),
           CupertinoTextFormFieldRow(
-            controller: totalSaleCon,
+            onChanged: (value) {
+              setState(() {
+                totalAmountCon.text = (double.parse(courseCostCon.text) -
+                        double.parse(discountCon.text))
+                    .toString();
+              });
+            },
+            controller: discountCon,
             prefix: const Row(
               children: [
                 Text("Discounted Fee",
@@ -233,12 +298,7 @@ class _PaymentFormState extends State<PaymentForm> {
               ],
             ),
             // padding: EdgeInsets.only(left: 90),
-            placeholder: "", //TODO: Automatically get the DISCOUNT price based on the trainee_type/voucher code used.
-            placeholderStyle: const TextStyle(
-              fontSize: 14,
-              fontWeight: FontWeight.w400,
-              color: Colors.black45,
-            ),
+            //TODO: Automatically get the DISCOUNT price based on the trainee_type/voucher code used.
             style: const TextStyle(
               fontSize: 14,
               fontWeight: FontWeight.w400,
@@ -251,12 +311,10 @@ class _PaymentFormState extends State<PaymentForm> {
                 width: 0.5,
               ),
               borderRadius: BorderRadius.circular(18),
-              // prefixIcon: Icon(Icons.person)
             ),
           ),
-          
           CupertinoTextFormFieldRow(
-            controller: totalIncomeCon,
+            controller: totalAmountCon,
             readOnly: true,
             prefix: const Row(
               children: [
@@ -268,9 +326,8 @@ class _PaymentFormState extends State<PaymentForm> {
                 SizedBox(width: 27),
               ],
             ),
-            // padding: EdgeInsets.only(left: 90),
-            placeholder: ".",
-            // TODO: Add a formula to get the sum of (registration fee - discount fee), then display it here. 
+            // padding: EdgeInsets.only(left: 90)
+            // TODO: Add a formula to get the sum of (registration fee - discount fee), then display it here.
             placeholderStyle: const TextStyle(
               fontSize: 14,
               fontWeight: FontWeight.w400,
@@ -288,7 +345,6 @@ class _PaymentFormState extends State<PaymentForm> {
                 width: 0.5,
               ),
               borderRadius: BorderRadius.circular(18),
-              // prefixIcon: Icon(Icons.person)
             ),
           ),
           const SizedBox(height: 10),
@@ -323,7 +379,33 @@ class _PaymentFormState extends State<PaymentForm> {
           return Colors.green;
         }),
       ),
-      onPressed: () {},
+      onPressed: () {
+        if (formKey.currentState!.validate()) {
+          final payment = Payment(
+            id: widget.payment?.id,
+            orDate: DateTime.parse(orDateCon.text),
+            orNumber: orNumberCon.text,
+            discount: double.parse(discountCon.text),
+            totalAmount: double.parse(totalAmountCon.text),
+            approved: false,
+            courseId: selectedCourse!.id!,
+            studentId: selectedTrainer!.id!,
+            programId: selectedProgram!.id!,
+          );
+          print(payment.toJson());
+
+          Supabase.instance.client
+              .from('payment')
+              .upsert(payment.toJson())
+              .then((value) {
+            ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+              content: Text("Payment saved successfully."),
+              backgroundColor: Colors.green,
+            ));
+            Navigator.pop(context);
+          });
+        }
+      },
       child: const Text(
         "Save",
         style: TextStyle(
@@ -358,6 +440,6 @@ class _PaymentFormState extends State<PaymentForm> {
       initialDate: DateTime.now(),
     );
     if (pickedDate == null) return;
-    datePickerController.text = DateFormat('yyyy-MM-dd').format(pickedDate);
+    orDateCon.text = DateFormat('yyyy-MM-dd').format(pickedDate);
   }
 }

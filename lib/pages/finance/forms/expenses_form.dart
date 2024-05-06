@@ -1,31 +1,59 @@
+import 'package:dropdown_search/dropdown_search.dart';
+import 'package:ictc_admin/models/course.dart';
+import 'package:ictc_admin/models/expense.dart';
+import 'package:ictc_admin/models/program.dart';
 import 'package:intl/intl.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:supabase_flutter/supabase_flutter.dart';
 
 class ExpensesForm extends StatefulWidget {
-  const ExpensesForm({super.key, this.expense});
+  const ExpensesForm({super.key, this.expense, this.program, this.course});
 
-  final Object? expense;
+  final Expense? expense;
+  final Program? program;
+  final Course? course;
 
   @override
   State<ExpensesForm> createState() => _ExpensesFormState();
 }
 
 class _ExpensesFormState extends State<ExpensesForm> {
+  Program? selectedProgram;
+  Course? selectedCourse;
+
+  final formKey = GlobalKey<FormState>();
+  late TextEditingController orDateCon, orNumberCon, particularsCon, amountCon;
+
   @override
   void initState() {
     super.initState();
 
-    datePickerController = TextEditingController();
-    nameCon = TextEditingController();
-    courseCon = TextEditingController();
-    costCon = TextEditingController();
+    orDateCon = TextEditingController(
+        text: widget.expense?.orDate.toString() ??
+            DateFormat('yyyy-MM-dd').format(DateTime.now()));
+    orNumberCon = TextEditingController(text: widget.expense?.orNumber ?? "");
+    particularsCon =
+        TextEditingController(text: widget.expense?.particulars ?? "");
+    amountCon =
+        TextEditingController(text: widget.expense?.amount.toString() ?? "");
 
-
+    if (widget.expense != null) {
+      Supabase.instance.client
+          .from('program')
+          .select()
+          .eq('id', widget.course!.programId!)
+          .limit(1)
+          .withConverter((data) => Program.fromJson(data.first))
+          .then((value) => setState(() => selectedProgram = value));
+      Supabase.instance.client
+          .from('course')
+          .select()
+          .eq('program_id', widget.program!.id!)
+          .withConverter((data) => Course.fromJson(data.first))
+          .then((value) => setState(() => selectedCourse = value));
+    }
   }
-
-  final formKey = GlobalKey<FormState>();
-  late TextEditingController datePickerController, nameCon, courseCon,costCon;
 
   onTapFunction({required BuildContext context}) async {
     DateTime? pickedDate = await showDatePicker(
@@ -35,22 +63,98 @@ class _ExpensesFormState extends State<ExpensesForm> {
       initialDate: DateTime.now(),
     );
     if (pickedDate == null) return;
-    datePickerController.text = DateFormat('yyyy-MM-dd').format(pickedDate);
+    orDateCon.text = DateFormat('yyyy-MM-dd').format(pickedDate);
+  }
+
+// PROGRAMS
+  Future<List<Program>> fetchPrograms({String? filter}) async {
+    final supabase = Supabase.instance.client;
+    List<Program> programs = await supabase
+        .from('program')
+        .select()
+        .withConverter((data) => data.map((e) => Program.fromJson(e)).toList());
+
+    return filter == null
+        ? programs
+        : programs.where((element) => element.title.contains(filter)).toList();
+  }
+
+// COURSES
+  Future<List<Course>> fetchCourses({String? filter}) async {
+    final supabase = Supabase.instance.client;
+    late final List<Course> programCourses;
+    programCourses = await supabase
+        .from('course')
+        .select()
+        .eq('program_id', selectedProgram!.id!)
+        .withConverter((data) => data.map((e) => Course.fromJson(e)).toList());
+    return filter == null
+        ? programCourses
+        : programCourses
+            .where((element) => element.toString().contains(filter))
+            .toList();
   }
 
   @override
   Widget build(BuildContext context) {
     return Form(
+      key: formKey,
       child: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
+          DropdownSearch<Program>(
+            asyncItems: (filter) => fetchPrograms(),
+            dropdownDecoratorProps: const DropDownDecoratorProps(
+              dropdownSearchDecoration: InputDecoration(
+                labelText: "Program",
+                filled: false,
+              ),
+            ),
+            onChanged: (value) => setState(() => selectedProgram = value),
+            selectedItem: selectedProgram,
+            popupProps: const PopupProps.dialog(showSearchBox: true),
+            compareFn: (item1, item2) => item1.id == item2.id,
+            validator: (value) {
+              if (value == null) {
+                return "Select a program.";
+              }
+              return null;
+            },
+          ),
+          const SizedBox(
+            height: 6,
+          ),
+          DropdownSearch<Course>(
+            asyncItems: (filter) => fetchCourses(),
+            dropdownDecoratorProps: const DropDownDecoratorProps(
+              dropdownSearchDecoration: InputDecoration(
+                labelText: "Course",
+                filled: false,
+              ),
+            ),
+            onChanged: (value) {
+              setState(() => selectedCourse = value);
+            },
+            selectedItem: selectedCourse,
+            popupProps: const PopupProps.dialog(showSearchBox: true),
+            compareFn: (item1, item2) => item1.id == item2.id,
+            validator: (value) {
+              if (value == null) {
+                return "Select a course.";
+              }
+              return null;
+            },
+          ),
+          const SizedBox(
+            height: 6,
+          ),
           TextFormField(
             style: TextStyle(
-                  color: Colors.black87,
-                  fontSize: 14,
-                  fontWeight: FontWeight.w400,
-                  height: 2),
-            controller: datePickerController,
+                color: Colors.black87,
+                fontSize: 14,
+                fontWeight: FontWeight.w400,
+                height: 2),
+            controller: orDateCon,
             readOnly: true,
             decoration: const InputDecoration(
               alignLabelWithHint: true,
@@ -68,7 +172,44 @@ class _ExpensesFormState extends State<ExpensesForm> {
           ),
           const SizedBox(height: 10),
           CupertinoTextFormFieldRow(
-            controller: nameCon,
+            controller: orNumberCon,
+            prefix: const Row(
+              children: [
+                Text("OR Number",
+                    style: TextStyle(
+                        color: Colors.black87,
+                        fontSize: 14,
+                        fontWeight: FontWeight.w400)),
+                SizedBox(width: 20),
+              ],
+            ),
+            // padding: EdgeInsets.only(left: 90),
+            placeholder: "Enter OR Number",
+            placeholderStyle: const TextStyle(
+              fontSize: 14,
+              fontWeight: FontWeight.w400,
+              color: Colors.black45,
+            ),
+            style: const TextStyle(
+              fontSize: 14,
+              fontWeight: FontWeight.w400,
+              color: Colors.black87,
+            ),
+            decoration: BoxDecoration(
+              // border: ,
+              border: Border.all(
+                color: Colors.black87,
+                width: 0.5,
+              ),
+              borderRadius: BorderRadius.circular(18),
+              // prefixIcon: Icon(Icons.person)
+            ),
+          ),
+          SizedBox(
+            height: 10,
+          ),
+          CupertinoTextFormFieldRow(
+            controller: particularsCon,
             prefix: const Row(
               children: [
                 Text("Particulars",
@@ -102,41 +243,7 @@ class _ExpensesFormState extends State<ExpensesForm> {
             ),
           ),
           CupertinoTextFormFieldRow(
-            controller: courseCon,
-            prefix: const Row(
-              children: [
-                Text("Course Name",
-                    style: TextStyle(
-                        color: Colors.black87,
-                        fontSize: 14,
-                        fontWeight: FontWeight.w400)),
-                SizedBox(width: 45),
-              ],
-            ),
-            // padding: EdgeInsets.only(left: 90),
-            placeholder: "Enter course name",
-            placeholderStyle: const TextStyle(
-              fontSize: 14,
-              fontWeight: FontWeight.w400,
-              color: Colors.black45,
-            ),
-            style: const TextStyle(
-              fontSize: 14,
-              fontWeight: FontWeight.w400,
-              color: Colors.black87,
-            ),
-            decoration: BoxDecoration(
-              // border: ,
-              border: Border.all(
-                color: Colors.black87,
-                width: 0.5,
-              ),
-              borderRadius: BorderRadius.circular(18),
-              // prefixIcon: Icon(Icons.person)
-            ),
-          ),
-          CupertinoTextFormFieldRow(
-            controller: costCon,
+            controller: amountCon,
             prefix: const Row(
               children: [
                 Text("Total Cost",
@@ -169,7 +276,6 @@ class _ExpensesFormState extends State<ExpensesForm> {
               // prefixIcon: Icon(Icons.person)
             ),
           ),
-          
           const SizedBox(height: 20),
           Row(
             children: [
@@ -201,7 +307,33 @@ class _ExpensesFormState extends State<ExpensesForm> {
           return Colors.green;
         }),
       ),
-      onPressed: () {},
+      onPressed: () {
+        if (formKey.currentState!.validate()) {
+          final expense = Expense(
+            id: widget.expense?.id,
+            programId: selectedProgram!.id!,
+            courseId: selectedCourse!.id!,
+            orDate: DateTime.parse(orDateCon.text),
+            orNumber: orNumberCon.text,
+            particulars: particularsCon.text,
+            amount: double.parse(amountCon.text),
+          );
+
+          print(expense.toJson());
+
+          Supabase.instance.client
+              .from('expense')
+              .upsert(expense.toJson())
+              .then((value) {
+            ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+              content: Text("Expense saved successfully."),
+              backgroundColor: Colors.green,
+            ));
+            Navigator.pop(context);
+          });
+        }
+
+      },
       child: const Text(
         "Save",
         style: TextStyle(
@@ -221,7 +353,21 @@ class _ExpensesFormState extends State<ExpensesForm> {
             return const Color.fromARGB(255, 226, 226, 226);
           }),
         ),
-        onPressed: () {},
+        onPressed: () {
+          final supabase = Supabase.instance.client;
+          final id = widget.expense!.id!;
+          
+
+          supabase.from('expense').delete().eq('id', id).whenComplete(() {
+            ScaffoldMessenger.of(context).showSnackBar(
+                const SnackBar(content: Text("Delete successful!")));
+
+            Navigator.of(context).pop();
+          }).catchError((_) {
+            ScaffoldMessenger.of(context)
+              .showSnackBar(const SnackBar(content: Text("An error occured.")));
+          });
+        },
         child: const Text(
           "Delete",
           style: TextStyle(color: Colors.black87),
