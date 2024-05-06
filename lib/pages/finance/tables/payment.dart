@@ -2,12 +2,16 @@ import 'dart:convert';
 import 'package:file_saver/file_saver.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:ictc_admin/models/course.dart';
 import 'package:ictc_admin/models/payment.dart';
+import 'package:ictc_admin/models/program.dart';
 import 'package:ictc_admin/models/seeds.dart';
+import 'package:ictc_admin/models/trainee.dart';
 import 'package:ictc_admin/pages/finance/forms/payment_form.dart';
 import 'package:pluto_grid_plus/pluto_grid_plus.dart';
-import 'package:pluto_grid_plus_export/pluto_grid_plus_export.dart' as pluto_grid_plus_export;
-
+import 'package:pluto_grid_plus_export/pluto_grid_plus_export.dart'
+    as pluto_grid_plus_export;
+import 'package:supabase_flutter/supabase_flutter.dart';
 
 class PaymentTable extends StatefulWidget {
   const PaymentTable({super.key});
@@ -20,19 +24,36 @@ class _PaymentTableState extends State<PaymentTable> {
   late Stream<List<Payment>> _payments;
   @override
   void initState() {
-    _payments = Seeds.paymentStream();
+    _payments = Supabase.instance.client.from('payment').stream(primaryKey: [
+      'id'
+    ]).map((data) => data.map((e) => Payment.fromJson(e)).toList());
 
     super.initState();
   }
+
+  Future<List<PlutoRow>> _fetchRows(List<Payment> payments) async {
+    final List<PlutoRow> rows = [];
+
+    for (Payment p in payments) {
+      rows.add(buildInRow(
+          payment: p,
+          student: await p.student,
+          program: await p.program,
+          course: await p.course));
+    }
+
+    return rows;
+  }
+
   late final PlutoGridStateManager stateManager;
 
-    void _defaultExportGridAsCSV() async {
+  void _defaultExportGridAsCSV() async {
     String title = "pluto_grid_plus_export";
     var exported = const Utf8Encoder().convert(
         pluto_grid_plus_export.PlutoGridExport.exportCSV(stateManager));
-    await FileSaver.instance.saveFile(name: "$title.csv", ext: ".csv", bytes: exported );
+    await FileSaver.instance
+        .saveFile(name: "$title.csv", ext: ".csv", bytes: exported);
   }
-
 
   @override
   Widget build(BuildContext context) {
@@ -49,10 +70,7 @@ class _PaymentTableState extends State<PaymentTable> {
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   crossAxisAlignment: CrossAxisAlignment.center,
-                  children: [
-                    addButton(),
-                    csvButton()
-                  ],
+                  children: [addButton(), csvButton()],
                 ),
               ),
               buildInDataTable(),
@@ -62,11 +80,11 @@ class _PaymentTableState extends State<PaymentTable> {
       ],
     );
   }
-Widget csvButton() {
-  return ElevatedButton(
-            onPressed: _defaultExportGridAsCSV,
-            child: const Text("Export to CSV"));
-}
+
+  Widget csvButton() {
+    return ElevatedButton(
+        onPressed: _defaultExportGridAsCSV, child: const Text("Export to CSV"));
+  }
 
   Widget editButton() {
     return TextButton(
@@ -122,7 +140,7 @@ Widget csvButton() {
       content: Flexible(
         flex: 2,
         child: SizedBox(
-          width:450,
+          width: 450,
           height: MediaQuery.of(context).size.height * 0.5,
           child: const Padding(
             padding: EdgeInsets.fromLTRB(0, 0, 0, 0),
@@ -144,16 +162,16 @@ Widget csvButton() {
   Widget addButton() {
     return ElevatedButton(
       style: ButtonStyle(
-              backgroundColor: MaterialStateProperty.resolveWith(
-                (states) {
-                  // If the button is pressed, return green, otherwise blue
-                  if (states.contains(MaterialState.pressed)) {
-                    return const Color.fromARGB(255, 57, 167, 74);
-                  }
-                  return const Color.fromARGB(255, 33, 175, 23);
-                },
-              ),
-              fixedSize: MaterialStateProperty.all(const Size.fromWidth(145))),
+          backgroundColor: MaterialStateProperty.resolveWith(
+            (states) {
+              // If the button is pressed, return green, otherwise blue
+              if (states.contains(MaterialState.pressed)) {
+                return const Color.fromARGB(255, 57, 167, 74);
+              }
+              return const Color.fromARGB(255, 33, 175, 23);
+            },
+          ),
+          fixedSize: MaterialStateProperty.all(const Size.fromWidth(145))),
       onPressed: () {
         showDialog(
           context: context,
@@ -294,26 +312,29 @@ Widget csvButton() {
       type: PlutoColumnType.number(),
     ),
     PlutoColumn(
-      title: 'Approved?',
-      field: 'isApproved',
-      readOnly: true,
-      type: PlutoColumnType.text()
-    ),
+        title: 'Approved?',
+        field: 'isApproved',
+        readOnly: true,
+        type: PlutoColumnType.text()),
   ];
 
-  PlutoRow buildInRow(Payment payment) {
+  PlutoRow buildInRow(
+      {required Payment payment,
+      required Trainee student,
+      required Program program,
+      required Course course}) {
     return PlutoRow(
       cells: {
         'id': PlutoCell(value: payment.id),
         'name': PlutoCell(value: payment.toString()),
-        'progName': PlutoCell(value: payment.programName),
-        'courseName': PlutoCell(value: payment.courseName),
-        'trainingFee': PlutoCell(value: payment.trainingFee),
+        'progName': PlutoCell(value: program.title),
+        'courseName': PlutoCell(value: course.title),
+        'trainingFee': PlutoCell(value: course.cost),
         'discount': PlutoCell(value: payment.discount),
         'orDate': PlutoCell(value: payment.orDate),
         'orNumber': PlutoCell(value: payment.orNumber),
-        'amount': PlutoCell(value: payment.amount),
-        'isApproved': PlutoCell(value: payment.isApproved),
+        'amount': PlutoCell(value: payment.totalAmount),
+        'isApproved': PlutoCell(value: payment.approved),
       },
     );
   }
@@ -325,50 +346,71 @@ Widget csvButton() {
         child: StreamBuilder(
             stream: _payments,
             builder: (context, snapshot) {
-              if (!snapshot.hasData) {
+              if (snapshot.connectionState == ConnectionState.waiting) {
                 return const Expanded(
                   child: Center(
                     child: CircularProgressIndicator(),
                   ),
                 );
               }
-              return PlutoGrid(
-                  columns: inColumns,
-                  rows: snapshot.data!.map((e) => buildInRow(e)).toList(),
-                  onChanged: (PlutoGridOnChangedEvent event) {
-                    print(event);
-                  },
-                  onLoaded: (PlutoGridOnLoadedEvent event) {
-                      stateManager = event.stateManager;
-                    event.stateManager.setShowColumnFilter(true);
-                  },
-                  configuration: PlutoGridConfiguration(
-                    columnFilter: PlutoGridColumnFilterConfig(
-                      filters: const [
-                        ...FilterHelper.defaultFilters,
-                        // custom filter
-                        ClassYouImplemented(),
-                      ],
-                      resolveDefaultColumnFilter: (column, resolver) {
-                        if (column.field == 'text') {
-                          return resolver<PlutoFilterTypeContains>()
-                              as PlutoFilterType;
-                        } else if (column.field == 'number') {
-                          return resolver<PlutoFilterTypeGreaterThan>()
-                              as PlutoFilterType;
-                        } else if (column.field == 'date') {
-                          return resolver<PlutoFilterTypeContains>()
-                              as PlutoFilterType;
-                        } else if (column.field == 'select') {
-                          return resolver<ClassYouImplemented>()
-                              as PlutoFilterType;
-                        }
 
-                        return resolver<PlutoFilterTypeContains>()
-                            as PlutoFilterType;
+              if (snapshot.data!.isEmpty) {
+                return const Expanded(
+                    child: Center(
+                  child: Text("No entries."),
+                ));
+              }
+
+              return FutureBuilder(
+                future: _fetchRows(snapshot.data!),
+                builder: (context, snapshot) {
+                  if (snapshot.connectionState == ConnectionState.waiting) {
+                    return const Expanded(
+                      child: Center(
+                        child: CircularProgressIndicator(),
+                      ),
+                    );
+                  }
+
+                  return PlutoGrid(
+                      columns: inColumns,
+                      rows: snapshot.data!,
+                      onChanged: (PlutoGridOnChangedEvent event) {
+                        print(event);
                       },
-                    ),
-                  ));
+                      onLoaded: (PlutoGridOnLoadedEvent event) {
+                        stateManager = event.stateManager;
+                        event.stateManager.setShowColumnFilter(true);
+                      },
+                      configuration: PlutoGridConfiguration(
+                        columnFilter: PlutoGridColumnFilterConfig(
+                          filters: const [
+                            ...FilterHelper.defaultFilters,
+                            // custom filter
+                            ClassYouImplemented(),
+                          ],
+                          resolveDefaultColumnFilter: (column, resolver) {
+                            if (column.field == 'text') {
+                              return resolver<PlutoFilterTypeContains>()
+                                  as PlutoFilterType;
+                            } else if (column.field == 'number') {
+                              return resolver<PlutoFilterTypeGreaterThan>()
+                                  as PlutoFilterType;
+                            } else if (column.field == 'date') {
+                              return resolver<PlutoFilterTypeContains>()
+                                  as PlutoFilterType;
+                            } else if (column.field == 'select') {
+                              return resolver<ClassYouImplemented>()
+                                  as PlutoFilterType;
+                            }
+
+                            return resolver<PlutoFilterTypeContains>()
+                                as PlutoFilterType;
+                          },
+                        ),
+                      ));
+                },
+              );
             }),
       ),
     );

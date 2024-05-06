@@ -75,32 +75,26 @@ class Seeds {
   static final List<Payment> _payments = [
     Payment(
       id: 1,
-      firstName: 'Samantha',
-      middleName: "Largo",
-      lastName: "De Las Nieves",
-      programName: 'GCE',
-      courseName: 'Level 1',
-      trainingFee: 2500,
+      studentId: _trainees[0].id,
+      programId: _programs[0].id!,
+      courseId: _courses[0].id!,
       discount: 250,
       orDate: DateTime.utc(2024, 4, 1),
       orNumber: 'OR2312312',
-      amount: 2250,
-      isApproved: true,
+      totalAmount: 2250.0,
+      approved: true,
     ),
   ];
 
   static final List<Expense> _expenses = [
     Expense(
-      id: 1, 
+      id: 1,
       particulars: 'Foodpanda Snacks',
-      programName: 'Microcredentials', 
-      courseName: 'Fundamentals to UI/UX', 
       orNumber: 'FOODPANDA1234',
-      orDate: DateTime.utc(2024, 4, 1), 
+      orDate: DateTime.utc(2024, 4, 1),
       amount: 1000,
     )
   ];
-
 
   static final List<Report> _reports = [
     Report(
@@ -111,9 +105,6 @@ class Seeds {
       netWorth: 10,
     ),
   ];
-
-
-
 
   static Stream<List<Trainer>> trainerStream() {
     return Stream.value(_trainers);
@@ -126,11 +117,12 @@ class Seeds {
   static Stream<List<Expense>> expenseStream() {
     return Stream.value(_expenses);
   }
+
   static Stream<List<Course>> courseStream() {
     return Stream.value(_courses);
   }
 
   static Stream<List<Report>> reportStream() {
-     return Stream.value(_reports);
+    return Stream.value(_reports);
   }
 }
