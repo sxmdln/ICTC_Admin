@@ -293,56 +293,56 @@ class _MainScreenState extends State<MainScreen> {
                     ],
                   ),
                 ),
-          Row(
-            mainAxisSize: MainAxisSize.min,
-            mainAxisAlignment: MainAxisAlignment.center,
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: [
-              buildSearchBar(context),
-              SizedBox(width: MediaQuery.of(context).size.width * 0.2),
-              Container(
-                padding: const EdgeInsets.all(8),
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(24),
-                ),
+          // Row(
+          //   mainAxisSize: MainAxisSize.min,
+          //   mainAxisAlignment: MainAxisAlignment.center,
+          //   crossAxisAlignment: CrossAxisAlignment.center,
+          //   children: [
+          //     buildSearchBar(context),
+          //     SizedBox(width: MediaQuery.of(context).size.width * 0.2),
+          //     Container(
+          //       padding: const EdgeInsets.all(8),
+          //       decoration: BoxDecoration(
+          //         borderRadius: BorderRadius.circular(24),
+          //       ),
 
-              ),
+          //     ),
 
-            ],
-          )
+          //   ],
+          // )
         ]));
   }
               
-  Widget buildSearchBar(BuildContext context) {
-    const key = ValueKey("searchbar");
-    return AnimatedSwitcher(
-      key: key,
-      duration: const Duration(milliseconds: 350),
-      child: _selectedIndex != 0
-          ? SearchBar(
-              constraints: BoxConstraints(
-                  minWidth: 80.0,
-                  maxWidth: MediaQuery.of(context).size.width * 0.3,
-                  maxHeight: 70,
-                  minHeight: 60),
-              controller: searchController,
-              elevation: const MaterialStatePropertyAll(1),
-              leading: const Icon(Icons.search),
-              hintText: "Search ${getSearchName()}...",
-              textStyle: MaterialStatePropertyAll(
-                  Theme.of(context).textTheme.bodyMedium),
-              trailing: [
-                IconButton(
-                    splashRadius: 15,
-                    onPressed: () {
-                      searchController.clear();
-                    },
-                    icon: const Icon(Icons.clear))
-              ],
-            )
-          : Container(key: key),
-    );
-  }
+  // Widget buildSearchBar(BuildContext context) {
+  //   const key = ValueKey("searchbar");
+  //   return AnimatedSwitcher(
+  //     key: key,
+  //     duration: const Duration(milliseconds: 350),
+  //     child: _selectedIndex != 0
+  //         ? SearchBar(
+  //             constraints: BoxConstraints(
+  //                 minWidth: 80.0,
+  //                 maxWidth: MediaQuery.of(context).size.width * 0.3,
+  //                 maxHeight: 70,
+  //                 minHeight: 60),
+  //             controller: searchController,
+  //             elevation: const MaterialStatePropertyAll(1),
+  //             leading: const Icon(Icons.search),
+  //             hintText: "Search ${getSearchName()}...",
+  //             textStyle: MaterialStatePropertyAll(
+  //                 Theme.of(context).textTheme.bodyMedium),
+  //             trailing: [
+  //               IconButton(
+  //                   splashRadius: 15,
+  //                   onPressed: () {
+  //                     searchController.clear();
+  //                   },
+  //                   icon: const Icon(Icons.clear))
+  //             ],
+  //           )
+  //         : Container(key: key),
+  //   );
+  // }
   
 
   Widget buildCounter(BuildContext context, Future<int> count) {
