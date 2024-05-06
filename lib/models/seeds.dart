@@ -97,13 +97,6 @@ class Seeds {
   ];
 
   static final List<Report> _reports = [
-    Report(
-      id: 1,
-      date: 'December',
-      totalIncome: 16,
-      totalExpense: 6,
-      netWorth: 10,
-    ),
   ];
 
   static Stream<List<Trainer>> trainerStream() {
