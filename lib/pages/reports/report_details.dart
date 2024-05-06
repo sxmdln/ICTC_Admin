@@ -1,20 +1,25 @@
 import 'package:data_table_2/data_table_2.dart';
 import 'package:flutter/material.dart';
 import 'package:ictc_admin/models/report.dart';
+import 'package:intl/intl.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
 class ReportDetails extends StatefulWidget {
-  const ReportDetails({super.key, required this.report});
+  const ReportDetails(
+      {super.key,
+      required this.reports,
+      required this.totalIncome,
+      required this.totalExpenses,
+      required this.netIncome});
 
-  final Report report;
+  final double totalIncome, totalExpenses, netIncome;
+  final List<Report> reports;
 
   @override
   State<ReportDetails> createState() => _ReportDetailsState();
-
 }
 
 class _ReportDetailsState extends State<ReportDetails> {
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -35,49 +40,58 @@ class _ReportDetailsState extends State<ReportDetails> {
       children: [
         Center(
           child: Container(
-            margin: EdgeInsets.symmetric(vertical: 40),
+            margin: const EdgeInsets.symmetric(vertical: 40),
             child: Column(
               children: [
                 Text(
-                  "Month: ${widget.report.date} ",
+                  "Month: ${DateFormat.MMMM().format(widget.reports.first.orDate)} ",
                   style: const TextStyle(
                       color: Colors.white,
                       fontSize: 45,
                       fontWeight: FontWeight.w600),
                 ),
-                SizedBox(height: 14,),
+                SizedBox(
+                  height: 14,
+                ),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
                     Text(
-                      "Total Income: P${widget.report.totalIncome.toString()} ",style: const TextStyle(
-                      color: Colors.white,
-                      fontSize: 18,
-                      fontWeight: FontWeight.w400),
+                      "Total Income: P${widget.totalIncome} ",
+                      style: const TextStyle(
+                          color: Colors.white,
+                          fontSize: 18,
+                          fontWeight: FontWeight.w400),
                     ),
                     Text(
-                      "| Total Expense:P${widget.report.totalExpense.toString()}",style: const TextStyle(
-                      color: Colors.white,
-                      fontSize: 18,
-                      fontWeight: FontWeight.w400),
+                      "| Total Expense:P${widget.totalExpenses}",
+                      style: const TextStyle(
+                          color: Colors.white,
+                          fontSize: 18,
+                          fontWeight: FontWeight.w400),
                     ),
                   ],
                 ),
-                SizedBox(height: 8,),
+                SizedBox(
+                  height: 8,
+                ),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
                     Text(
-                      "Net Income: P${widget.report.netIncome.toString()} ",style: const TextStyle(
-                      color: Colors.white,
-                      fontSize: 18,
-                      fontWeight: FontWeight.w400),
+                      "Net Worth: P${widget.netIncome} ",
+                      style: const TextStyle(
+                          color: Colors.white,
+                          fontSize: 18,
+                          fontWeight: FontWeight.w400),
                     ),
                   ],
                 ),
-                SizedBox(height: 8,),
+                SizedBox(
+                  height: 8,
+                ),
               ],
             ),
           ),

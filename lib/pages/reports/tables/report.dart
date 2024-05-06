@@ -1,12 +1,14 @@
 import 'dart:convert';
+import 'package:async/async.dart';
 import 'package:file_saver/file_saver.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:ictc_admin/models/report.dart';
-import 'package:ictc_admin/models/seeds.dart';
 import 'package:ictc_admin/pages/reports/report_details.dart';
+import 'package:intl/intl.dart';
 import 'package:pluto_grid_plus/pluto_grid_plus.dart';
-import 'package:pluto_grid_plus_export/pluto_grid_plus_export.dart' as pluto_grid_plus_export;
+import 'package:pluto_grid_plus_export/pluto_grid_plus_export.dart'
+    as pluto_grid_plus_export;
+import 'package:supabase_flutter/supabase_flutter.dart';
 
 class ReportTable extends StatefulWidget {
   const ReportTable({super.key});
@@ -18,35 +20,48 @@ class ReportTable extends StatefulWidget {
 }
 
 class _ReportTableState extends State<ReportTable> {
-  late Stream<List<Report>> _reports;
   @override
   void initState() {
-    _reports = Seeds.reportStream();
-
-
-
-
     super.initState();
   }
- late final PlutoGridStateManager stateManager;
 
-    void _defaultExportGridAsCSV() async {
+  late final PlutoGridStateManager stateManager;
+
+  void _defaultExportGridAsCSV() async {
     String title = "pluto_grid_plus_export";
     var exported = const Utf8Encoder().convert(
         pluto_grid_plus_export.PlutoGridExport.exportCSV(stateManager));
-    await FileSaver.instance.saveFile(name: "$title.csv", ext: ".csv", bytes: exported );
+    await FileSaver.instance
+        .saveFile(name: "$title.csv", ext: ".csv", bytes: exported);
   }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: const Color(0xfff1f5fb),
-      body: Expanded(child: Column(
+      body: Expanded(
+          child: Column(
         children: [
           Row(),
           buildDataTable(),
         ],
       )),
     );
+  }
+
+  Future<List<PlutoRow>> _fetchRows() async {
+    final List<PlutoRow> rows = [];
+
+    final query =
+        await Supabase.instance.client.rpc('reports_by_month').select();
+
+    print(query);
+
+    for (Map<String, dynamic> json in query) {
+      rows.add(buildRow(json));
+    }
+
+    return rows;
   }
 
   // FIN (Finance)
@@ -79,7 +94,8 @@ class _ReportTableState extends State<ReportTable> {
       readOnly: true,
       filterWidget: Container(color: Colors.white,),
       title: 'Actions',
-      field: 'actions',renderer: (rendererContext) => rendererContext.cell.value as Widget,
+      field: 'actions',
+      renderer: (rendererContext) => rendererContext.cell.value as Widget,
       type: PlutoColumnType.text(),
       enableEditingMode: false,
       enableAutoEditing: false,
@@ -91,24 +107,46 @@ class _ReportTableState extends State<ReportTable> {
     ),
   ];
 
-  PlutoRow buildRow(Report report) {
+  PlutoRow buildRow(Map<String, dynamic> json) {
+    final jsonDate = DateTime.parse(json['month_date']);
+
     return PlutoRow(
       cells: {
-        'id': PlutoCell(value: report.id),
-        'month': PlutoCell(value: report.date),
-        'totalIncome': PlutoCell(value: report.totalIncome),
-        'totalExpense': PlutoCell(value: report.totalExpense),
-        'netIncome': PlutoCell(value: report.netIncome),
+        'month': PlutoCell(value: DateFormat.MMMM().format(jsonDate)),
+        'totalIncome': PlutoCell(value: json['total_income']),
+        'totalExpense': PlutoCell(value: json['total_expenses']),
+        'netWorth': PlutoCell(value: json['net_income']),
         'actions': PlutoCell(value: Builder(builder: (context) {
           return Row(
             children: [
               TextButton(
-                  onPressed: () {
-                    Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => ReportDetails(report: report),
-                        ));
+                  onPressed: () async {
+                    final reports = await Supabase.instance.client
+                        .from('reports_view')
+                        .select()
+                        .gte('official_receipt_date', jsonDate)
+                        .lte(
+                            'official_receipt_date',
+                            DateTime(
+                                jsonDate.year,
+                                jsonDate.month,
+                                DateUtils.getDaysInMonth(
+                                    jsonDate.year, jsonDate.month)))
+                        .withConverter((data) =>
+                            data.map((e) => Report.fromJson(e)).toList());
+
+                    if (context.mounted) {
+                      Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => ReportDetails(
+                              reports: reports,
+                              totalIncome: json['total_income'],
+                              totalExpenses: json['total_expenses'],
+                              netIncome: json['net_income'],
+                            ),
+                          ));
+                    }
                   },
                   child: const Row(
                     children: [
@@ -140,51 +178,84 @@ class _ReportTableState extends State<ReportTable> {
       child: Container(
         padding: const EdgeInsets.all(30),
         child: StreamBuilder(
-            stream: _reports,
+            stream: StreamGroup.merge([
+              Supabase.instance.client
+                  .from('payment')
+                  .stream(primaryKey: ['id']),
+              Supabase.instance.client
+                  .from('expense')
+                  .stream(primaryKey: ['id'])
+            ]),
             builder: (context, snapshot) {
-              if (!snapshot.hasData) {
+              if (snapshot.connectionState == ConnectionState.waiting) {
                 return const Expanded(
                   child: Center(
                     child: CircularProgressIndicator(),
                   ),
                 );
               }
-              return PlutoGrid(
-                  columns: columns,
-                  rows: snapshot.data!.map((e) => buildRow(e)).toList(),
-                  onChanged: (PlutoGridOnChangedEvent event) {
-                    print(event);
-                  },
-                  onLoaded: (PlutoGridOnLoadedEvent event) {
-                    event.stateManager.setShowColumnFilter(true);
-                  },
-                  configuration: PlutoGridConfiguration(
-                    columnFilter: PlutoGridColumnFilterConfig(
-                      filters: const [
-                        ...FilterHelper.defaultFilters,
-                        // custom filter
-                        ClassYouImplemented(),
-                      ],
-                      resolveDefaultColumnFilter: (column, resolver) {
-                        if (column.field == 'text') {
-                          return resolver<PlutoFilterTypeContains>()
-                              as PlutoFilterType;
-                        } else if (column.field == 'number') {
-                          return resolver<PlutoFilterTypeGreaterThan>()
-                              as PlutoFilterType;
-                        } else if (column.field == 'date') {
-                          return resolver<PlutoFilterTypeContains>()
-                              as PlutoFilterType;
-                        } else if (column.field == 'select') {
-                          return resolver<ClassYouImplemented>()
-                              as PlutoFilterType;
-                        }
 
-                        return resolver<PlutoFilterTypeContains>()
-                            as PlutoFilterType;
+              if (!snapshot.hasData ||
+                  snapshot.data![0].isEmpty ||
+                  snapshot.data![1].isEmpty) {
+                return const Expanded(
+                  child: Center(
+                    child: Text("No entries."),
+                  ),
+                );
+              }
+
+              print(snapshot.data!);
+
+              return FutureBuilder(
+                future: _fetchRows(),
+                builder: (context, snapshot) {
+                  if (snapshot.connectionState == ConnectionState.waiting) {
+                    return const Expanded(
+                      child: Center(
+                        child: CircularProgressIndicator(),
+                      ),
+                    );
+                  }
+
+                  return PlutoGrid(
+                      columns: columns,
+                      rows: snapshot.data!,
+                      onChanged: (PlutoGridOnChangedEvent event) {
+                        print(event);
                       },
-                    ),
-                  ));
+                      onLoaded: (PlutoGridOnLoadedEvent event) {
+                        event.stateManager.setShowColumnFilter(true);
+                      },
+                      configuration: PlutoGridConfiguration(
+                        columnFilter: PlutoGridColumnFilterConfig(
+                          filters: const [
+                            ...FilterHelper.defaultFilters,
+                            // custom filter
+                            ClassYouImplemented(),
+                          ],
+                          resolveDefaultColumnFilter: (column, resolver) {
+                            if (column.field == 'text') {
+                              return resolver<PlutoFilterTypeContains>()
+                                  as PlutoFilterType;
+                            } else if (column.field == 'number') {
+                              return resolver<PlutoFilterTypeGreaterThan>()
+                                  as PlutoFilterType;
+                            } else if (column.field == 'date') {
+                              return resolver<PlutoFilterTypeContains>()
+                                  as PlutoFilterType;
+                            } else if (column.field == 'select') {
+                              return resolver<ClassYouImplemented>()
+                                  as PlutoFilterType;
+                            }
+
+                            return resolver<PlutoFilterTypeContains>()
+                                as PlutoFilterType;
+                          },
+                        ),
+                      ));
+                },
+              );
             }),
       ),
     );
