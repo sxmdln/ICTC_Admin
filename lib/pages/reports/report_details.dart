@@ -70,7 +70,7 @@ class _ReportDetailsState extends State<ReportDetails> {
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
                     Text(
-                      "Net Worth: P${widget.report.netWorth.toString()} ",style: const TextStyle(
+                      "Net Income: P${widget.report.netIncome.toString()} ",style: const TextStyle(
                       color: Colors.white,
                       fontSize: 18,
                       fontWeight: FontWeight.w400),

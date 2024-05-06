@@ -11,6 +11,8 @@ import 'package:pluto_grid_plus_export/pluto_grid_plus_export.dart' as pluto_gri
 class ReportTable extends StatefulWidget {
   const ReportTable({super.key});
 
+
+
   @override
   State<ReportTable> createState() => _ReportTableState();
 }
@@ -20,6 +22,9 @@ class _ReportTableState extends State<ReportTable> {
   @override
   void initState() {
     _reports = Seeds.reportStream();
+
+
+
 
     super.initState();
   }
@@ -47,16 +52,6 @@ class _ReportTableState extends State<ReportTable> {
   // FIN (Finance)
   List<PlutoColumn> columns = [
     PlutoColumn(
-      hide: true,
-      title: 'ID',
-      field: 'id',
-      readOnly: true,
-      type: PlutoColumnType.number(),
-      minWidth: 50,
-      width: 90,
-      enableDropToResize: false,
-    ),
-    PlutoColumn(
       title: 'Month',
       field: 'month',
       readOnly: true,
@@ -75,13 +70,14 @@ class _ReportTableState extends State<ReportTable> {
       type: PlutoColumnType.number(),
     ),
     PlutoColumn(
-      title: 'Net Worth',
-      field: 'netWorth',
+      title: 'Net Income',
+      field: 'netIncome',
       readOnly: true,
       type: PlutoColumnType.number(),
     ),
     PlutoColumn(
       readOnly: true,
+      filterWidget: Container(color: Colors.white,),
       title: 'Actions',
       field: 'actions',renderer: (rendererContext) => rendererContext.cell.value as Widget,
       type: PlutoColumnType.text(),
@@ -102,7 +98,7 @@ class _ReportTableState extends State<ReportTable> {
         'month': PlutoCell(value: report.date),
         'totalIncome': PlutoCell(value: report.totalIncome),
         'totalExpense': PlutoCell(value: report.totalExpense),
-        'netWorth': PlutoCell(value: report.netWorth),
+        'netIncome': PlutoCell(value: report.netIncome),
         'actions': PlutoCell(value: Builder(builder: (context) {
           return Row(
             children: [
