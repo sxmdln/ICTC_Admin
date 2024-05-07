@@ -291,7 +291,7 @@ class _PaymentTableState extends State<PaymentTable> {
       field: 'name',
       readOnly: true,
       type: PlutoColumnType.text(),
-      filterHintText: 'Search Trainer',
+      filterHintText: 'Search Trainee',
       textAlign: PlutoColumnTextAlign.right,
       titleTextAlign: PlutoColumnTextAlign.center,
       enableEditingMode: false,
