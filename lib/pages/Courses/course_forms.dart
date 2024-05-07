@@ -5,6 +5,7 @@ import 'package:ictc_admin/models/program.dart';
 import 'package:ictc_admin/models/trainer.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:dropdown_search/dropdown_search.dart';
+import 'package:syncfusion_flutter_datepicker/datepicker.dart';
 
 class CourseForm extends StatefulWidget {
   const CourseForm({super.key, this.course});
@@ -24,10 +25,12 @@ class _CourseFormState extends State<CourseForm> {
 
     courseTitleCon = TextEditingController(text: widget.course?.title);
     descriptionCon = TextEditingController(text: widget.course?.description);
-    costCon = TextEditingController(text: widget.course?.cost?.toString());
+    costCon = TextEditingController(text: widget.course?.cost.toString());
     durationCon = TextEditingController(text: widget.course?.duration);
     scheduleCon = TextEditingController(text: widget.course?.schedule);
     venueCon = TextEditingController(text: widget.course?.venue);
+    // startDateCon = TextEditingController(text: widget.course?.startDate);
+    // endDateCon = TextEditingController(text: widget.course?.endDate);
 
     if (widget.course != null) {
       Supabase.instance.client
@@ -51,12 +54,15 @@ class _CourseFormState extends State<CourseForm> {
 
   Program? selectedProgram;
   Trainer? selectedTrainer;
-  late TextEditingController courseTitleCon,
+  late TextEditingController 
+      courseTitleCon,
       descriptionCon,
       costCon,
       durationCon,
       scheduleCon,
       venueCon;
+      // startDateCon;
+      // endDateCon;
 
   Future<List<Program>> fetchPrograms({String? filter}) async {
     final supabase = Supabase.instance.client;
@@ -539,6 +545,8 @@ class _CourseFormState extends State<CourseForm> {
           duration: durationCon.text,
           schedule: scheduleCon.text,
           venue: venueCon.text,
+          // startDate: startDateCon.text,
+          // endDate: endDateCon.text,
         );
 
         print(course.toJson());

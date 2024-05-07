@@ -1,5 +1,8 @@
+import 'package:data_table_2/data_table_2.dart';
 import 'package:flutter/material.dart';
 import 'package:ictc_admin/models/trainee.dart';
+import 'package:ictc_admin/models/register.dart';
+import 'package:supabase_flutter/supabase_flutter.dart';
 
 class TraineeViewMore extends StatefulWidget {
   final Trainee trainee;
@@ -11,30 +14,74 @@ class TraineeViewMore extends StatefulWidget {
 }
 
 class _TraineeViewMoreState extends State<TraineeViewMore> {
+
+late final Future<List<Register>> courseStudents;
+
+Future<String> fetchCourseTitle(int courseId) async {
+  final response = await Supabase.instance.client
+      .from('course')
+      .select('title')
+      .eq('id', courseId)
+      .single();
+
+  if (response.isEmpty) {
+    throw Exception('No course found with id: $courseId');
+  }
+
+  final title = response['title']?.toString();
+  print('Fetched course title for courseId $courseId: $title');
+  return title ?? 'Unknown Course';
+}
+
+
   @override
+  void initState() {
+    courseStudents = Supabase.instance.client
+        .from('registration')
+        .select()
+        .eq('student_id', widget.trainee.id!)
+        .withConverter((data) {
+          print(data);
+          return data.map((e) => Register.fromJson(e)).toList();
+        });
+
+    super.initState();
+  }
+
+
+   @override
   Widget build(BuildContext context) {
-    return Container(
-      margin: const EdgeInsets.only(bottom: 20, top: 33.5, right: 12),
-      decoration: const BoxDecoration(
-        // border: Border(bottom: BorderSide(width: 1)),
-        // color: Color(0xfff1f5fb),
-        borderRadius: BorderRadius.all(Radius.circular(24)),
-        color: Colors.white,
-      ),
-      child: Column(
-        mainAxisSize: MainAxisSize.min,
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          traineeHeader(),
-          const SizedBox(height: 8),
-          const Divider(thickness: 0.5, color: Colors.black87),
-          const SizedBox(height: 8),
-          buildCourses(),
-          const Spacer(
-            flex: 2,
-          ),
-        ],
-      ),
+    return FutureBuilder<List<Register>>(
+      future: courseStudents,
+      builder: (context, snapshot) {
+        if (snapshot.connectionState == ConnectionState.waiting) {
+          return const Center(child: CircularProgressIndicator());
+        } else if (snapshot.hasError) {
+          return Text('Error: ${snapshot.error}');
+        } else {
+          return Container(
+            margin: const EdgeInsets.only(bottom: 20, top: 33.5, right: 12),
+            decoration: const BoxDecoration(
+              borderRadius: BorderRadius.all(Radius.circular(24)),
+              color: Colors.white,
+            ),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                traineeHeader(),
+                const SizedBox(height: 8),
+                const Divider(thickness: 0.5, color: Colors.black87),
+                const SizedBox(height: 8),
+                buildCourses(snapshot.data!),
+                const Spacer(
+                  flex: 2,
+                ),
+              ],
+            ),
+          );
+        }
+      },
     );
   }
 
@@ -172,85 +219,98 @@ class _TraineeViewMoreState extends State<TraineeViewMore> {
       // ),
     );
   }
+Widget buildCourses(List<Register> register) {
+  return Flexible(
+    flex: 8,
+    child: Container(
+      padding: const EdgeInsets.only(top: 0, left: 25, right: 25),
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.start,
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          const Text(
+            softWrap: true,
+            //name
+            "Courses",
+            style: TextStyle(
+                fontSize: 16,
+                color: Colors.black87,
+                fontWeight: FontWeight.w600),
+          ),
+          const SizedBox(
+            height: 15,
+          ),
+          Expanded(
+            flex: 2,
+            child: ListView.builder(
+              itemBuilder: (context, index) {
+                final registerItem = register[index];
 
-  Widget buildCourses() {
-    return Flexible(
-      flex: 8,
-      child: Container(
-        padding: const EdgeInsets.only(top: 0, left: 25, right: 25),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.start,
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            //title
-            const Text(
-              softWrap: true,
-              //name
-              "Courses",
-              style: TextStyle(
-                  fontSize: 16,
-                  color: Colors.black87,
-                  fontWeight: FontWeight.w600),
+                return FutureBuilder<String>(
+                  future: fetchCourseTitle(registerItem.courseId),
+                  builder: (context, snapshot) {
+                    if (snapshot.connectionState == ConnectionState.waiting) {
+                      return Center(child: const CircularProgressIndicator());
+                    } else if (snapshot.hasError) {
+                      return Text('Error in future builder string: ${snapshot.error}');
+                    } else {
+                      return traineeCourseCard(snapshot.data!);
+                    }
+                  },
+                );
+
+              },
+              itemCount: register.length,
             ),
-            const SizedBox(
-              height: 20,
-            ),
-            //courses
-            Expanded(
-                flex: 2,
-                child: ListView(
-                    padding: const EdgeInsets.only(left: 13),
-                    children: [
-                      traineeCourseCard(),
-                      traineeCourseCard(),
-                      traineeCourseCard(),
-                      traineeCourseCard(),
-                      traineeCourseCard(),
-                      traineeCourseCard(),
-                    ])),
-          ],
+          ),
+        ],
+      ),
+    ),
+  );
+}
+
+
+Widget traineeCourseCard(String courseTitle) {
+  return Container(
+    margin: const EdgeInsets.only(bottom: 2),
+    padding: const EdgeInsets.all(0),
+    child: SizedBox(
+      width: 240,
+      height: 60,
+      child: Card(
+        elevation: 0.5,
+        shape: RoundedRectangleBorder(
+          side: BorderSide(color: Colors.black12),
+          borderRadius: BorderRadius.all(Radius.circular(10))),
+        color: Color.fromARGB(255, 247, 247, 247),
+        child: Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              Text(
+                courseTitle,
+                style: const TextStyle(
+                  fontSize: 14,
+                  fontWeight: FontWeight.w500,
+                  color: Colors.black,
+                ),
+              ),
+              Text(
+                "courseSchedule",
+                style: const TextStyle(
+                  fontSize: 12,
+                  color: Colors.black54,
+                  fontWeight: FontWeight.w300),
+              ),
+            ],
+          ),
         ),
       ),
-    );
-  }
+    ),
+  );
+}
 
-  Widget traineeCourseCard() {
-    return Container(
-      margin: const EdgeInsets.only(bottom: 2),
-      padding: const EdgeInsets.all(0),
-      child: const SizedBox(
-          width: 240,
-          height: 60,
-          child: Card(
-              elevation: 0.5,
-              shape: RoundedRectangleBorder(
-                  side: BorderSide(color: Colors.black12),
-                  borderRadius: BorderRadius.all(Radius.circular(10))),
-              color: Color.fromARGB(255, 247, 247, 247),
-              child: Padding(
-                padding: EdgeInsets.symmetric(horizontal: 10, vertical: 5),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  children: [
-                    Text(
-                      " Introduction to Cybersecurity", //TODO: add courses of trainer (connected)
-                      style: TextStyle(
-                        fontSize: 14,
-                        fontWeight: FontWeight.w500,
-                        color: Colors.black,
-                      ),
-                    ),
-                    Text(
-                      "01/01/2024-02/1/2024",
-                      style: TextStyle(
-                          fontSize: 12,
-                          color: Colors.black54,
-                          fontWeight: FontWeight.w300),
-                    ),
-                  ],
-                ),
-              ))),
-    );
-  }
+
 }

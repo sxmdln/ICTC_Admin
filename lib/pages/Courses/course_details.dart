@@ -183,24 +183,45 @@ class _CourseDetailsState extends State<CourseDetails> {
     );
   }
 
-DataRow2 buildRow(Register register) {
-  final studentId = register.studentId;
+  DataRow2 buildRow(Register register) {
+    final studentId = register.studentId;
 
-  return DataRow2(
-    onSelectChanged: (selected) {},
-    cells: [
-      DataCell(
-        FutureBuilder(
+    return DataRow2(
+      onSelectChanged: (selected) {},
+      cells: [
+        DataCell(
+          FutureBuilder(
+            future: Supabase.instance.client
+                .from('student')
+                .select('first_name, last_name')
+                .eq('id', studentId)
+                .single()
+                .then((response) {
+              final firstName = response['first_name'] as String;
+              final lastName = response['last_name'] as String;
+              final fullName = '$firstName $lastName';
+              return fullName;
+            }),
+            builder: (BuildContext context, AsyncSnapshot<String> snapshot) {
+              if (snapshot.connectionState == ConnectionState.waiting) {
+                return CircularProgressIndicator();
+              } else if (snapshot.hasError) {
+                return Text('Error: ${snapshot.error}');
+              } else {
+                return Text(snapshot.data ?? '');
+              }
+            },
+          ),
+        ),
+        DataCell(FutureBuilder(
           future: Supabase.instance.client
               .from('student')
-              .select('first_name, last_name')
+              .select('email')
               .eq('id', studentId)
               .single()
               .then((response) {
-            final firstName = response['first_name'] as String;
-            final lastName = response['last_name'] as String;
-            final fullName = '$firstName $lastName';
-            return fullName;
+            final email = response['email'] as String;
+            return email;
           }),
           builder: (BuildContext context, AsyncSnapshot<String> snapshot) {
             if (snapshot.connectionState == ConnectionState.waiting) {
@@ -211,66 +232,45 @@ DataRow2 buildRow(Register register) {
               return Text(snapshot.data ?? '');
             }
           },
+        )),
+        DataCell(
+          ToggleSwitch(
+            minWidth: 90.0,
+            cornerRadius: 20.0,
+            activeBgColors: [[Colors.green[800]!], [Colors.red[800]!]],
+            activeFgColor: Colors.white,
+            inactiveBgColor: Colors.grey,
+            inactiveFgColor: Colors.white,
+            initialLabelIndex: register.status ? 0 : 1,
+            totalSwitches: 2,
+            labels: const ['Complete', 'Pending'],
+            radiusStyle: true,
+
+            onToggle: (index) {
+              setState(() {
+                register.status = index == 0;
+              });
+
+              final updatedData = {'is_approved': register.status}; // Update column name if needed
+
+              Supabase.instance.client
+                  .from('registration')
+                  .update(updatedData)
+                  .eq('id', register.id as Object)
+                  .then((_) {
+                // Update succeeded
+                print('Status updated successfully');
+              }).catchError((error) {
+                // Handle update error
+                print('Error updating status: $error');
+              });
+            },
+
+
+          ),
         ),
-      ),
-      DataCell(FutureBuilder(
-        future: Supabase.instance.client
-            .from('student')
-            .select('email')
-            .eq('id', studentId)
-            .single()
-            .then((response) {
-          final email = response['email'] as String;
-          return email;
-        }),
-        builder: (BuildContext context, AsyncSnapshot<String> snapshot) {
-          if (snapshot.connectionState == ConnectionState.waiting) {
-            return CircularProgressIndicator();
-          } else if (snapshot.hasError) {
-            return Text('Error: ${snapshot.error}');
-          } else {
-            return Text(snapshot.data ?? '');
-          }
-        },
-      )),
-      DataCell(
-        ToggleSwitch(
-          minWidth: 90.0,
-          cornerRadius: 20.0,
-          activeBgColors: [[Colors.green[800]!], [Colors.red[800]!]],
-          activeFgColor: Colors.white,
-          inactiveBgColor: Colors.grey,
-          inactiveFgColor: Colors.white,
-          initialLabelIndex: register.status ? 0 : 1,
-          totalSwitches: 2,
-          labels: ['Complete', 'Pending'],
-          radiusStyle: true,
-
-          onToggle: (index) {
-            setState(() {
-              register.status = index == 0;
-            });
-
-            final updatedData = {'is_approved': register.status}; // Update column name if needed
-
-            Supabase.instance.client
-                .from('registration')
-                .update(updatedData)
-                .eq('id', register.id as Object)
-                .then((_) {
-              // Update succeeded
-              print('Status updated successfully');
-            }).catchError((error) {
-              // Handle update error
-              print('Error updating status: $error');
-            });
-          },
-
-
-        ),
-      ),
-    ],
-  );
+      ],
+    );
 }
 
 
