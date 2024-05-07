@@ -301,13 +301,17 @@ class _TrainersFormState extends State<TrainersForm> {
         );
 
         supabase.from('trainer').upsert(trainer.toJson()).whenComplete(() {
-          ScaffoldMessenger.of(context)
-              .showSnackBar(const SnackBar(content: Text("Upsert successful!")));
+          ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+              content: Text("Successfully added trainer: ${widget.trainer!.toString()}."),
+              backgroundColor: Colors.green,
+            ));
 
           Navigator.of(context).pop();
         }).catchError((_) {
-          ScaffoldMessenger.of(context)
-              .showSnackBar(const SnackBar(content: Text("An error occured.")));
+          ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+              content: Text("Unsuccessful adding trainer. Please try again."),
+              backgroundColor: Colors.redAccent,
+            ));
         });
       },
       child: const Text(
@@ -334,13 +338,17 @@ class _TrainersFormState extends State<TrainersForm> {
           final id = widget.trainer!.id!;
 
           supabase.from('trainer').delete().eq('id', id).whenComplete(() {
-            ScaffoldMessenger.of(context).showSnackBar(
-                const SnackBar(content: Text("Delete successful!")));
+            ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+              content: Text("Successfully deleted trainer: ${widget.trainer!.toString()}."),
+              backgroundColor: Colors.green,
+            ));
 
             Navigator.of(context).pop();
           }).catchError((_) {
-            ScaffoldMessenger.of(context)
-              .showSnackBar(const SnackBar(content: Text("An error occured.")));
+            ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+              content: Text("Unsuccessful deleting trainer: ${widget.trainer!.toString()}. Please try again."),
+              backgroundColor: Colors.green,
+            ));
           });
         },
         child: const Text(

@@ -399,7 +399,7 @@ class _PaymentFormState extends State<PaymentForm> {
               .upsert(payment.toJson())
               .then((value) {
             ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
-              content: Text("Payment saved successfully."),
+              content: Text("Successfully added!"),
               backgroundColor: Colors.green,
             ));
             Navigator.pop(context);
