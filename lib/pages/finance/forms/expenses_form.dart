@@ -8,11 +8,9 @@ import 'package:flutter/material.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
 class ExpensesForm extends StatefulWidget {
-  const ExpensesForm({super.key, this.expense, this.program, this.course});
+  const ExpensesForm({super.key, this.expense});
 
   final Expense? expense;
-  final Program? program;
-  final Course? course;
 
   @override
   State<ExpensesForm> createState() => _ExpensesFormState();
@@ -39,17 +37,21 @@ class _ExpensesFormState extends State<ExpensesForm> {
         TextEditingController(text: widget.expense?.amount.toString() ?? "");
 
     if (widget.expense != null) {
-      Supabase.instance.client
+       if (widget.expense!.programId != null) {
+       Supabase.instance.client
           .from('program')
           .select()
-          .eq('id', widget.course!.programId!)
+          .eq('id', widget.expense!.programId)
           .limit(1)
           .withConverter((data) => Program.fromJson(data.first))
           .then((value) => setState(() => selectedProgram = value));
+       }
+       if (widget.expense!.courseId != null) {
       Supabase.instance.client
           .from('course')
           .select()
-          .eq('program_id', widget.program!.id!)
+          .eq('id', widget.expense!.courseId)
+          .limit(1)
           .withConverter((data) => Course.fromJson(data.first))
           .then((value) => setState(() => selectedCourse = value));
     }

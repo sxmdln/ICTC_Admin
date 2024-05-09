@@ -444,7 +444,6 @@ class _PaymentTableState extends State<PaymentTable> {
         'orNumber': PlutoCell(value: payment.orNumber),
         'actions': PlutoCell(value: Builder(builder: (context) {
           return Row(
-            //TODO: HINDI PA GUMAGANA PLS MAKE IT WORK :<
             children: [
               editButton(payment),
             ],

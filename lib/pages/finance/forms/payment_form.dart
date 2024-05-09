@@ -1,7 +1,8 @@
 import 'package:dropdown_search/dropdown_search.dart';
 import 'package:ictc_admin/models/course.dart';
 import 'package:ictc_admin/models/payment.dart';
-import 'package:ictc_admin/models/trainer.dart';
+import 'package:ictc_admin/models/register.dart';
+import 'package:ictc_admin/models/trainee.dart';
 import 'package:ictc_admin/models/program.dart';
 import 'package:intl/intl.dart';
 import 'package:flutter/cupertino.dart';
@@ -9,9 +10,7 @@ import 'package:flutter/material.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
 class PaymentForm extends StatefulWidget {
-  const PaymentForm({super.key, this.payment, this.course, this.program});
-  final Program? program;
-  final Course? course;
+  const PaymentForm({super.key, this.payment});
   final Payment? payment;
 
   @override
@@ -19,7 +18,7 @@ class PaymentForm extends StatefulWidget {
 }
 
 class _PaymentFormState extends State<PaymentForm> {
-  Trainer? selectedTrainer;
+  Trainee? selectedTrainee;
   Program? selectedProgram;
   Course? selectedCourse;
 
@@ -45,40 +44,46 @@ class _PaymentFormState extends State<PaymentForm> {
         text: widget.payment?.orDate.toString() ??
             DateFormat('yyyy-MM-dd').format(DateTime.now()));
     orNumberCon = TextEditingController(text: widget.payment?.orNumber ?? "");
-    courseCostCon =
-        TextEditingController(text: widget.course?.cost.toString() ?? "0.0");
     discountCon = TextEditingController(
-        text: widget.payment?.discount.toString() ?? "0.0");
-    totalAmountCon = TextEditingController(
-        text:
-            (double.parse(courseCostCon.text) - double.parse(discountCon.text))
-                    .toString() ??
-                "0.0");
+        text: widget.payment?.discount.toString() ?? 0.toString());
     approvedCon = TextEditingController(
         text: widget.payment?.approved.toString() ?? "false");
+    courseCostCon = TextEditingController();
+    totalAmountCon = TextEditingController();
 
     if (widget.payment != null) {
       Supabase.instance.client
           .from('program')
           .select()
-          .eq('id', widget.course!.programId!)
+          .eq('id', widget.payment!.programId)
           .limit(1)
           .withConverter((data) => Program.fromJson(data.first))
           .then((value) => setState(() => selectedProgram = value));
+          
       Supabase.instance.client
           .from('course')
           .select()
-          .eq('trainer_id', widget.course!.trainerId!)
+          .eq('id', widget.payment!.courseId)
           .limit(1)
-          .withConverter((data) => Trainer.fromJson(data.first))
-          .then((value) => setState(() => selectedTrainer = value));
-      Supabase.instance.client
-          .from('course')
-          .select()
-          .eq('program_id', widget.program!.id!)
           .withConverter((data) => Course.fromJson(data.first))
-          .then((value) => setState(() => selectedCourse = value));
+          .then((value) => setState(() {
+                selectedCourse = value;
+                courseCostCon.text = selectedCourse!.cost.toString();
+                totalAmountCon.text = (double.parse(courseCostCon.text) -
+                        double.parse(discountCon.text))
+                    .toString();
+              }));
+
+      Supabase.instance.client
+          .from('student')
+          .select()
+          .eq('id', widget.payment!.studentId)
+          .limit(1)
+          .withConverter((data) => Trainee.fromJson(data.first))
+          .then((value) => setState(() => selectedTrainee = value));
     }
+
+    print(widget.payment?.toJson());
   }
 
 // PROGRAMS
@@ -95,23 +100,41 @@ class _PaymentFormState extends State<PaymentForm> {
   }
 
 // TRAINERS
-  Future<List<Trainer>> fetchTrainers({String? filter}) async {
+  Future<List<Trainee>> fetchTrainees({String? filter}) async {
+    if (selectedCourse == null) return [];
+
     final supabase = Supabase.instance.client;
-    List<Trainer> trainers;
-    trainers = await supabase
-        .from('trainer')
+
+    final registrations = await supabase
+        .from('registration')
         .select()
-        .withConverter((data) => data.map((e) => Trainer.fromJson(e)).toList());
+        .eq('course_id', selectedCourse!.id!)
+        .eq('is_approved', false)
+        .withConverter(
+            (data) => data.map((e) => Register.fromJson(e)).toList());
+
+    final List<Trainee> trainees = [];
+    for (final register in registrations) {
+      final trainee = await supabase
+          .from('student')
+          .select()
+          .eq('id', register.studentId!)
+          .limit(1)
+          .withConverter((data) => Trainee.fromJson(data.first));
+      trainees.add(trainee);
+    }
 
     return filter == null
-        ? trainers
-        : trainers
+        ? trainees
+        : trainees
             .where((element) => element.toString().contains(filter))
             .toList();
   }
 
 // COURSES
   Future<List<Course>> fetchCourses({String? filter}) async {
+    if (selectedProgram == null) return [];
+
     final supabase = Supabase.instance.client;
     late final List<Course> programCourses;
     programCourses = await supabase
@@ -168,6 +191,11 @@ class _PaymentFormState extends State<PaymentForm> {
               setState(() {
                 courseCostCon.text = selectedCourse!.cost.toString();
               });
+              setState(() {
+                totalAmountCon.text = (double.parse(courseCostCon.text) -
+                        double.parse(discountCon.text))
+                    .toString();
+              });
             },
             selectedItem: selectedCourse,
             popupProps: const PopupProps.dialog(showSearchBox: true),
@@ -182,21 +210,21 @@ class _PaymentFormState extends State<PaymentForm> {
           const SizedBox(
             height: 6,
           ),
-          DropdownSearch<Trainer>(
-            asyncItems: (filter) => fetchTrainers(),
+          DropdownSearch<Trainee>(
+            asyncItems: (filter) => fetchTrainees(),
             dropdownDecoratorProps: const DropDownDecoratorProps(
               dropdownSearchDecoration: InputDecoration(
-                labelText: "Trainer",
+                labelText: "Trainee",
                 filled: false,
               ),
             ),
-            onChanged: (value) => setState(() => selectedTrainer = value),
-            selectedItem: selectedTrainer,
+            onChanged: (value) => setState(() => selectedTrainee = value),
+            selectedItem: selectedTrainee,
             popupProps: const PopupProps.dialog(showSearchBox: true),
             compareFn: (item1, item2) => item1.id == item2.id,
             validator: (value) {
               if (value == null) {
-                return "Select a trainer.";
+                return "Select a student.";
               }
               return null;
             },
@@ -261,8 +289,6 @@ class _PaymentFormState extends State<PaymentForm> {
                 SizedBox(width: 18),
               ],
             ),
-            //TODO: Automatically get the COURSE Cost or the course registration fee.
-
             style: const TextStyle(
               fontSize: 14,
               fontWeight: FontWeight.w400,
@@ -280,6 +306,10 @@ class _PaymentFormState extends State<PaymentForm> {
           ),
           CupertinoTextFormFieldRow(
             onChanged: (value) {
+              if (value.isEmpty) {
+                setState(() => discountCon.text = "0");
+              }
+
               setState(() {
                 totalAmountCon.text = (double.parse(courseCostCon.text) -
                         double.parse(discountCon.text))
@@ -389,7 +419,7 @@ class _PaymentFormState extends State<PaymentForm> {
             totalAmount: double.parse(totalAmountCon.text),
             approved: false,
             courseId: selectedCourse!.id!,
-            studentId: selectedTrainer!.id!,
+            studentId: selectedTrainee!.id!,
             programId: selectedProgram!.id!,
           );
           print(payment.toJson());
