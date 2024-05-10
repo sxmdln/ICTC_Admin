@@ -110,12 +110,14 @@ class _ReportTableState extends State<ReportTable> {
   PlutoRow buildRow(Map<String, dynamic> json) {
     final jsonDate = DateTime.parse(json['month_date']);
 
+    print("creating row for this json: $json");
+
     return PlutoRow(
       cells: {
         'month': PlutoCell(value: DateFormat.MMMM().format(jsonDate)),
         'totalIncome': PlutoCell(value: json['total_income']),
         'totalExpense': PlutoCell(value: json['total_expenses']),
-        'netWorth': PlutoCell(value: json['net_income']),
+        'netIncome': PlutoCell(value: json['net_income']),
         'actions': PlutoCell(value: Builder(builder: (context) {
           return Row(
             children: [
@@ -188,6 +190,7 @@ class _ReportTableState extends State<ReportTable> {
             ]),
             builder: (context, snapshot) {
               if (snapshot.connectionState == ConnectionState.waiting) {
+                print('wait for data');
                 return const Expanded(
                   child: Center(
                     child: CircularProgressIndicator(),
@@ -198,6 +201,7 @@ class _ReportTableState extends State<ReportTable> {
               if (!snapshot.hasData ||
                   snapshot.data![0].isEmpty ||
                   snapshot.data![1].isEmpty) {
+                    print('data is empty');
                 return const Expanded(
                   child: Center(
                     child: Text("No entries."),
@@ -209,8 +213,9 @@ class _ReportTableState extends State<ReportTable> {
 
               return FutureBuilder(
                 future: _fetchRows(),
-                builder: (context, snapshot) {
-                  if (snapshot.connectionState == ConnectionState.waiting) {
+                builder: (context, futureSnapshot) {
+                  if (futureSnapshot.connectionState == ConnectionState.waiting) {
+                    print('waiting for row');
                     return const Expanded(
                       child: Center(
                         child: CircularProgressIndicator(),
@@ -218,13 +223,16 @@ class _ReportTableState extends State<ReportTable> {
                     );
                   }
 
+                  print('${futureSnapshot.data!.length} rows are here wow');
+
                   return PlutoGrid(
                       columns: columns,
-                      rows: snapshot.data!,
+                      rows: futureSnapshot.data!,
                       onChanged: (PlutoGridOnChangedEvent event) {
                         print(event);
                       },
                       onLoaded: (PlutoGridOnLoadedEvent event) {
+                        stateManager = event.stateManager;
                         event.stateManager.setShowColumnFilter(true);
                       },
                       configuration: PlutoGridConfiguration(
