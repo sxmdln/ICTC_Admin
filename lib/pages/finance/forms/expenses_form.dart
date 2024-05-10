@@ -41,7 +41,7 @@ class _ExpensesFormState extends State<ExpensesForm> {
        Supabase.instance.client
           .from('program')
           .select()
-          .eq('id', widget.expense!.programId)
+          .eq('id', widget.expense!.programId as Object)
           .limit(1)
           .withConverter((data) => Program.fromJson(data.first))
           .then((value) => setState(() => selectedProgram = value));
@@ -50,13 +50,13 @@ class _ExpensesFormState extends State<ExpensesForm> {
       Supabase.instance.client
           .from('course')
           .select()
-          .eq('id', widget.expense!.courseId)
+          .eq('id', widget.expense!.courseId as Object)
           .limit(1)
           .withConverter((data) => Course.fromJson(data.first))
           .then((value) => setState(() => selectedCourse = value));
     }
   }
-
+  }
   onTapFunction({required BuildContext context}) async {
     DateTime? pickedDate = await showDatePicker(
       context: context,
@@ -80,9 +80,10 @@ class _ExpensesFormState extends State<ExpensesForm> {
         ? programs
         : programs.where((element) => element.title.contains(filter)).toList();
   }
-
 // COURSES
   Future<List<Course>> fetchCourses({String? filter}) async {
+    if (selectedProgram == null) return [];
+
     final supabase = Supabase.instance.client;
     late final List<Course> programCourses;
     programCourses = await supabase

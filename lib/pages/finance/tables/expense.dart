@@ -13,9 +13,8 @@ import 'package:pluto_grid_plus_export/pluto_grid_plus_export.dart'
 import 'package:supabase_flutter/supabase_flutter.dart';
 
 class ExpenseTable extends StatefulWidget {
-  const ExpenseTable({super.key, this.expense});
+  const ExpenseTable({super.key});
 
-  final Expense? expense;
 
   @override
   State<ExpenseTable> createState() => _ExpenseTableState();
