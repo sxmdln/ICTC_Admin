@@ -314,10 +314,31 @@ class _PaymentTableState extends State<PaymentTable> {
       field: 'discount',
       readOnly: true,
       type: PlutoColumnType.number(),
+      backgroundColor: Colors.orange.withOpacity(0.1),
       filterWidget: Container(
         color: Colors.white,
       ),
       enableFilterMenuItem: false,
+       footerRenderer: (rendererContext) {
+        return PlutoAggregateColumnFooter(
+          rendererContext: rendererContext,
+          type: PlutoAggregateColumnType.sum,
+          format: 'P#,###',
+          alignment: Alignment.center,
+          titleSpanBuilder: (text) {
+            return [
+              const TextSpan(
+                text: 'Total Discount',
+                style: TextStyle(color: Colors.orangeAccent),
+              ),
+              const TextSpan(text: ' : '),
+              TextSpan(
+                  text: text,
+                  style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16)),
+            ];
+          },
+        );
+      },
       textAlign: PlutoColumnTextAlign.right,
       titleTextAlign: PlutoColumnTextAlign.center,
       minWidth: 50,
