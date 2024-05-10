@@ -99,7 +99,7 @@ class _PaymentFormState extends State<PaymentForm> {
         : programs.where((element) => element.title.contains(filter)).toList();
   }
 
-// TRAINERS
+// TRAINEES
   Future<List<Trainee>> fetchTrainees({String? filter}) async {
     if (selectedCourse == null) return [];
 
