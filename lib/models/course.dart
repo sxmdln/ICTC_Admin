@@ -21,6 +21,8 @@ class Course {
   String? duration;
   String? schedule;
   String? venue;
+  String? startDate;
+  String? endDate;
 
   var students;
 
@@ -34,6 +36,8 @@ class Course {
     this.duration,
     this.schedule,
     this.venue,
+    this.startDate,
+    this.endDate,
   });
 
   factory Course.fromJson(Map<String, dynamic> json) => _$CourseFromJson(json);

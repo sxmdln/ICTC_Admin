@@ -198,79 +198,80 @@ class _TrainerViewMoreState extends State<TrainerViewMore> {
       // ),
     );
   }
-Widget buildCourses(List<Course> courses) {
-  return Flexible(
-    flex: 8,
-    child: Container(
-      padding: const EdgeInsets.only(top: 0, left: 25, right: 25),
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.start,
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          //title
-          const Text(
-            softWrap: true,
-            //name
-            "Courses",
-            style: TextStyle(
-                fontSize: 16,
-                color: Colors.black87,
-                fontWeight: FontWeight.w600),
-          ),
-          const SizedBox(
-            height: 15,
-          ),
-          //courses
-          Expanded(
-              flex: 2,
-              child: ListView.builder(
-                itemBuilder: (context, index) =>
-                    trainerCourseCard(courses[index]),
-                itemCount: courses.length,
-              )),
-        ],
+    
+  Widget buildCourses(List<Course> courses) {
+    return Flexible(
+      flex: 8,
+      child: Container(
+        padding: const EdgeInsets.only(top: 0, left: 25, right: 25),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.start,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            //title
+            const Text(
+              softWrap: true,
+              //name
+              "Courses",
+              style: TextStyle(
+                  fontSize: 16,
+                  color: Colors.black87,
+                  fontWeight: FontWeight.w600),
+            ),
+            const SizedBox(
+              height: 15,
+            ),
+            //courses
+            Expanded(
+                flex: 2,
+                child: ListView.builder(
+                  itemBuilder: (context, index) =>
+                      trainerCourseCard(courses[index]),
+                  itemCount: courses.length,
+                )),
+          ],
+        ),
       ),
-    ),
-  );
-}
+    );
+  }
 
-Widget trainerCourseCard(Course course) {
-  return Padding(
-    padding: const EdgeInsets.all(0),
-    child: SizedBox(
-        width: 240,
-        height: 60,
-        child: Card(
-            elevation: 0.5,
-            shape: const RoundedRectangleBorder(
-                side: BorderSide(color: Colors.black12),
-                borderRadius: BorderRadius.all(Radius.circular(10))),
-            color: const Color.fromARGB(255, 247, 247, 247),
-            child: Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: [
-                  Text(
-                    course.title, 
-                    style: const TextStyle(
-                      fontSize: 14,
-                      fontWeight: FontWeight.w500,
-                      color: Colors.black,
+  Widget trainerCourseCard(Course course) {
+    return Padding(
+      padding: const EdgeInsets.all(0),
+      child: SizedBox(
+          width: 240,
+          height: 60,
+          child: Card(
+              elevation: 0.5,
+              shape: const RoundedRectangleBorder(
+                  side: BorderSide(color: Colors.black12),
+                  borderRadius: BorderRadius.all(Radius.circular(10))),
+              color: const Color.fromARGB(255, 247, 247, 247),
+              child: Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    Text(
+                      course.title, 
+                      style: const TextStyle(
+                        fontSize: 14,
+                        fontWeight: FontWeight.w500,
+                        color: Colors.black,
+                      ),
                     ),
-                  ),
-                  const SizedBox(height: 5),
-                  Text(
-                    course.schedule ?? "Not set",
-                    style: const TextStyle(
-                        fontSize: 12,
-                        color: Colors.black54,
-                        fontWeight: FontWeight.w300),
-                  ),
-                ],
-              ),
-            ))),
-  );
-}
+                    const SizedBox(height: 5),
+                    Text(
+                      course.schedule ?? "Not set",
+                      style: const TextStyle(
+                          fontSize: 12,
+                          color: Colors.black54,
+                          fontWeight: FontWeight.w300),
+                    ),
+                  ],
+                ),
+              ))),
+    );
+  }
 }

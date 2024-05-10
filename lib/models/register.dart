@@ -6,25 +6,24 @@ part 'register.g.dart';
     includeIfNull: false
 )
 class Register {
-
   final int? id;
 
   @JsonKey(name: 'student_id')
-  int? studentId;
+  int studentId;
 
   @JsonKey(name: 'course_id')
-  int? courseId;
+  int courseId;
 
-  //String? status;
+  @JsonKey(name: 'is_approved')
+  bool status;
 
-  bool is_approved;
 
   Register({
     this.id,
     required this.studentId,
-    this.courseId,
-    //this.status,
-    required this.is_approved, 
+    required this.courseId,
+    required this.status,
+
   });
 
   factory Register.fromJson(Map<String, dynamic> json) => _$RegisterFromJson(json);

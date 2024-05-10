@@ -8,9 +8,9 @@ part of 'register.dart';
 
 Register _$RegisterFromJson(Map<String, dynamic> json) => Register(
       id: json['id'] as int?,
-      studentId: json['student_id'] as int?,
-      courseId: json['course_id'] as int?,
-      is_approved: json['is_approved'] as bool,
+      studentId: json['student_id'] as int,
+      courseId: json['course_id'] as int,
+      status: json['is_approved'] as bool,
     );
 
 Map<String, dynamic> _$RegisterToJson(Register instance) {
@@ -23,8 +23,8 @@ Map<String, dynamic> _$RegisterToJson(Register instance) {
   }
 
   writeNotNull('id', instance.id);
-  writeNotNull('student_id', instance.studentId);
-  writeNotNull('course_id', instance.courseId);
-  val['is_approved'] = instance.is_approved;
+  val['student_id'] = instance.studentId;
+  val['course_id'] = instance.courseId;
+  val['is_approved'] = instance.status;
   return val;
 }
