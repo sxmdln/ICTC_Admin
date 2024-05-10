@@ -32,6 +32,8 @@ dependencies:
   pluto_grid_plus: ^8.4.0
   pluto_grid_plus_export: ^1.0.4
   async: ^2.11.0
+  toggle_switch: ^2.3.0
+  syncfusion_flutter_datepicker: ^25.1.42
 
 dev_dependencies:
   flutter_test:
