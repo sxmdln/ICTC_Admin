@@ -43,12 +43,12 @@ class _MainScreenState extends State<MainScreen> {
 
   String getSearchName() {
     List<String> pageNames = const [
-      "Reports",
-      "Trainers",
-      "Trainees",
-      "Programs",
-      "Courses",
-      "Finance",
+      "Finances",
+      "List of Trainers",
+      "List of Trainees",
+      "List of Programs",
+      "List of Courses",
+      "List of Reports",
     ];
 
     return pageNames[_selectedIndex];
@@ -281,7 +281,7 @@ class _MainScreenState extends State<MainScreen> {
                   child: const Row(
                     children: [
                       Text(
-                        "List of Reports",
+                        "Finances",
                         style: TextStyle(
                             fontSize: 28,
                             fontWeight: FontWeight.w700,
