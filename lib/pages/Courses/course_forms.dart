@@ -331,6 +331,43 @@ class _CourseFormState extends State<CourseForm> {
           const SizedBox(
             height: 6,
           ),
+          Flexible(
+            child: CupertinoTextFormFieldRow(
+              controller: venueCon,
+              validator: isNotEmpty,
+              prefix: const Row(
+                children: [
+                  Text("Venue",
+                      style: TextStyle(
+                          color: Colors.black87,
+                          fontSize: 14,
+                          fontWeight: FontWeight.w400)),
+                  SizedBox(width: 12),
+                ],
+              ),
+              placeholder: "Course Venue",
+              placeholderStyle: const TextStyle(
+                fontSize: 14,
+                fontWeight: FontWeight.w400,
+                color: Colors.black45,
+              ),
+              style: const TextStyle(
+                fontSize: 14,
+                fontWeight: FontWeight.w400,
+                color: Colors.black87,
+              ),
+              decoration: BoxDecoration(
+                border: Border.all(
+                  color: Colors.black87,
+                  width: 0.5,
+                ),
+                borderRadius: BorderRadius.circular(10),
+              ),
+            ),
+          ),
+          const SizedBox(
+            height: 6,
+          ),
           Column(
             children: <Widget>[
               SizedBox(
@@ -367,95 +404,6 @@ class _CourseFormState extends State<CourseForm> {
                 ),
               )
             ],
-          ),
-          // InkWell(
-          //   onTap: () => startDate(context: context),
-          //   child: IgnorePointer(
-          //     child: TextField(
-          //       controller: startDateCon,
-          //       readOnly: true,
-          //       decoration: InputDecoration(
-          //         contentPadding: const EdgeInsets.all(0),
-          //         alignLabelWithHint: true,
-          //         hintText: "Start Date",
-          //         hintStyle: const TextStyle(fontSize: 14, height: 0),
-          //         labelStyle: const TextStyle(fontSize: 14, height: 0),
-          //         filled: false,
-          //         isDense: true,
-          //         border: OutlineInputBorder(
-          //           borderRadius: BorderRadius.circular(10),
-          //         ),
-          //         prefixIcon: const Icon(
-          //           Icons.calendar_month,
-          //           size: 15,
-          //           color: Color(0xff153faa),
-          //         ),
-          //       ),
-          //     ),
-          //   ),
-          // ),
-          // const SizedBox(
-          //   height: 6,
-          // ),
-          // InkWell(
-          //   onTap: () => endDate(context: context),
-          //   child: IgnorePointer(
-          //     child: TextField(
-          //       controller: startDateCon,
-          //       readOnly: true,
-          //       decoration: InputDecoration(
-          //         contentPadding: const EdgeInsets.all(0),
-          //         alignLabelWithHint: true,
-          //         hintText: "End Date",
-          //         hintStyle: const TextStyle(fontSize: 14, height: 0),
-          //         labelStyle: const TextStyle(fontSize: 14, height: 0),
-          //         filled: false,
-          //         isDense: true,
-          //         border: OutlineInputBorder(
-          //           borderRadius: BorderRadius.circular(10),
-          //         ),
-          //         prefixIcon: const Icon(
-          //           Icons.calendar_month,
-          //           size: 15,
-          //           color: Color(0xff153faa),
-          //         ),
-          //       ),
-          //     ),
-          //   ),
-          // ),
-          Flexible(
-            child: CupertinoTextFormFieldRow(
-              controller: venueCon,
-              validator: isNotEmpty,
-              prefix: const Row(
-                children: [
-                  Text("Venue",
-                      style: TextStyle(
-                          color: Colors.black87,
-                          fontSize: 14,
-                          fontWeight: FontWeight.w400)),
-                  SizedBox(width: 12),
-                ],
-              ),
-              placeholder: "Course Venue",
-              placeholderStyle: const TextStyle(
-                fontSize: 14,
-                fontWeight: FontWeight.w400,
-                color: Colors.black45,
-              ),
-              style: const TextStyle(
-                fontSize: 14,
-                fontWeight: FontWeight.w400,
-                color: Colors.black87,
-              ),
-              decoration: BoxDecoration(
-                border: Border.all(
-                  color: Colors.black87,
-                  width: 0.5,
-                ),
-                borderRadius: BorderRadius.circular(10),
-              ),
-            ),
           ),
           const SizedBox(height: 20),
           Row(
