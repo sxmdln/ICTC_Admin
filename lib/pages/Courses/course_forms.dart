@@ -1,8 +1,10 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 import 'package:ictc_admin/models/course.dart';
 import 'package:ictc_admin/models/program.dart';
 import 'package:ictc_admin/models/trainer.dart';
+import 'package:intl/intl.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:dropdown_search/dropdown_search.dart';
 import 'package:syncfusion_flutter_datepicker/datepicker.dart';
@@ -17,11 +19,30 @@ class CourseForm extends StatefulWidget {
 }
 
 class _CourseFormState extends State<CourseForm> {
+  final formKey = GlobalKey<FormState>();
+  final DateRangePickerController dateRangeController =
+      DateRangePickerController();
+  DateTimeRange? dateTimeRange;
+  Program? selectedProgram;
+  Trainer? selectedTrainer;
+  late TextEditingController courseTitleCon,
+      descriptionCon,
+      costCon,
+      durationCon,
+      scheduleCon,
+      venueCon,
+      startDateCon,
+      endDateCon;
+
+  // late String startDateCon, endDateCon;
+
   @override
   void initState() {
     super.initState();
 
-    print("course ${widget.course?.id}");
+    print(widget.course?.endDate.toString());
+    // print(DateFormat('yyyy-MM-dd').format(DateTime.now()).toString());
+    // print(DateTime.parse(endDateCon));
 
     courseTitleCon = TextEditingController(text: widget.course?.title);
     descriptionCon = TextEditingController(text: widget.course?.description);
@@ -29,8 +50,20 @@ class _CourseFormState extends State<CourseForm> {
     durationCon = TextEditingController(text: widget.course?.duration);
     scheduleCon = TextEditingController(text: widget.course?.schedule);
     venueCon = TextEditingController(text: widget.course?.venue);
-    // startDateCon = TextEditingController(text: widget.course?.startDate);
-    // endDateCon = TextEditingController(text: widget.course?.endDate);
+
+    startDateCon = TextEditingController(
+        text: widget.course?.startDate.toString() ??
+            DateFormat('yyyy-MM-dd').format(DateTime.now()));
+    // startDateCon =  widget.course?.startDate.toString() ??
+    //         DateFormat('yyyy-MM-dd').format(DateTime.now());
+    endDateCon = TextEditingController(
+        text: widget.course?.endDate.toString() ??
+            DateFormat('yyyy-MM-dd').format(DateTime.now()));
+    // endDateCon = widget.course?.endDate.toString() ??
+    //         DateFormat('yyyy-MM-dd').format(DateTime.now());
+
+    // dateRangeController.selectedRange = PickerDateRange(
+    //     DateTime.now(), DateTime.now().add(const Duration(days: 3)));
 
     if (widget.course != null) {
       Supabase.instance.client
@@ -50,19 +83,45 @@ class _CourseFormState extends State<CourseForm> {
     }
   }
 
-  final formKey = GlobalKey<FormState>();
+  dateFunction({required BuildContext context}) async {
+    DateTimeRange? pickedStartDate = await showDateRangePicker(
+      context: context,
+      lastDate: DateTime.now(),
+      firstDate: DateTime(2024),
+      currentDate: DateTime.now(),
+      saveText: 'Done',
+    );
+    setState(() {
+      dateTimeRange = pickedStartDate;
+      startDateCon = TextEditingController(
+        text: pickedStartDate?.start.toString() ??
+            DateFormat('yyyy-MM-dd').format(DateTime.now()));
+      endDateCon = TextEditingController(
+        text: pickedStartDate?.end.toString() ??
+            DateFormat('yyyy-MM-dd').format(DateTime.now()));
+    });
+    if (pickedStartDate == null) return;
 
-  Program? selectedProgram;
-  Trainer? selectedTrainer;
-  late TextEditingController 
-      courseTitleCon,
-      descriptionCon,
-      costCon,
-      durationCon,
-      scheduleCon,
-      venueCon;
-      // startDateCon;
-      // endDateCon;
+    print(
+        '>> START Date selected: ${pickedStartDate.start.day}-${pickedStartDate.start.month}-${pickedStartDate.start.year}');
+    print(
+        '>>>> END Date selected: ${pickedStartDate.end.day}-${pickedStartDate.end.month}-${pickedStartDate.end.year}');
+
+    // startDateCon = DateFormat('yyyy-MM-dd').format(pickedStartDate);
+  }
+
+  // void selectionChanged(DateRangePickerSelectionChangedArgs args) {
+  //   setState(() {
+  //     startDateCon =
+  //         DateFormat('yyyy-MM-dd').format(args.value.startDate);
+  //     endDateCon = DateFormat('yyyy-MM-dd')
+  //         .format(args.value.endDate ?? args.value.endDate)
+  //         ;
+  //         print(startDateCon);
+
+  //         print(endDateCon);
+  //   });
+  // }
 
   Future<List<Program>> fetchPrograms({String? filter}) async {
     final supabase = Supabase.instance.client;
@@ -100,10 +159,21 @@ class _CourseFormState extends State<CourseForm> {
         children: [
           DropdownSearch<Program>(
             asyncItems: (filter) => fetchPrograms(),
-            dropdownDecoratorProps: const DropDownDecoratorProps(
+            dropdownDecoratorProps: DropDownDecoratorProps(
               dropdownSearchDecoration: InputDecoration(
+                contentPadding: const EdgeInsets.all(0),
+                border: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(10),
+                ),
+                isDense: true,
+                prefixIcon: const Icon(
+                  Icons.school,
+                  size: 15,
+                  color: Color(0xff153faa),
+                ),
                 labelText: "Program",
-                filled: true,
+                labelStyle: const TextStyle(fontSize: 14),
+                filled: false,
               ),
             ),
             onChanged: (value) => setState(() => selectedProgram = value),
@@ -118,23 +188,31 @@ class _CourseFormState extends State<CourseForm> {
               return null;
             },
           ),
-
           const SizedBox(
             height: 6,
           ),
-
           DropdownSearch<Trainer>(
             asyncItems: (filter) => fetchTrainers(),
-            dropdownDecoratorProps: const DropDownDecoratorProps(
+            dropdownDecoratorProps: DropDownDecoratorProps(
               dropdownSearchDecoration: InputDecoration(
                 labelText: "Trainer",
-                filled: true,
+                contentPadding: const EdgeInsets.all(0),
+                prefixIcon: const Icon(
+                  Icons.person,
+                  size: 15,
+                  color: Color(0xff153faa),
+                ),
+                labelStyle: const TextStyle(fontSize: 14),
+                isDense: true,
+                border: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(10),
+                ),
+                filled: false,
               ),
             ),
             onChanged: (value) => setState(() => selectedTrainer = value),
             selectedItem: selectedTrainer,
             popupProps: const PopupProps.dialog(showSearchBox: true),
-            
             compareFn: (item1, item2) => item1.id == item2.id,
             validator: (value) {
               if (value == null) {
@@ -144,11 +222,9 @@ class _CourseFormState extends State<CourseForm> {
               return null;
             },
           ),
-
           const SizedBox(
             height: 6,
           ),
-          
           Flexible(
             child: CupertinoTextFormFieldRow(
               controller: courseTitleCon,
@@ -179,7 +255,7 @@ class _CourseFormState extends State<CourseForm> {
                   color: Colors.black87,
                   width: 0.5,
                 ),
-                borderRadius: BorderRadius.circular(18),
+                borderRadius: BorderRadius.circular(10),
               ),
             ),
           ),
@@ -217,7 +293,7 @@ class _CourseFormState extends State<CourseForm> {
                   color: Colors.black87,
                   width: 0.5,
                 ),
-                borderRadius: BorderRadius.circular(18),
+                borderRadius: BorderRadius.circular(10),
               ),
             ),
           ),
@@ -251,7 +327,7 @@ class _CourseFormState extends State<CourseForm> {
                   color: Colors.black87,
                   width: 0.5,
                 ),
-                borderRadius: BorderRadius.circular(18),
+                borderRadius: BorderRadius.circular(10),
               ),
             ),
           ),
@@ -285,41 +361,102 @@ class _CourseFormState extends State<CourseForm> {
                   color: Colors.black87,
                   width: 0.5,
                 ),
-                borderRadius: BorderRadius.circular(18),
+                borderRadius: BorderRadius.circular(10),
               ),
             ),
           ),
-          Flexible(
-            child: CupertinoTextFormFieldRow(
-              controller: scheduleCon,
-              validator: isNotEmpty,
-              prefix: const Row(
-                children: [
-                  Text("Schedule",
-                      style: TextStyle(
-                          color: Colors.black87,
-                          fontSize: 14,
-                          fontWeight: FontWeight.w400)),
-                  SizedBox(width: 12),
-                ],
-              ),
-              placeholder: "Course Schedule",
-              placeholderStyle: const TextStyle(
-                fontSize: 14,
-                fontWeight: FontWeight.w400,
-                color: Colors.black45,
-              ),
-              style: const TextStyle(
-                fontSize: 14,
-                fontWeight: FontWeight.w400,
-                color: Colors.black87,
-              ),
-              decoration: BoxDecoration(
-                border: Border.all(
-                  color: Colors.black87,
-                  width: 0.5,
+          const SizedBox(
+            height: 6,
+          ),
+          // Column(
+          //   children: <Widget>[
+          //     SizedBox(
+          //         height: 50,
+          //         child: Row(
+          //           mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          //           crossAxisAlignment: CrossAxisAlignment.center,
+          //           children: [
+          //             Container(
+          //                 child: Text(
+          //               'Start Date: ' '$startDateCon',
+          //               style: TextStyle(
+          //                   color: Colors.black87,
+          //                   fontSize: 14,
+          //                   fontWeight: FontWeight.w400),
+          //             )),
+          //             Container(
+          //                 child: Text(
+          //               'End Date: ' '$endDateCon',
+          //               style: TextStyle(
+          //                   color: Colors.black87,
+          //                   fontSize: 14,
+          //                   fontWeight: FontWeight.w400),
+          //             ))
+          //           ],
+          //         )),
+          //     Card(
+          //       margin: const EdgeInsets.fromLTRB(20, 20, 20, 50),
+          //       child: SfDateRangePicker(
+          //         controller: dateRangeController,
+          //         selectionMode: DateRangePickerSelectionMode.range,
+          //         onSelectionChanged: selectionChanged,
+          //         allowViewNavigation: true,
+          //       ),
+          //     )
+          //   ],
+          // ),
+          InkWell(
+            onTap: () => dateFunction(context: context),
+            child: IgnorePointer(
+              child: TextField(
+                controller: startDateCon,
+                readOnly: true,
+                decoration: InputDecoration(
+                  contentPadding: const EdgeInsets.all(0),
+                  alignLabelWithHint: true,
+                  hintText: "Start Date",
+                  hintStyle: const TextStyle(fontSize: 14, height: 0),
+                  labelStyle: const TextStyle(fontSize: 14, height: 0),
+                  filled: false,
+                  isDense: true,
+                  border: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(10),
+                  ),
+                  prefixIcon: const Icon(
+                    Icons.calendar_month,
+                    size: 15,
+                    color: Color(0xff153faa),
+                  ),
                 ),
-                borderRadius: BorderRadius.circular(18),
+              ),
+            ),
+          ),
+          const SizedBox(
+            height: 6,
+          ),
+          InkWell(
+            onTap: () => dateFunction(context: context),
+            child: IgnorePointer(
+              child: TextField(
+                controller: endDateCon,
+                readOnly: true,
+                decoration: InputDecoration(
+                  contentPadding: const EdgeInsets.all(0),
+                  alignLabelWithHint: true,
+                  hintText: "End Date",
+                  hintStyle: const TextStyle(fontSize: 14, height: 0),
+                  labelStyle: const TextStyle(fontSize: 14, height: 0),
+                  filled: false,
+                  isDense: true,
+                  border: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(10),
+                  ),
+                  prefixIcon: const Icon(
+                    Icons.calendar_month,
+                    size: 15,
+                    color: Color(0xff153faa),
+                  ),
+                ),
               ),
             ),
           ),
@@ -353,11 +490,10 @@ class _CourseFormState extends State<CourseForm> {
                   color: Colors.black87,
                   width: 0.5,
                 ),
-                borderRadius: BorderRadius.circular(18),
+                borderRadius: BorderRadius.circular(10),
               ),
             ),
           ),
-
           const SizedBox(height: 20),
           Row(
             children: [
@@ -414,9 +550,11 @@ class _CourseFormState extends State<CourseForm> {
           duration: durationCon.text,
           schedule: scheduleCon.text,
           venue: venueCon.text,
-          // startDate: startDateCon.text,
-          // endDate: endDateCon.text,
+          startDate: DateTime.parse(startDateCon.text),
+          endDate: DateTime.parse(endDateCon.text),
         );
+        print(course.startDate);
+        print(course.endDate);
 
         print(course.toJson());
 
@@ -470,4 +608,21 @@ class _CourseFormState extends State<CourseForm> {
           style: TextStyle(color: Colors.black87),
         ));
   }
+
+  // endDate({required BuildContext context}) async {
+  //   DateTimeRange? pickedEndDate = await showDateRangePicker(
+  //     context: context,
+  //     lastDate: DateTime.now(),
+  //     firstDate: DateTime(2024),
+  //     currentDate: DateTime.now(),
+  //   );
+  //   setState(() {
+  //     dateTimeRange = pickedEndDate;
+  //   });
+  //   if (pickedEndDate == null) return;
+  //   print(
+  //       '>> END Date selected: ${pickedEndDate.end.day}-${pickedEndDate.end.month}-${pickedEndDate.end.year}');
+
+  //   // endDateCon.text = DateFormat('yyyy-MM-dd').format(pickedEndDate);
+  // }
 }
