@@ -28,8 +28,10 @@ class _ExpensesFormState extends State<ExpensesForm> {
     super.initState();
 
     orDateCon = TextEditingController(
-        text: widget.expense?.orDate.toString() ??
-            DateFormat('yyyy-MM-dd').format(DateTime.now()));
+        text: widget.expense?.orDate != null
+        ? DateFormat.yMMMMd().format(widget.expense!.orDate!)
+        : "None"
+        );
     orNumberCon = TextEditingController(text: widget.expense?.orNumber ?? "");
     particularsCon =
         TextEditingController(text: widget.expense?.particulars ?? "");
@@ -66,7 +68,7 @@ class _ExpensesFormState extends State<ExpensesForm> {
       initialDate: DateTime.now(),
     );
     if (pickedDate == null) return;
-    orDateCon.text = DateFormat('yyyy-MM-dd').format(pickedDate);
+    orDateCon.text = DateFormat.yMMMMd().format(pickedDate);
   }
 
 // PROGRAMS

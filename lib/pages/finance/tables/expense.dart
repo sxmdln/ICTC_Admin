@@ -90,6 +90,25 @@ class _ExpenseTableState extends State<ExpenseTable> {
       width: 90,
       enableDropToResize: false,
     ),
+    
+    PlutoColumn(
+      title: 'Program Name',
+      field: 'progName',
+      readOnly: true,
+      type: PlutoColumnType.text(),
+      textAlign: PlutoColumnTextAlign.left,
+      titleTextAlign: PlutoColumnTextAlign.center,
+    ),
+    PlutoColumn(
+      title: 'Course Name',
+      field: 'courseName',
+      readOnly: true,
+      type: PlutoColumnType.text(),
+      textAlign: PlutoColumnTextAlign.right,
+      titleTextAlign: PlutoColumnTextAlign.center,
+      minWidth: 100,
+      width: 300,
+    ),
     PlutoColumn(
       title: 'Particulars',
       field: 'particulars',
@@ -99,24 +118,6 @@ class _ExpenseTableState extends State<ExpenseTable> {
       titleTextAlign: PlutoColumnTextAlign.center,
     ),
     PlutoColumn(
-      title: 'Program Name',
-      field: 'progName',
-      readOnly: true,
-      type: PlutoColumnType.text(),
-      textAlign: PlutoColumnTextAlign.center,
-      titleTextAlign: PlutoColumnTextAlign.center,
-    ),
-    PlutoColumn(
-      title: 'Course Name',
-      field: 'courseName',
-      readOnly: true,
-      type: PlutoColumnType.text(),
-      textAlign: PlutoColumnTextAlign.center,
-      titleTextAlign: PlutoColumnTextAlign.center,
-      minWidth: 100,
-      width: 300,
-    ),
-    PlutoColumn(
       title: 'Amount',
       field: 'amount',
       readOnly: true,
@@ -124,7 +125,9 @@ class _ExpenseTableState extends State<ExpenseTable> {
         color: Colors.white,
       ),
       enableFilterMenuItem: false,
-      type: PlutoColumnType.number(),
+      type: PlutoColumnType.number(
+        negative: false,
+          format: 'P#,###',),
       textAlign: PlutoColumnTextAlign.right,
       titleTextAlign: PlutoColumnTextAlign.center,
       backgroundColor: Colors.red.withOpacity(0.1),
@@ -156,9 +159,9 @@ class _ExpenseTableState extends State<ExpenseTable> {
       title: 'OR Date',
       field: 'orDate',
       readOnly: true,
-      type: PlutoColumnType.date(),
+      type: PlutoColumnType.date(format: 'yMMMMd'),
       textAlign: PlutoColumnTextAlign.right,
-      titleTextAlign: PlutoColumnTextAlign.center,
+      titleTextAlign: PlutoColumnTextAlign.right,
     ),
     PlutoColumn(
       title: 'OR Number',
@@ -195,15 +198,14 @@ class _ExpenseTableState extends State<ExpenseTable> {
     return PlutoRow(
       cells: {
         'id': PlutoCell(value: expense.id),
+        'progName': PlutoCell(value: program?.title),
+        'courseName': PlutoCell(value: course?.title),
         'particulars': PlutoCell(value: expense.particulars),
-        'progName': PlutoCell(value: program?.title ?? "N/A"),
-        'courseName': PlutoCell(value: course?.title ?? "N/A"),
         'amount': PlutoCell(value: expense.amount),
-        'orDate': PlutoCell(value: expense.orDate ?? "N/A"),
-        'orNumber': PlutoCell(value: expense.orNumber ?? "N/A"),
+        'orDate': PlutoCell(value: expense.orDate),
+        'orNumber': PlutoCell(value: expense.orNumber),
         'actions': PlutoCell(value: Builder(builder: (context) {
           return Row(
-            //TODO: HINDI PA GUMAGANA PLS MAKE IT WORK :<
             children: [
               editButton(expense),
             ],

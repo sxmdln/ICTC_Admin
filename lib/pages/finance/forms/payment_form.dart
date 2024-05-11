@@ -42,8 +42,9 @@ class _PaymentFormState extends State<PaymentForm> {
     super.initState();
 
     orDateCon = TextEditingController(
-        text: widget.payment?.orDate.toString() ??
-            DateFormat('yyyy-MM-dd').format(DateTime.now()));
+        text: widget.payment?.orDate != null
+            ? DateFormat.yMMMMd().format(widget.payment!.orDate)
+            : "None");
     orNumberCon = TextEditingController(text: widget.payment?.orNumber ?? "");
     discountCon = TextEditingController(
         text: widget.payment?.discount.toString() ?? 0.toString());
@@ -85,6 +86,17 @@ class _PaymentFormState extends State<PaymentForm> {
     }
 
     print(widget.payment?.toJson());
+  }
+
+  orDate({required BuildContext context}) async {
+    DateTime? pickedDate = await showDatePicker(
+      context: context,
+      lastDate: DateTime.now(),
+      firstDate: DateTime(2024),
+      initialDate: DateTime.now(),
+    );
+    if (pickedDate == null) return;
+    orDateCon.text = DateFormat.yMMMMd().format(pickedDate);
   }
 
 // PROGRAMS
@@ -384,35 +396,6 @@ class _PaymentFormState extends State<PaymentForm> {
             ),
           ),
           CupertinoTextFormFieldRow(
-            enabled: false,
-            readOnly: true,
-            controller: courseCostCon,
-            prefix: const Row(
-              children: [
-                Text("Course Cost",
-                    style: TextStyle(
-                        color: Colors.black87,
-                        fontSize: 14,
-                        fontWeight: FontWeight.w400)),
-                SizedBox(width: 45),
-              ],
-            ),
-            style: const TextStyle(
-              fontSize: 14,
-              fontWeight: FontWeight.w400,
-              color: Colors.black87,
-            ),
-            decoration: BoxDecoration(
-              // border: ,
-              border: Border.all(
-                color: Colors.white,
-                width: 0.5,
-              ),
-              borderRadius: BorderRadius.circular(10),
-              // prefixIcon: Icon(Icons.person)
-            ),
-          ),
-          CupertinoTextFormFieldRow(
             onChanged: (value) {
               if (value.isEmpty) {
                 setState(() => discountCon.text = "0");
@@ -447,6 +430,35 @@ class _PaymentFormState extends State<PaymentForm> {
                 width: 0.5,
               ),
               borderRadius: BorderRadius.circular(10),
+            ),
+          ),
+          CupertinoTextFormFieldRow(
+            enabled: false,
+            readOnly: true,
+            controller: courseCostCon,
+            prefix: const Row(
+              children: [
+                Text("Course Cost",
+                    style: TextStyle(
+                        color: Colors.black87,
+                        fontSize: 14,
+                        fontWeight: FontWeight.w400)),
+                SizedBox(width: 45),
+              ],
+            ),
+            style: const TextStyle(
+              fontSize: 14,
+              fontWeight: FontWeight.w400,
+              color: Colors.black87,
+            ),
+            decoration: BoxDecoration(
+              // border: ,
+              border: Border.all(
+                color: Colors.white,
+                width: 0.5,
+              ),
+              borderRadius: BorderRadius.circular(10),
+              // prefixIcon: Icon(Icons.person)
             ),
           ),
           CupertinoTextFormFieldRow(
@@ -562,16 +574,5 @@ class _PaymentFormState extends State<PaymentForm> {
           "Delete",
           style: TextStyle(color: Colors.black87),
         ));
-  }
-
-  orDate({required BuildContext context}) async {
-    DateTime? pickedDate = await showDatePicker(
-      context: context,
-      lastDate: DateTime.now(),
-      firstDate: DateTime(2024),
-      initialDate: DateTime.now(),
-    );
-    if (pickedDate == null) return;
-    orDateCon.text = DateFormat('yyyy-MM-dd').format(pickedDate);
   }
 }
