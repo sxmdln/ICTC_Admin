@@ -21,8 +21,8 @@ class Course {
   String? duration;
   String? schedule;
   String? venue;
-  String? startDate;
-  String? endDate;
+  DateTime? startDate;
+  DateTime? endDate;
 
   var students;
 
