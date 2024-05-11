@@ -22,7 +22,6 @@ class _CourseFormState extends State<CourseForm> {
   final formKey = GlobalKey<FormState>();
   final DateRangePickerController dateRangeController =
       DateRangePickerController();
-  DateTimeRange? dateTimeRange;
   Program? selectedProgram;
   Trainer? selectedTrainer;
   late TextEditingController courseTitleCon,
@@ -30,17 +29,15 @@ class _CourseFormState extends State<CourseForm> {
       costCon,
       durationCon,
       scheduleCon,
-      venueCon,
-      startDateCon,
-      endDateCon;
+      venueCon;
 
-  // late String startDateCon, endDateCon;
+  late String? startDateCon, endDateCon;
 
   @override
   void initState() {
     super.initState();
 
-    print(widget.course?.endDate.toString());
+    print("course end date ${widget.course?.endDate.toString()}");
     // print(DateFormat('yyyy-MM-dd').format(DateTime.now()).toString());
     // print(DateTime.parse(endDateCon));
 
@@ -51,19 +48,17 @@ class _CourseFormState extends State<CourseForm> {
     scheduleCon = TextEditingController(text: widget.course?.schedule);
     venueCon = TextEditingController(text: widget.course?.venue);
 
-    startDateCon = TextEditingController(
-        text: widget.course?.startDate.toString() ??
-            DateFormat('yyyy-MM-dd').format(DateTime.now()));
-    // startDateCon =  widget.course?.startDate.toString() ??
-    //         DateFormat('yyyy-MM-dd').format(DateTime.now());
-    endDateCon = TextEditingController(
-        text: widget.course?.endDate.toString() ??
-            DateFormat('yyyy-MM-dd').format(DateTime.now()));
-    // endDateCon = widget.course?.endDate.toString() ??
-    //         DateFormat('yyyy-MM-dd').format(DateTime.now());
+    startDateCon = widget.course?.startDate != null
+        ? DateFormat.yMMMMd().format(widget.course!.startDate!)
+        : "None";
 
-    // dateRangeController.selectedRange = PickerDateRange(
-    //     DateTime.now(), DateTime.now().add(const Duration(days: 3)));
+    endDateCon = widget.course?.endDate != null
+        ? DateFormat.yMMMMd().format(widget.course!.endDate!)
+        : "None";
+
+    dateRangeController.selectedRange = PickerDateRange(
+        widget.course?.startDate ?? DateTime.now(),
+        widget.course?.endDate ?? DateTime.now().add(const Duration(days: 3)));
 
     if (widget.course != null) {
       Supabase.instance.client
@@ -83,45 +78,13 @@ class _CourseFormState extends State<CourseForm> {
     }
   }
 
-  dateFunction({required BuildContext context}) async {
-    DateTimeRange? pickedStartDate = await showDateRangePicker(
-      context: context,
-      lastDate: DateTime.now(),
-      firstDate: DateTime(2024),
-      currentDate: DateTime.now(),
-      saveText: 'Done',
-    );
+  void selectionChanged(DateRangePickerSelectionChangedArgs args) {
     setState(() {
-      dateTimeRange = pickedStartDate;
-      startDateCon = TextEditingController(
-        text: pickedStartDate?.start.toString() ??
-            DateFormat('yyyy-MM-dd').format(DateTime.now()));
-      endDateCon = TextEditingController(
-        text: pickedStartDate?.end.toString() ??
-            DateFormat('yyyy-MM-dd').format(DateTime.now()));
+      startDateCon = DateFormat.yMMMMd('en_US').format(args.value.startDate);
+      endDateCon = DateFormat.yMMMMd('en_US')
+          .format(args.value.endDate ?? args.value.startDate);
     });
-    if (pickedStartDate == null) return;
-
-    print(
-        '>> START Date selected: ${pickedStartDate.start.day}-${pickedStartDate.start.month}-${pickedStartDate.start.year}');
-    print(
-        '>>>> END Date selected: ${pickedStartDate.end.day}-${pickedStartDate.end.month}-${pickedStartDate.end.year}');
-
-    // startDateCon = DateFormat('yyyy-MM-dd').format(pickedStartDate);
   }
-
-  // void selectionChanged(DateRangePickerSelectionChangedArgs args) {
-  //   setState(() {
-  //     startDateCon =
-  //         DateFormat('yyyy-MM-dd').format(args.value.startDate);
-  //     endDateCon = DateFormat('yyyy-MM-dd')
-  //         .format(args.value.endDate ?? args.value.endDate)
-  //         ;
-  //         print(startDateCon);
-
-  //         print(endDateCon);
-  //   });
-  // }
 
   Future<List<Program>> fetchPrograms({String? filter}) async {
     final supabase = Supabase.instance.client;
@@ -368,98 +331,98 @@ class _CourseFormState extends State<CourseForm> {
           const SizedBox(
             height: 6,
           ),
-          // Column(
-          //   children: <Widget>[
-          //     SizedBox(
-          //         height: 50,
-          //         child: Row(
-          //           mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          //           crossAxisAlignment: CrossAxisAlignment.center,
-          //           children: [
-          //             Container(
-          //                 child: Text(
-          //               'Start Date: ' '$startDateCon',
-          //               style: TextStyle(
-          //                   color: Colors.black87,
-          //                   fontSize: 14,
-          //                   fontWeight: FontWeight.w400),
-          //             )),
-          //             Container(
-          //                 child: Text(
-          //               'End Date: ' '$endDateCon',
-          //               style: TextStyle(
-          //                   color: Colors.black87,
-          //                   fontSize: 14,
-          //                   fontWeight: FontWeight.w400),
-          //             ))
-          //           ],
-          //         )),
-          //     Card(
-          //       margin: const EdgeInsets.fromLTRB(20, 20, 20, 50),
-          //       child: SfDateRangePicker(
-          //         controller: dateRangeController,
-          //         selectionMode: DateRangePickerSelectionMode.range,
-          //         onSelectionChanged: selectionChanged,
-          //         allowViewNavigation: true,
+          Column(
+            children: <Widget>[
+              SizedBox(
+                  height: 50,
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      Container(
+                          child: Text(
+                        'Start Date: ' '$startDateCon',
+                        style: TextStyle(
+                            color: Colors.black87,
+                            fontSize: 14,
+                            fontWeight: FontWeight.w400),
+                      )),
+                      Container(
+                          child: Text(
+                        'End Date: ' '$endDateCon',
+                        style: TextStyle(
+                            color: Colors.black87,
+                            fontSize: 14,
+                            fontWeight: FontWeight.w400),
+                      ))
+                    ],
+                  )),
+              Card(
+                margin: const EdgeInsets.fromLTRB(20, 20, 20, 50),
+                child: SfDateRangePicker(
+                  controller: dateRangeController,
+                  selectionMode: DateRangePickerSelectionMode.range,
+                  onSelectionChanged: selectionChanged,
+                  allowViewNavigation: false,
+                ),
+              )
+            ],
+          ),
+          // InkWell(
+          //   onTap: () => startDate(context: context),
+          //   child: IgnorePointer(
+          //     child: TextField(
+          //       controller: startDateCon,
+          //       readOnly: true,
+          //       decoration: InputDecoration(
+          //         contentPadding: const EdgeInsets.all(0),
+          //         alignLabelWithHint: true,
+          //         hintText: "Start Date",
+          //         hintStyle: const TextStyle(fontSize: 14, height: 0),
+          //         labelStyle: const TextStyle(fontSize: 14, height: 0),
+          //         filled: false,
+          //         isDense: true,
+          //         border: OutlineInputBorder(
+          //           borderRadius: BorderRadius.circular(10),
+          //         ),
+          //         prefixIcon: const Icon(
+          //           Icons.calendar_month,
+          //           size: 15,
+          //           color: Color(0xff153faa),
+          //         ),
           //       ),
-          //     )
-          //   ],
+          //     ),
+          //   ),
           // ),
-          InkWell(
-            onTap: () => dateFunction(context: context),
-            child: IgnorePointer(
-              child: TextField(
-                controller: startDateCon,
-                readOnly: true,
-                decoration: InputDecoration(
-                  contentPadding: const EdgeInsets.all(0),
-                  alignLabelWithHint: true,
-                  hintText: "Start Date",
-                  hintStyle: const TextStyle(fontSize: 14, height: 0),
-                  labelStyle: const TextStyle(fontSize: 14, height: 0),
-                  filled: false,
-                  isDense: true,
-                  border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(10),
-                  ),
-                  prefixIcon: const Icon(
-                    Icons.calendar_month,
-                    size: 15,
-                    color: Color(0xff153faa),
-                  ),
-                ),
-              ),
-            ),
-          ),
-          const SizedBox(
-            height: 6,
-          ),
-          InkWell(
-            onTap: () => dateFunction(context: context),
-            child: IgnorePointer(
-              child: TextField(
-                controller: endDateCon,
-                readOnly: true,
-                decoration: InputDecoration(
-                  contentPadding: const EdgeInsets.all(0),
-                  alignLabelWithHint: true,
-                  hintText: "End Date",
-                  hintStyle: const TextStyle(fontSize: 14, height: 0),
-                  labelStyle: const TextStyle(fontSize: 14, height: 0),
-                  filled: false,
-                  isDense: true,
-                  border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(10),
-                  ),
-                  prefixIcon: const Icon(
-                    Icons.calendar_month,
-                    size: 15,
-                    color: Color(0xff153faa),
-                  ),
-                ),
-              ),
-            ),
-          ),
+          // const SizedBox(
+          //   height: 6,
+          // ),
+          // InkWell(
+          //   onTap: () => endDate(context: context),
+          //   child: IgnorePointer(
+          //     child: TextField(
+          //       controller: startDateCon,
+          //       readOnly: true,
+          //       decoration: InputDecoration(
+          //         contentPadding: const EdgeInsets.all(0),
+          //         alignLabelWithHint: true,
+          //         hintText: "End Date",
+          //         hintStyle: const TextStyle(fontSize: 14, height: 0),
+          //         labelStyle: const TextStyle(fontSize: 14, height: 0),
+          //         filled: false,
+          //         isDense: true,
+          //         border: OutlineInputBorder(
+          //           borderRadius: BorderRadius.circular(10),
+          //         ),
+          //         prefixIcon: const Icon(
+          //           Icons.calendar_month,
+          //           size: 15,
+          //           color: Color(0xff153faa),
+          //         ),
+          //       ),
+          //     ),
+          //   ),
+          // ),
           Flexible(
             child: CupertinoTextFormFieldRow(
               controller: venueCon,
@@ -550,11 +513,9 @@ class _CourseFormState extends State<CourseForm> {
           duration: durationCon.text,
           schedule: scheduleCon.text,
           venue: venueCon.text,
-          startDate: DateTime.parse(startDateCon.text),
-          endDate: DateTime.parse(endDateCon.text),
+          startDate: DateFormat('yyyy-MM-dd').parse(startDateCon!),
+          endDate: DateFormat('yyyy-MM-dd').parse(endDateCon!),
         );
-        print(course.startDate);
-        print(course.endDate);
 
         print(course.toJson());
 
@@ -609,20 +570,25 @@ class _CourseFormState extends State<CourseForm> {
         ));
   }
 
-  // endDate({required BuildContext context}) async {
-  //   DateTimeRange? pickedEndDate = await showDateRangePicker(
+  // startDate({required BuildContext context}) async {
+  //   DateTime? pickedStartDate = await showDatePicker(
   //     context: context,
   //     lastDate: DateTime.now(),
   //     firstDate: DateTime(2024),
-  //     currentDate: DateTime.now(),
+  //     initialDate: DateTime.now(),
   //   );
-  //   setState(() {
-  //     dateTimeRange = pickedEndDate;
-  //   });
-  //   if (pickedEndDate == null) return;
-  //   print(
-  //       '>> END Date selected: ${pickedEndDate.end.day}-${pickedEndDate.end.month}-${pickedEndDate.end.year}');
+  //   if (pickedStartDate == null) return;
+  //   startDateCon = DateFormat('yyyy-MM-dd').format(pickedStartDate);
+  // }
 
-  //   // endDateCon.text = DateFormat('yyyy-MM-dd').format(pickedEndDate);
+  // endDate({required BuildContext context}) async {
+  //   DateTime? pickedEndDate = await showDatePicker(
+  //     context: context,
+  //     lastDate: DateTime.now(),
+  //     firstDate: DateTime(2024),
+  //     initialDate: DateTime.now(),
+  //   );
+  //   if (pickedEndDate == null) return;
+  //   endDateCon.text = DateFormat('yyyy-MM-dd').format(pickedEndDate);
   // }
 }
