@@ -21,7 +21,11 @@ class Course {
   String? duration;
   String? schedule;
   String? venue;
+  
+  @JsonKey(name: 'start_date')
   DateTime? startDate;
+
+  @JsonKey(name: 'end_date')
   DateTime? endDate;
 
   var students;
