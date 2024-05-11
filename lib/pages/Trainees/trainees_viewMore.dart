@@ -297,13 +297,6 @@ Widget traineeCourseCard(String courseTitle) {
                   color: Colors.black,
                 ),
               ),
-              Text(
-                "courseSchedule",
-                style: const TextStyle(
-                  fontSize: 12,
-                  color: Colors.black54,
-                  fontWeight: FontWeight.w300),
-              ),
             ],
           ),
         ),
