@@ -37,26 +37,27 @@ class _ExpensesFormState extends State<ExpensesForm> {
         TextEditingController(text: widget.expense?.amount.toString() ?? "");
 
     if (widget.expense != null) {
-       if (widget.expense!.programId != null) {
-       Supabase.instance.client
-          .from('program')
-          .select()
-          .eq('id', widget.expense!.programId as Object)
-          .limit(1)
-          .withConverter((data) => Program.fromJson(data.first))
-          .then((value) => setState(() => selectedProgram = value));
-       }
-       if (widget.expense!.courseId != null) {
-      Supabase.instance.client
-          .from('course')
-          .select()
-          .eq('id', widget.expense!.courseId as Object)
-          .limit(1)
-          .withConverter((data) => Course.fromJson(data.first))
-          .then((value) => setState(() => selectedCourse = value));
+      if (widget.expense!.programId != null) {
+        Supabase.instance.client
+            .from('program')
+            .select()
+            .eq('id', widget.expense!.programId as Object)
+            .limit(1)
+            .withConverter((data) => Program.fromJson(data.first))
+            .then((value) => setState(() => selectedProgram = value));
+      }
+      if (widget.expense!.courseId != null) {
+        Supabase.instance.client
+            .from('course')
+            .select()
+            .eq('id', widget.expense!.courseId as Object)
+            .limit(1)
+            .withConverter((data) => Course.fromJson(data.first))
+            .then((value) => setState(() => selectedCourse = value));
+      }
     }
   }
-  }
+
   onTapFunction({required BuildContext context}) async {
     DateTime? pickedDate = await showDatePicker(
       context: context,
@@ -80,6 +81,7 @@ class _ExpensesFormState extends State<ExpensesForm> {
         ? programs
         : programs.where((element) => element.title.contains(filter)).toList();
   }
+
 // COURSES
   Future<List<Course>> fetchCourses({String? filter}) async {
     if (selectedProgram == null) return [];
@@ -107,15 +109,44 @@ class _ExpensesFormState extends State<ExpensesForm> {
         children: [
           DropdownSearch<Program>(
             asyncItems: (filter) => fetchPrograms(),
-            dropdownDecoratorProps: const DropDownDecoratorProps(
+            dropdownDecoratorProps: DropDownDecoratorProps(
               dropdownSearchDecoration: InputDecoration(
+                contentPadding: const EdgeInsets.all(0),
+                border: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(10),
+                ),
+                isDense: true,
+                prefixIcon: const Icon(
+                  Icons.school,
+                  size: 15,
+                  color: Color(0xff153faa),
+                ),
                 labelText: "Program",
+                labelStyle: const TextStyle(fontSize: 14),
                 filled: false,
               ),
             ),
             onChanged: (value) => setState(() => selectedProgram = value),
             selectedItem: selectedProgram,
-            popupProps: const PopupProps.dialog(showSearchBox: true),
+            popupProps: PopupProps.dialog(
+                title: Container(
+                  padding: const EdgeInsets.all(30),
+                  child: const Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      Text("Select a Program",
+                          style: TextStyle(
+                              fontSize: 24, fontWeight: FontWeight.w600)),
+                    ],
+                  ),
+                ),
+                showSearchBox: true,
+                constraints: const BoxConstraints(
+                    maxHeight: 450,
+                    maxWidth: 500,
+                    minWidth: 500,
+                    minHeight: 400)),
             compareFn: (item1, item2) => item1.id == item2.id,
             validator: (value) {
               if (value == null) {
@@ -129,8 +160,19 @@ class _ExpensesFormState extends State<ExpensesForm> {
           ),
           DropdownSearch<Course>(
             asyncItems: (filter) => fetchCourses(),
-            dropdownDecoratorProps: const DropDownDecoratorProps(
+            dropdownDecoratorProps: DropDownDecoratorProps(
               dropdownSearchDecoration: InputDecoration(
+                contentPadding: const EdgeInsets.all(0),
+                isDense: true,
+                border: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(10),
+                ),
+                prefixIcon: const Icon(
+                  Icons.book,
+                  size: 15,
+                  color: Color(0xff153faa),
+                ),
+                labelStyle: const TextStyle(fontSize: 14),
                 labelText: "Course",
                 filled: false,
               ),
@@ -139,7 +181,25 @@ class _ExpensesFormState extends State<ExpensesForm> {
               setState(() => selectedCourse = value);
             },
             selectedItem: selectedCourse,
-            popupProps: const PopupProps.dialog(showSearchBox: true),
+            popupProps: PopupProps.dialog(
+                showSearchBox: true,
+                title: Container(
+                  padding: const EdgeInsets.all(30),
+                  child: const Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      Text("Select a Course",
+                          style: TextStyle(
+                              fontSize: 24, fontWeight: FontWeight.w600)),
+                    ],
+                  ),
+                ),
+                constraints: const BoxConstraints(
+                    maxHeight: 450,
+                    maxWidth: 500,
+                    minWidth: 500,
+                    minHeight: 400)),
             compareFn: (item1, item2) => item1.id == item2.id,
             validator: (value) {
               if (value == null) {
@@ -151,27 +211,31 @@ class _ExpensesFormState extends State<ExpensesForm> {
           const SizedBox(
             height: 6,
           ),
-          TextFormField(
-            style: TextStyle(
-                color: Colors.black87,
-                fontSize: 14,
-                fontWeight: FontWeight.w400,
-                height: 2),
-            controller: orDateCon,
-            readOnly: true,
-            decoration: const InputDecoration(
-              alignLabelWithHint: true,
-              hintText: "Date of Expense: ",
-              hintStyle: TextStyle(
-                  color: Colors.black87,
-                  fontSize: 14,
-                  fontWeight: FontWeight.w400,
-                  height: 2),
-              filled: false,
-              isDense: true,
-              prefixIcon: Icon(Icons.calendar_month, size: 20),
-            ),
+          InkWell(
             onTap: () => onTapFunction(context: context),
+            child: IgnorePointer(
+              child: TextField(
+                controller: orDateCon,
+                readOnly: true,
+                decoration: InputDecoration(
+                  contentPadding: const EdgeInsets.all(0),
+                  alignLabelWithHint: true,
+                  hintText: "OR Date",
+                  hintStyle: const TextStyle(fontSize: 14, height: 0),
+                  labelStyle: const TextStyle(fontSize: 14, height: 0),
+                  filled: false,
+                  isDense: true,
+                  border: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(10),
+                  ),
+                  prefixIcon: const Icon(
+                    Icons.calendar_month,
+                    size: 15,
+                    color: Color(0xff153faa),
+                  ),
+                ),
+              ),
+            ),
           ),
           const SizedBox(height: 10),
           CupertinoTextFormFieldRow(
@@ -204,12 +268,9 @@ class _ExpensesFormState extends State<ExpensesForm> {
                 color: Colors.black87,
                 width: 0.5,
               ),
-              borderRadius: BorderRadius.circular(18),
+              borderRadius: BorderRadius.circular(10),
               // prefixIcon: Icon(Icons.person)
             ),
-          ),
-          SizedBox(
-            height: 10,
           ),
           CupertinoTextFormFieldRow(
             controller: particularsCon,
@@ -220,7 +281,7 @@ class _ExpensesFormState extends State<ExpensesForm> {
                         color: Colors.black87,
                         fontSize: 14,
                         fontWeight: FontWeight.w400)),
-                SizedBox(width: 20),
+                SizedBox(width: 25),
               ],
             ),
             // padding: EdgeInsets.only(left: 90),
@@ -241,7 +302,7 @@ class _ExpensesFormState extends State<ExpensesForm> {
                 color: Colors.black87,
                 width: 0.5,
               ),
-              borderRadius: BorderRadius.circular(18),
+              borderRadius: BorderRadius.circular(10),
               // prefixIcon: Icon(Icons.person)
             ),
           ),
@@ -253,8 +314,8 @@ class _ExpensesFormState extends State<ExpensesForm> {
                     style: TextStyle(
                         color: Colors.black87,
                         fontSize: 14,
-                        fontWeight: FontWeight.w400)),
-                SizedBox(width: 66),
+                        fontWeight: FontWeight.w700)),
+                SizedBox(width: 30),
               ],
             ),
             // padding: EdgeInsets.only(left: 90),
@@ -275,7 +336,7 @@ class _ExpensesFormState extends State<ExpensesForm> {
                 color: Colors.black87,
                 width: 0.5,
               ),
-              borderRadius: BorderRadius.circular(18),
+              borderRadius: BorderRadius.circular(10),
               // prefixIcon: Icon(Icons.person)
             ),
           ),
@@ -321,7 +382,7 @@ class _ExpensesFormState extends State<ExpensesForm> {
             particulars: particularsCon.text,
             amount: double.parse(amountCon.text),
           );
-
+print(expense.orDate.toString());
           print(expense.toJson());
 
           Supabase.instance.client
@@ -335,7 +396,6 @@ class _ExpensesFormState extends State<ExpensesForm> {
             Navigator.pop(context);
           });
         }
-
       },
       child: const Text(
         "Save",
@@ -359,7 +419,6 @@ class _ExpensesFormState extends State<ExpensesForm> {
         onPressed: () {
           final supabase = Supabase.instance.client;
           final id = widget.expense!.id!;
-          
 
           supabase.from('expense').delete().eq('id', id).whenComplete(() {
             ScaffoldMessenger.of(context).showSnackBar(
@@ -367,8 +426,8 @@ class _ExpensesFormState extends State<ExpensesForm> {
 
             Navigator.of(context).pop();
           }).catchError((_) {
-            ScaffoldMessenger.of(context)
-              .showSnackBar(const SnackBar(content: Text("An error occured.")));
+            ScaffoldMessenger.of(context).showSnackBar(
+                const SnackBar(content: Text("An error occured.")));
           });
         },
         child: const Text(

@@ -1,4 +1,5 @@
 import 'package:dropdown_search/dropdown_search.dart';
+import 'package:flutter/widgets.dart';
 import 'package:ictc_admin/models/course.dart';
 import 'package:ictc_admin/models/payment.dart';
 import 'package:ictc_admin/models/register.dart';
@@ -59,7 +60,7 @@ class _PaymentFormState extends State<PaymentForm> {
           .limit(1)
           .withConverter((data) => Program.fromJson(data.first))
           .then((value) => setState(() => selectedProgram = value));
-          
+
       Supabase.instance.client
           .from('course')
           .select()
@@ -118,7 +119,7 @@ class _PaymentFormState extends State<PaymentForm> {
       final trainee = await supabase
           .from('student')
           .select()
-          .eq('id', register.studentId!)
+          .eq('id', register.studentId)
           .limit(1)
           .withConverter((data) => Trainee.fromJson(data.first));
       trainees.add(trainee);
@@ -158,15 +159,44 @@ class _PaymentFormState extends State<PaymentForm> {
         children: [
           DropdownSearch<Program>(
             asyncItems: (filter) => fetchPrograms(),
-            dropdownDecoratorProps: const DropDownDecoratorProps(
+            dropdownDecoratorProps: DropDownDecoratorProps(
               dropdownSearchDecoration: InputDecoration(
+                contentPadding: const EdgeInsets.all(0),
+                border: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(10),
+                ),
+                isDense: true,
+                prefixIcon: const Icon(
+                  Icons.school,
+                  size: 15,
+                  color: Color(0xff153faa),
+                ),
                 labelText: "Program",
+                labelStyle: const TextStyle(fontSize: 14),
                 filled: false,
               ),
             ),
             onChanged: (value) => setState(() => selectedProgram = value),
             selectedItem: selectedProgram,
-            popupProps: const PopupProps.dialog(showSearchBox: true),
+            popupProps: PopupProps.dialog(
+                title: Container(
+                  padding: const EdgeInsets.all(30),
+                  child: const Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      Text("Select a Program",
+                          style: TextStyle(
+                              fontSize: 24, fontWeight: FontWeight.w600)),
+                    ],
+                  ),
+                ),
+                showSearchBox: true,
+                constraints: const BoxConstraints(
+                    maxHeight: 450,
+                    maxWidth: 500,
+                    minWidth: 500,
+                    minHeight: 400)),
             compareFn: (item1, item2) => item1.id == item2.id,
             validator: (value) {
               if (value == null) {
@@ -180,8 +210,19 @@ class _PaymentFormState extends State<PaymentForm> {
           ),
           DropdownSearch<Course>(
             asyncItems: (filter) => fetchCourses(),
-            dropdownDecoratorProps: const DropDownDecoratorProps(
+            dropdownDecoratorProps: DropDownDecoratorProps(
               dropdownSearchDecoration: InputDecoration(
+                contentPadding: const EdgeInsets.all(0),
+                isDense: true,
+                border: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(10),
+                ),
+                prefixIcon: const Icon(
+                  Icons.book,
+                  size: 15,
+                  color: Color(0xff153faa),
+                ),
+                labelStyle: const TextStyle(fontSize: 14),
                 labelText: "Course",
                 filled: false,
               ),
@@ -198,7 +239,25 @@ class _PaymentFormState extends State<PaymentForm> {
               });
             },
             selectedItem: selectedCourse,
-            popupProps: const PopupProps.dialog(showSearchBox: true),
+            popupProps: PopupProps.dialog(
+                showSearchBox: true,
+                title: Container(
+                  padding: const EdgeInsets.all(30),
+                  child: const Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      Text("Select a Course",
+                          style: TextStyle(
+                              fontSize: 24, fontWeight: FontWeight.w600)),
+                    ],
+                  ),
+                ),
+                constraints: const BoxConstraints(
+                    maxHeight: 450,
+                    maxWidth: 500,
+                    minWidth: 500,
+                    minHeight: 400)),
             compareFn: (item1, item2) => item1.id == item2.id,
             validator: (value) {
               if (value == null) {
@@ -212,15 +271,44 @@ class _PaymentFormState extends State<PaymentForm> {
           ),
           DropdownSearch<Trainee>(
             asyncItems: (filter) => fetchTrainees(),
-            dropdownDecoratorProps: const DropDownDecoratorProps(
+            dropdownDecoratorProps: DropDownDecoratorProps(
               dropdownSearchDecoration: InputDecoration(
+                contentPadding: const EdgeInsets.all(0),
+                prefixIcon: const Icon(
+                  Icons.person,
+                  size: 15,
+                  color: Color(0xff153faa),
+                ),
+                labelStyle: const TextStyle(fontSize: 14),
                 labelText: "Trainee",
+                isDense: true,
+                border: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(10),
+                ),
                 filled: false,
               ),
             ),
             onChanged: (value) => setState(() => selectedTrainee = value),
             selectedItem: selectedTrainee,
-            popupProps: const PopupProps.dialog(showSearchBox: true),
+            popupProps: PopupProps.dialog(
+                showSearchBox: true,
+                title: Container(
+                  padding: const EdgeInsets.all(30),
+                  child: const Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      Text("Select a Trainee",
+                          style: TextStyle(
+                              fontSize: 24, fontWeight: FontWeight.w600)),
+                    ],
+                  ),
+                ),
+                constraints: const BoxConstraints(
+                    maxHeight: 450,
+                    maxWidth: 500,
+                    minWidth: 500,
+                    minHeight: 400)),
             compareFn: (item1, item2) => item1.id == item2.id,
             validator: (value) {
               if (value == null) {
@@ -229,18 +317,37 @@ class _PaymentFormState extends State<PaymentForm> {
               return null;
             },
           ),
-          TextField(
-            controller: orDateCon,
-            readOnly: true,
-            decoration: const InputDecoration(
-              alignLabelWithHint: true,
-              hintText: "OR Date",
-              hintStyle: TextStyle(fontSize: 14, height: 2),
-              filled: false,
-              isDense: true,
-              prefixIcon: Icon(Icons.calendar_month, size: 20),
+          const SizedBox(
+            height: 6,
+          ),
+          InkWell(
+            onTap: () => orDate(context: context),
+            child: IgnorePointer(
+              child: TextField(
+                controller: orDateCon,
+                readOnly: true,
+                decoration: InputDecoration(
+                  contentPadding: const EdgeInsets.all(0),
+                  alignLabelWithHint: true,
+                  hintText: "OR Date",
+                  hintStyle: const TextStyle(fontSize: 14, height: 0),
+                  labelStyle: const TextStyle(fontSize: 14, height: 0),
+                  filled: false,
+                  isDense: true,
+                  border: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(10),
+                  ),
+                  prefixIcon: const Icon(
+                    Icons.calendar_month,
+                    size: 15,
+                    color: Color(0xff153faa),
+                  ),
+                ),
+              ),
             ),
-            onTap: () => onTapFunction(context: context),
+          ),
+          const SizedBox(
+            height: 12,
           ),
           CupertinoTextFormFieldRow(
             controller: orNumberCon,
@@ -251,7 +358,7 @@ class _PaymentFormState extends State<PaymentForm> {
                         color: Colors.black87,
                         fontSize: 14,
                         fontWeight: FontWeight.w400)),
-                SizedBox(width: 20),
+                SizedBox(width: 45),
               ],
             ),
             // padding: EdgeInsets.only(left: 90),
@@ -272,11 +379,12 @@ class _PaymentFormState extends State<PaymentForm> {
                 color: Colors.black87,
                 width: 0.5,
               ),
-              borderRadius: BorderRadius.circular(18),
+              borderRadius: BorderRadius.circular(10),
               // prefixIcon: Icon(Icons.person)
             ),
           ),
           CupertinoTextFormFieldRow(
+            enabled: false,
             readOnly: true,
             controller: courseCostCon,
             prefix: const Row(
@@ -286,7 +394,7 @@ class _PaymentFormState extends State<PaymentForm> {
                         color: Colors.black87,
                         fontSize: 14,
                         fontWeight: FontWeight.w400)),
-                SizedBox(width: 18),
+                SizedBox(width: 45),
               ],
             ),
             style: const TextStyle(
@@ -297,10 +405,10 @@ class _PaymentFormState extends State<PaymentForm> {
             decoration: BoxDecoration(
               // border: ,
               border: Border.all(
-                color: Colors.black87,
+                color: Colors.white,
                 width: 0.5,
               ),
-              borderRadius: BorderRadius.circular(18),
+              borderRadius: BorderRadius.circular(10),
               // prefixIcon: Icon(Icons.person)
             ),
           ),
@@ -327,8 +435,6 @@ class _PaymentFormState extends State<PaymentForm> {
                 SizedBox(width: 25),
               ],
             ),
-            // padding: EdgeInsets.only(left: 90),
-            //TODO: Automatically get the DISCOUNT price based on the trainee_type/voucher code used.
             style: const TextStyle(
               fontSize: 14,
               fontWeight: FontWeight.w400,
@@ -340,10 +446,11 @@ class _PaymentFormState extends State<PaymentForm> {
                 color: Colors.black87,
                 width: 0.5,
               ),
-              borderRadius: BorderRadius.circular(18),
+              borderRadius: BorderRadius.circular(10),
             ),
           ),
           CupertinoTextFormFieldRow(
+            enabled: false,
             controller: totalAmountCon,
             readOnly: true,
             prefix: const Row(
@@ -352,29 +459,24 @@ class _PaymentFormState extends State<PaymentForm> {
                     style: TextStyle(
                         color: Colors.black87,
                         fontSize: 14,
-                        fontWeight: FontWeight.w400)),
-                SizedBox(width: 27),
+                        fontWeight: FontWeight.w700)),
+                SizedBox(width: 37),
               ],
             ),
             // padding: EdgeInsets.only(left: 90)
-            // TODO: Add a formula to get the sum of (registration fee - discount fee), then display it here.
-            placeholderStyle: const TextStyle(
-              fontSize: 14,
-              fontWeight: FontWeight.w400,
-              color: Colors.black45,
-            ),
+
             style: const TextStyle(
-              fontSize: 14,
-              fontWeight: FontWeight.w400,
+              fontSize: 16,
+              fontWeight: FontWeight.w600,
               color: Colors.black87,
             ),
             decoration: BoxDecoration(
               // border: ,
               border: Border.all(
-                color: Colors.black87,
+                color: Colors.white,
                 width: 0.5,
               ),
-              borderRadius: BorderRadius.circular(18),
+              borderRadius: BorderRadius.circular(10),
             ),
           ),
           const SizedBox(height: 10),
@@ -419,7 +521,7 @@ class _PaymentFormState extends State<PaymentForm> {
             totalAmount: double.parse(totalAmountCon.text),
             approved: false,
             courseId: selectedCourse!.id!,
-            studentId: selectedTrainee!.id!,
+            studentId: selectedTrainee!.id,
             programId: selectedProgram!.id!,
           );
           print(payment.toJson());
@@ -462,7 +564,7 @@ class _PaymentFormState extends State<PaymentForm> {
         ));
   }
 
-  onTapFunction({required BuildContext context}) async {
+  orDate({required BuildContext context}) async {
     DateTime? pickedDate = await showDatePicker(
       context: context,
       lastDate: DateTime.now(),
