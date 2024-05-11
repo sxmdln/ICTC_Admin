@@ -57,28 +57,28 @@ class _MainScreenState extends State<MainScreen> {
   @override
   Widget build(BuildContext context) {
     List<Widget> views = [
-      const ReportsPage(),
+      const FinancePage(),
       const TrainersPage(),
       const TraineesPage(),
       const ProgramsPage(),
       const CoursesPage(),
-      const FinancePage(),
+      const ReportsPage(),
     ];
 
     List<NavigationRailDestination> destinations = const [
       NavigationRailDestination(
         icon: Icon(
-          Icons.home_outlined,
+          Icons.grid_view_outlined,
           color: Colors.white,
           size: 30,
         ),
         selectedIcon: Icon(
-          Icons.home_rounded,
+          Icons.grid_view_rounded,
           color: Colors.white,
           size: 30,
         ),
         label: Text(
-          "Reports",
+          "Finance",
           style: TextStyle(
             fontSize: 16,
             fontWeight: FontWeight.w400,
@@ -128,12 +128,12 @@ class _MainScreenState extends State<MainScreen> {
       ),
       NavigationRailDestination(
         icon: Icon(
-          Icons.grid_view_outlined,
+          Icons.playlist_add_check_circle_outlined,
           color: Colors.white,
           size: 30,
         ),
         selectedIcon: Icon(
-          Icons.grid_view_rounded,
+          Icons.playlist_add_check_circle_rounded,
           color: Colors.white,
           size: 30,
         ),
@@ -168,17 +168,17 @@ class _MainScreenState extends State<MainScreen> {
       ),
       NavigationRailDestination(
         icon: Icon(
-          Icons.home_outlined,
+          Icons.table_chart_outlined,
           color: Colors.white,
           size: 30,
         ),
         selectedIcon: Icon(
-          Icons.home_rounded,
+          Icons.table_chart_rounded,
           color: Colors.white,
           size: 30,
         ),
         label: Text(
-          "Finance",
+          "Reports",
           style: TextStyle(
             fontSize: 16,
             fontWeight: FontWeight.w400,
@@ -230,15 +230,12 @@ class _MainScreenState extends State<MainScreen> {
     }
   }
 
-
   Future<int> getCount(String tableName) async {
-
     final supabase = Supabase.instance.client;
     final count = await supabase.from(tableName).count();
-    
+
     return count;
   }
-
 
   Container buildBar(BuildContext context) {
     return Container(
@@ -293,57 +290,8 @@ class _MainScreenState extends State<MainScreen> {
                     ],
                   ),
                 ),
-          // Row(
-          //   mainAxisSize: MainAxisSize.min,
-          //   mainAxisAlignment: MainAxisAlignment.center,
-          //   crossAxisAlignment: CrossAxisAlignment.center,
-          //   children: [
-          //     buildSearchBar(context),
-          //     SizedBox(width: MediaQuery.of(context).size.width * 0.2),
-          //     Container(
-          //       padding: const EdgeInsets.all(8),
-          //       decoration: BoxDecoration(
-          //         borderRadius: BorderRadius.circular(24),
-          //       ),
-
-          //     ),
-
-          //   ],
-          // )
         ]));
   }
-              
-  // Widget buildSearchBar(BuildContext context) {
-  //   const key = ValueKey("searchbar");
-  //   return AnimatedSwitcher(
-  //     key: key,
-  //     duration: const Duration(milliseconds: 350),
-  //     child: _selectedIndex != 0
-  //         ? SearchBar(
-  //             constraints: BoxConstraints(
-  //                 minWidth: 80.0,
-  //                 maxWidth: MediaQuery.of(context).size.width * 0.3,
-  //                 maxHeight: 70,
-  //                 minHeight: 60),
-  //             controller: searchController,
-  //             elevation: const MaterialStatePropertyAll(1),
-  //             leading: const Icon(Icons.search),
-  //             hintText: "Search ${getSearchName()}...",
-  //             textStyle: MaterialStatePropertyAll(
-  //                 Theme.of(context).textTheme.bodyMedium),
-  //             trailing: [
-  //               IconButton(
-  //                   splashRadius: 15,
-  //                   onPressed: () {
-  //                     searchController.clear();
-  //                   },
-  //                   icon: const Icon(Icons.clear))
-  //             ],
-  //           )
-  //         : Container(key: key),
-  //   );
-  // }
-  
 
   Widget buildCounter(BuildContext context, Future<int> count) {
     const key = ValueKey("counter");
@@ -356,14 +304,14 @@ class _MainScreenState extends State<MainScreen> {
         builder: (context, snapshot) {
           if (snapshot.hasData) {
             return snapshot.data != 0
-              ? Text(
+                ? Text(
                     snapshot.data.toString(),
                     style: const TextStyle(
                         fontSize: 28,
                         fontWeight: FontWeight.bold,
                         color: Colors.black26),
                   )
-              : Container(key: key);
+                : Container(key: key);
           } else {
             return Container(key: key);
           }
