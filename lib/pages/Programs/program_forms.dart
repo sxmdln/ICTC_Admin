@@ -1,16 +1,36 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:ictc_admin/models/program.dart';
+import 'package:supabase_flutter/supabase_flutter.dart';
 
 class ProgramForm extends StatefulWidget {
+
   const ProgramForm({super.key, this.program});
 
-  final Object? program;
+  final Program? program;
 
   @override
   State<ProgramForm> createState() => _ProgramFormState();
+
 }
 
 class _ProgramFormState extends State<ProgramForm> {
+
+  @override
+  void initState() {
+
+    super.initState();
+
+    print("program ${widget.program?.id}");
+
+    progTitleCon = TextEditingController(text: widget.program?.title);
+    progDescriptionCon = TextEditingController(text: widget.program?.description);
+    
+  }
+
+  final formKey = GlobalKey<FormState>();
+  late TextEditingController progTitleCon, progDescriptionCon;
+
   @override
   Widget build(BuildContext context) {
     return Form(
@@ -19,6 +39,7 @@ class _ProgramFormState extends State<ProgramForm> {
         children: [
           Flexible(
             child: CupertinoTextFormFieldRow(
+              controller: progTitleCon,
               prefix: const Row(
                 children: [
                   Text("Program Title",
@@ -32,7 +53,7 @@ class _ProgramFormState extends State<ProgramForm> {
               // padding: EdgeInsets.only(left: 90),
               placeholder: "e.g. Microcredentials",
               placeholderStyle: const TextStyle(
-                fontSize: 14, //
+                fontSize: 14,
                 fontWeight: FontWeight.w400,
                 color: Colors.black45,
               ),
@@ -56,6 +77,7 @@ class _ProgramFormState extends State<ProgramForm> {
           // DESCRIPTION
           Flexible(
             child: CupertinoTextFormFieldRow(
+              controller: progDescriptionCon,
               expands: true,
               keyboardType: TextInputType.multiline,
               minLines: null,
@@ -117,7 +139,7 @@ class _ProgramFormState extends State<ProgramForm> {
   }
 
   Widget saveButton() {
-    return FilledButton(
+    return ElevatedButton(
       style: ButtonStyle(
         backgroundColor: MaterialStateProperty.resolveWith((states) {
           if (states.contains(MaterialState.pressed)) {
@@ -126,7 +148,32 @@ class _ProgramFormState extends State<ProgramForm> {
           return Colors.green;
         }),
       ),
-      onPressed: () {},
+      
+      onPressed: () {
+        final supabase = Supabase.instance.client;
+        Program program = Program(
+          id: widget.program?.id,
+          title: progTitleCon.text,
+          description: progDescriptionCon.text,
+        );
+
+        print(program.toJson());
+
+        supabase.from('program').upsert(program.toJson()).whenComplete(() {
+          ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+              content: Text("Successfully added program: ${widget.program!.id!}."),
+              backgroundColor: Colors.green,
+            ));
+
+          Navigator.of(context).pop();
+        }).catchError((_) {
+          ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+              content: Text("Unsuccessful adding program. Please try again."),
+              backgroundColor: Colors.redAccent,
+            ));
+        });
+      },
+
       child: const Text(
         "Save",
         style: TextStyle(
@@ -134,19 +181,40 @@ class _ProgramFormState extends State<ProgramForm> {
         ),
       ),
     );
-  }
 
+  }
+  
   Widget deleteButton() {
-    return FilledButton(
+    return ElevatedButton(
         style: ButtonStyle(
           backgroundColor: MaterialStateProperty.resolveWith((states) {
             if (states.contains(MaterialState.pressed)) {
               return Colors.white70;
             }
-            return Color.fromARGB(255, 226, 226, 226);
+            return const Color.fromARGB(255, 226, 226, 226);
           }),
         ),
-        onPressed: () {},
+        onPressed: () {
+          final supabase = Supabase.instance.client;
+          final id = widget.program!.id!;
+          
+
+          supabase.from('program').delete().eq('id', id).whenComplete(() {
+            ScaffoldMessenger.of(context).showSnackBar(
+              SnackBar(
+                content: Text("Successfully deleted program ${widget.program!.toString()}."),
+                backgroundColor: Colors.orangeAccent,
+              )
+            );
+
+            Navigator.of(context).pop();
+          }).catchError((_) {
+            ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+              content: Text("Error deleting program: ${widget.program!.toString()}. Please try again."),
+              backgroundColor: Colors.redAccent,
+            ));
+          });
+        },
         child: const Text(
           "Delete",
           style: TextStyle(color: Colors.black87),

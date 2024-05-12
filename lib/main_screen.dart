@@ -1,15 +1,13 @@
 // import 'dart:async';
 // import 'package:firebase_auth/firebase_auth.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:ictc_admin/pages/auth/login_page.dart';
 import 'package:ictc_admin/pages/courses/courses_page.dart';
-import 'package:ictc_admin/pages/dashboard/dashboard.dart';
-import 'package:ictc_admin/pages/expenses/expenses_page.dart';
+import 'package:ictc_admin/pages/finance/finance_page.dart';
 import 'package:ictc_admin/pages/programs/programs_page.dart';
-import 'package:ictc_admin/pages/sales/sales_page.dart';
+import 'package:ictc_admin/pages/reports/reports_page.dart';
 import 'package:ictc_admin/pages/trainers/trainers_page.dart';
 import 'package:ictc_admin/pages/trainees/trainees_page.dart';
+import 'package:supabase_flutter/supabase_flutter.dart';
 
 class MainScreen extends StatefulWidget {
   const MainScreen({super.key});
@@ -28,6 +26,7 @@ class _MainScreenState extends State<MainScreen> {
   PageController pageController = PageController(
     keepPage: true,
   );
+
   SearchController searchController = SearchController();
 
   void onDestinationChanged(int value) {
@@ -38,19 +37,18 @@ class _MainScreenState extends State<MainScreen> {
     });
   }
 
-  // void logout() async {
-  //   await FirebaseAuth.instance.signOut();
-  // }
+  void logout() async {
+    await Supabase.instance.client.auth.signOut();
+  }
 
   String getSearchName() {
     List<String> pageNames = const [
-      "Dashboard",
-      "Trainers",
-      "Trainees",
-      "Programs",
-      "Courses",
-      "Sales",
-      "Expenses",
+      "Finances",
+      "List of Trainers",
+      "List of Trainees",
+      "List of Programs",
+      "List of Courses",
+      "List of Reports",
     ];
 
     return pageNames[_selectedIndex];
@@ -59,29 +57,28 @@ class _MainScreenState extends State<MainScreen> {
   @override
   Widget build(BuildContext context) {
     List<Widget> views = [
-      const DashboardPage(),
+      const FinancePage(),
       const TrainersPage(),
       const TraineesPage(),
       const ProgramsPage(),
       const CoursesPage(),
-      const SalesPage(),
-      const ExpensesPage(),
+      const ReportsPage(),
     ];
 
     List<NavigationRailDestination> destinations = const [
       NavigationRailDestination(
         icon: Icon(
-          Icons.home_outlined,
+          Icons.grid_view_outlined,
           color: Colors.white,
           size: 30,
         ),
         selectedIcon: Icon(
-          Icons.home_rounded,
+          Icons.grid_view_rounded,
           color: Colors.white,
           size: 30,
         ),
         label: Text(
-          "Dashboard",
+          "Finance",
           style: TextStyle(
             fontSize: 16,
             fontWeight: FontWeight.w400,
@@ -131,12 +128,12 @@ class _MainScreenState extends State<MainScreen> {
       ),
       NavigationRailDestination(
         icon: Icon(
-          Icons.grid_view_outlined,
+          Icons.playlist_add_check_circle_outlined,
           color: Colors.white,
           size: 30,
         ),
         selectedIcon: Icon(
-          Icons.grid_view_rounded,
+          Icons.playlist_add_check_circle_rounded,
           color: Colors.white,
           size: 30,
         ),
@@ -171,37 +168,17 @@ class _MainScreenState extends State<MainScreen> {
       ),
       NavigationRailDestination(
         icon: Icon(
-          Icons.monetization_on_outlined,
+          Icons.table_chart_outlined,
           color: Colors.white,
           size: 30,
         ),
         selectedIcon: Icon(
-          Icons.monetization_on,
+          Icons.table_chart_rounded,
           color: Colors.white,
           size: 30,
         ),
         label: Text(
-          "Sales",
-          style: TextStyle(
-            fontSize: 16,
-            fontWeight: FontWeight.w400,
-            color: Colors.white,
-          ),
-        ),
-      ),
-      NavigationRailDestination(
-        icon: Icon(
-          Icons.money_off_rounded,
-          color: Colors.white,
-          size: 30,
-        ),
-        selectedIcon: Icon(
-          Icons.money_off_csred,
-          color: Colors.white,
-          size: 30,
-        ),
-        label: Text(
-          "Expenses",
+          "Reports",
           style: TextStyle(
             fontSize: 16,
             fontWeight: FontWeight.w400,
@@ -211,25 +188,53 @@ class _MainScreenState extends State<MainScreen> {
       ),
     ];
 
-    return Scaffold(
-      backgroundColor: const Color(0xfff1f5fb),
-      body: Row(
-        children: [
-          Container(
-              // decoration: const BoxDecoration(
-              //     border: Border(bottom: BorderSide(width: 2))),
-              child: buildNavRail(destinations)),
-          Expanded(
-            child: Column(
+    return LayoutBuilder(
+      builder: (context, constraints) {
+        if (true) {
+          return Scaffold(
+            backgroundColor: const Color(0xfff1f5fb),
+            body: Row(
               children: [
-                buildBar(context),
-                buildPageView(views),
+                Container(
+                    // decoration: const BoxDecoration(
+                    //     border: Border(bottom: BorderSide(width: 2))),
+                    child: buildNavRail(destinations)),
+                Expanded(
+                  child: Column(
+                    children: [
+                      buildBar(context),
+                      buildPageView(views),
+                    ],
+                  ),
+                )
               ],
             ),
-          )
-        ],
-      ),
+          );
+        }
+      },
     );
+  }
+
+  String getTableName() {
+    switch (_selectedIndex) {
+      case 1:
+        return "trainer";
+      case 2:
+        return "student";
+      case 3:
+        return "program";
+      case 4:
+        return "course";
+      default:
+        return "";
+    }
+  }
+
+  Future<int> getCount(String tableName) async {
+    final supabase = Supabase.instance.client;
+    final count = await supabase.from(tableName).count();
+
+    return count;
   }
 
   Container buildBar(BuildContext context) {
@@ -239,152 +244,79 @@ class _MainScreenState extends State<MainScreen> {
         height: 80,
         child:
             Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
-           _selectedIndex != 0
-          ? AnimatedSwitcher(
-            duration: const Duration(milliseconds: 350),
-            transitionBuilder: (child, animation) => SlideTransition(
-                position: Tween<Offset>(
-                        begin: const Offset(0.0, -3),
-                        end: const Offset(0.0, 0.0))
-                    .animate(animation),
-                child: child),
-            child: Row(
-              children: [
-                Text(
-                  getSearchName(),
-                  key: ValueKey<String>(getSearchName()),
-                  style: const TextStyle(
-                      fontSize: 28,
-                      fontWeight: FontWeight.w700,
-                      color: Colors.black),
+          _selectedIndex != 0
+              ? AnimatedSwitcher(
+                  duration: const Duration(milliseconds: 350),
+                  transitionBuilder: (child, animation) => SlideTransition(
+                      position: Tween<Offset>(
+                              begin: const Offset(0.0, -3),
+                              end: const Offset(0.0, 0.0))
+                          .animate(animation),
+                      child: child),
+                  child: Row(
+                    children: [
+                      Text(
+                        getSearchName(),
+                        key: ValueKey<String>(getSearchName()),
+                        style: const TextStyle(
+                            fontSize: 28,
+                            fontWeight: FontWeight.w700,
+                            color: Colors.black),
+                      ),
+                      const SizedBox(
+                        width: 10,
+                      ),
+                      buildCounter(context, getCount(getTableName())),
+                    ],
+                  ),
+                )
+              : AnimatedSwitcher(
+                  duration: const Duration(milliseconds: 350),
+                  transitionBuilder: (child, animation) => SlideTransition(
+                      position: Tween<Offset>(
+                              begin: const Offset(0.0, -3),
+                              end: const Offset(0.0, 0.0))
+                          .animate(animation),
+                      child: child),
+                  child: const Row(
+                    children: [
+                      Text(
+                        "Finances",
+                        style: TextStyle(
+                            fontSize: 28,
+                            fontWeight: FontWeight.w700,
+                            color: Colors.black),
+                      ),
+                    ],
+                  ),
                 ),
-                const SizedBox(
-                  width: 10,
-                ),
-                buildCounter(context),
-                //TODO: need backend - FOR TOTAL# (remove it if page is on dashboard).
-              ],
-            ),
-          ) : 
-          AnimatedSwitcher(
-            duration: const Duration(milliseconds: 350),
-            transitionBuilder: (child, animation) => SlideTransition(
-                position: Tween<Offset>(
-                        begin: const Offset(0.0, -3),
-                        end: const Offset(0.0, 0.0))
-                    .animate(animation),
-                child: child),
-            child: Row(
-              children: [
-                Text(
-                  "Welcome, Admin",
-                  style: const TextStyle(
-                      fontSize: 28,
-                      fontWeight: FontWeight.w700,
-                      color: Colors.black),
-                ),
-                //TODO: need backend - FOR TOTAL# (remove it if page is on dashboard).
-              ],
-            ),
-          )
-          ,
-          Row(
-            mainAxisSize: MainAxisSize.min,
-            mainAxisAlignment: MainAxisAlignment.center,
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: [
-              buildSearchBar(context),
-              SizedBox(width: MediaQuery.of(context).size.width * 0.2),
-              Container(
-                padding: EdgeInsets.all(8),
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(24),
-                ),
-                // child: Row(
-                //   mainAxisAlignment: MainAxisAlignment.center,
-                //   crossAxisAlignment: CrossAxisAlignment.center,
-                //   children: [
-                //     FilledButton.icon(
-                //       style: ButtonStyle(
-                //         enableFeedback: false,
-                //         splashFactory: NoSplash.splashFactory,
-                //         iconSize: MaterialStateProperty.all(23),
-                //         maximumSize: MaterialStateProperty.all(Size.fromWidth(
-                //             MediaQuery.of(context).size.height * 1)),
-                //         backgroundColor: MaterialStateProperty.all(
-                //           Color(0xfff1f5fb),
-                //         ),
-                //         elevation: MaterialStateProperty.all(0.5),
-                //       ),
-
-                //       label: const Text(
-                //         "Welcome, Admin",
-                //         style: TextStyle(color: Colors.black, fontSize: 14),
-                //       ),
-                //       icon: Icon(
-                //         CupertinoIcons.person_alt_circle,
-                //         color: Color(0xff19306B),
-                //       ),
-                //       // child: ,
-                //       onPressed:
-                // () {}, //TODO: Add a dropdown for profile settings: to change admin pass and user
-                //     ),
-                //   ],
-                // ),
-              ),
-              // ProfileDropdown(
-              //   onSettingsTap: state.openSettings,
-              // )
-            ],
-          )
         ]));
   }
 
-  Widget buildSearchBar(BuildContext context) {
-    const key = ValueKey("searchbar");
-    return AnimatedSwitcher(
-      key: key,
-      duration: const Duration(milliseconds: 350),
-      child: _selectedIndex != 0
-          ? SearchBar(
-              constraints: BoxConstraints(
-                  minWidth: 80.0,
-                  maxWidth: MediaQuery.of(context).size.width * 0.3,
-                  maxHeight: 70,
-                  minHeight: 60),
-              controller: searchController,
-              elevation: const MaterialStatePropertyAll(1),
-              leading: const Icon(Icons.search),
-              hintText: "Search ${getSearchName()}...",
-              textStyle: MaterialStatePropertyAll(
-                  Theme.of(context).textTheme.bodyMedium),
-              trailing: [
-                IconButton(
-                    splashRadius: 15,
-                    onPressed: () {
-                      searchController.clear();
-                    },
-                    icon: const Icon(Icons.clear))
-              ],
-            )
-          : Container(key: key),
-    );
-  }
-
-  Widget buildCounter(BuildContext context) {
+  Widget buildCounter(BuildContext context, Future<int> count) {
     const key = ValueKey("counter");
+
     return AnimatedSwitcher(
       key: key,
       duration: const Duration(milliseconds: 350),
-      child: _selectedIndex != 0
-          ? const Text(
-              "15",
-              style: TextStyle(
-                  fontSize: 28,
-                  fontWeight: FontWeight.bold,
-                  color: Colors.black26),
-            )
-          : Container(key: key),
+      child: FutureBuilder(
+        future: count,
+        builder: (context, snapshot) {
+          if (snapshot.hasData) {
+            return snapshot.data != 0
+                ? Text(
+                    snapshot.data.toString(),
+                    style: const TextStyle(
+                        fontSize: 28,
+                        fontWeight: FontWeight.bold,
+                        color: Colors.black26),
+                  )
+                : Container(key: key);
+          } else {
+            return Container(key: key);
+          }
+        },
+      ),
     );
   }
 
@@ -463,14 +395,7 @@ class _MainScreenState extends State<MainScreen> {
                 color: Colors.white,
               ),
             ),
-            // onPressed: state.logout,
-            onPressed: () {
-              Navigator.of(context).push(
-                MaterialPageRoute(
-                  builder: (context) => const LoginPage(),
-                ),
-              );
-            },
+            onPressed: logout,
           ),
         ),
       ],
@@ -486,56 +411,5 @@ class _MainScreenState extends State<MainScreen> {
         children: views,
       ),
     );
-  }
-}
-
-class ProfileDropdown extends StatefulWidget {
-  const ProfileDropdown({
-    super.key,
-    required this.onSettingsTap,
-  });
-
-  final Function()? onSettingsTap;
-
-  @override
-  State<ProfileDropdown> createState() => _ProfileDropdownState();
-}
-
-class _ProfileDropdownState extends State<ProfileDropdown> {
-  @override
-  void initState() {
-    super.initState();
-  }
-
-  @override
-  void dispose() {
-    super.dispose();
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return Row(
-        mainAxisSize: MainAxisSize.min,
-        crossAxisAlignment: CrossAxisAlignment.center,
-        mainAxisAlignment: MainAxisAlignment.start,
-        children: <Widget>[
-          PopupMenuButton<String>(
-            offset: Offset.zero,
-            position: PopupMenuPosition.under,
-            icon: const Icon(Icons.arrow_drop_down, size: 25),
-            tooltip: 'Profile',
-            itemBuilder: (BuildContext context) {
-              return [
-                PopupMenuItem(
-                  onTap: widget.onSettingsTap,
-                  child: const Text(
-                    "Settings",
-                    style: TextStyle(fontWeight: FontWeight.w400, fontSize: 15),
-                  ),
-                ),
-              ];
-            },
-          ),
-        ]);
   }
 }

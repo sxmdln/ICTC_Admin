@@ -1,10 +1,10 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:data_table_2/data_table_2.dart';
-import 'package:ictc_admin/models/seeds.dart';
 import 'package:ictc_admin/models/trainer.dart';
 import 'package:ictc_admin/pages/trainers/trainers_forms.dart';
 import 'package:ictc_admin/pages/trainers/trainers_viewMore.dart';
+import 'package:supabase_flutter/supabase_flutter.dart';
 
 class TrainersPage extends StatefulWidget {
   const TrainersPage({super.key});
@@ -29,12 +29,13 @@ class _TrainersPageState extends State<TrainersPage>
 //   void deleteItem(int id) {
 //     items.removeWhere((item) => item.id == id);
 //   }
-  late List<Trainer> trainers;
+  late Stream<List<Trainer>> _trainers;
 
   @override
   void initState() {
-    // TODO: implement initState for populating the table with data from the backend
-    trainers = Seeds.trainers;
+    _trainers = Supabase.instance.client.from("trainer").stream(primaryKey: [
+      'id'
+    ]).map((data) => data.map((e) => Trainer.fromJson(e)).toList());
 
     super.initState();
   }
@@ -102,25 +103,37 @@ class _TrainersPageState extends State<TrainersPage>
   }
 
   Widget buildDataTable() {
-    return Expanded(
-      child: DataTable2(
-        showCheckboxColumn: false,
-        showBottomBorder: true,
-        horizontalMargin: 30,
-        isVerticalScrollBarVisible: true,
-        columns: const [
-          DataColumn2(
-              label: Text(
-            'Name of Trainer',
-          )),
-          DataColumn2(
-              label: Text(
-            'Actions',
-          )),
-        ],
-        rows: trainers.map((e) => buildRow(e)).toList(),
-      ),
-    );
+    return StreamBuilder(
+        stream: _trainers,
+        builder: (context, snapshot) {
+          if (!snapshot.hasData) {
+            return const Expanded(
+              child: Center(
+                child: CircularProgressIndicator(),
+              ),
+            );
+          }
+
+          return Expanded(
+            child: DataTable2(
+              showCheckboxColumn: false,
+              showBottomBorder: true,
+              horizontalMargin: 30,
+              isVerticalScrollBarVisible: true,
+              columns: const [
+                DataColumn2(
+                    label: Text(
+                  'Name of Trainer',
+                )),
+                DataColumn2(
+                    label: Text(
+                  'Actions',
+                )),
+              ],
+              rows: snapshot.data!.map((e) => buildRow(e)).toList(),
+            ),
+          );
+        });
   }
 
   DataRow2 buildRow(Trainer trainer) {
@@ -128,7 +141,7 @@ class _TrainersPageState extends State<TrainersPage>
       DataCell(Text(trainer.toString())),
       DataCell(Row(
         children: [
-          editButton(),
+          editButton(trainer),
           viewButton(trainer),
         ],
       )),
@@ -172,7 +185,7 @@ class _TrainersPageState extends State<TrainersPage>
     return AlertDialog(
       // shape: const RoundedRectangleBorder(
       //     borderRadius: BorderRadius.all(Radius.circular(30))),
-      contentPadding: EdgeInsets.only(left: 20, right: 30, top: 40),
+      contentPadding: const EdgeInsets.only(left: 20, right: 30, top: 40),
       title: Column(
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
@@ -197,8 +210,8 @@ class _TrainersPageState extends State<TrainersPage>
       content: Flexible(
         flex: 2,
         child: SizedBox(
-          width: 550,
-          height: MediaQuery.of(context).size.height * 0.4,
+          width: 500,
+          height: MediaQuery.of(context).size.height * 0.28,
           child: const Padding(
             padding: EdgeInsets.fromLTRB(0, 0, 0, 0),
             child: SingleChildScrollView(
@@ -216,13 +229,13 @@ class _TrainersPageState extends State<TrainersPage>
     );
   }
 
-  Widget editButton() {
+  Widget editButton(Trainer trainer) {
     return TextButton(
         onPressed: () {
           showDialog(
             context: context,
             builder: (context) {
-              return editDialog();
+              return editDialog(trainer);
             },
           );
         },
@@ -241,11 +254,11 @@ class _TrainersPageState extends State<TrainersPage>
         ));
   }
 
-  Widget editDialog() {
+  Widget editDialog(Trainer trainer) {
     return AlertDialog(
       // shape: const RoundedRectangleBorder(
       //     borderRadius: BorderRadius.all(Radius.circular(30))),
-      contentPadding: EdgeInsets.only(left: 20, right: 30, top: 40),
+      contentPadding: const EdgeInsets.only(left: 20, right: 30, top: 40),
       title: Column(
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
@@ -270,16 +283,16 @@ class _TrainersPageState extends State<TrainersPage>
       content: Flexible(
         flex: 2,
         child: SizedBox(
-          width: 550,
-          height: MediaQuery.of(context).size.height * 0.4,
-          child: const Padding(
-            padding: EdgeInsets.fromLTRB(0, 0, 0, 0),
+          width: 500,
+          height: MediaQuery.of(context).size.height * 0.28,
+          child: Padding(
+            padding: const EdgeInsets.fromLTRB(0, 0, 0, 0),
             child: SingleChildScrollView(
               child: Column(
                 mainAxisSize: MainAxisSize.min,
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
-                  TrainersForm(trainer: true),
+                  TrainersForm(trainer: trainer),
                 ],
               ),
             ),

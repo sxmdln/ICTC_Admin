@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:ictc_admin/models/course.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
+
 class CourseViewMore extends StatefulWidget {
   final Course course;
   const CourseViewMore({required this.course, super.key});
@@ -16,8 +17,8 @@ class _CourseViewMoreState extends State<CourseViewMore> {
     return Column(
       mainAxisAlignment: MainAxisAlignment.start,
       children: [
-        SizedBox(height: 45),
-        Row(
+        const SizedBox(height: 45),
+        const Row(
           mainAxisAlignment: MainAxisAlignment.center,
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
@@ -25,7 +26,7 @@ class _CourseViewMoreState extends State<CourseViewMore> {
                 style: TextStyle(fontWeight: FontWeight.w500, fontSize: 24)),
           ],
         ),
-        SizedBox(height: 45),
+        const SizedBox(height: 45),
         SizedBox(
           width: 400,
           height: 500,
@@ -51,7 +52,7 @@ class _CourseViewMoreState extends State<CourseViewMore> {
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
-                        Text(widget.course.title,
+                        Text(widget.course.title.toString(),
                             style: const TextStyle(
                                 fontSize: 24, fontWeight: FontWeight.w600)),
                         Row(
@@ -74,7 +75,7 @@ class _CourseViewMoreState extends State<CourseViewMore> {
                     ),
                     const SizedBox(height: 20),
                     Text(
-                      widget.course.description,
+                      widget.course.description ?? "No description set",
                       maxLines: 3,
                       overflow: TextOverflow.ellipsis,
                       textHeightBehavior: const TextHeightBehavior(

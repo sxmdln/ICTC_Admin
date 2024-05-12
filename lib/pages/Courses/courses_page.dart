@@ -2,9 +2,12 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:data_table_2/data_table_2.dart';
 import 'package:ictc_admin/models/course.dart';
-import 'package:ictc_admin/models/seeds.dart';
+import 'package:ictc_admin/models/payment.dart';
+import 'package:ictc_admin/models/register.dart';
+import 'package:ictc_admin/pages/Courses/course_details.dart';
 import 'package:ictc_admin/pages/courses/course_viewMore.dart';
 import 'package:ictc_admin/pages/courses/course_forms.dart';
+import 'package:supabase_flutter/supabase_flutter.dart';
 
 class CoursesPage extends StatefulWidget {
   const CoursesPage({super.key});
@@ -13,33 +16,34 @@ class CoursesPage extends StatefulWidget {
   State<CoursesPage> createState() => _CoursesPageState();
 }
 
-class _CoursesPageState extends State<CoursesPage>
-    with AutomaticKeepAliveClientMixin {
+class _CoursesPageState extends State<CoursesPage> {
   CourseViewMore? courseProfileWidget;
 
-  late List<Course> courses;
+  late Payment? payment;
+  late Stream<List<Course>> _courses;
 
   @override
   void initState() {
-    // TODO: implement initState
-    courses = Seeds.courses;
+    _courses = Supabase.instance.client.from('course').stream(primaryKey: [
+      'id'
+    ]).map((data) => data.map((e) => Course.fromJson(e)).toList());
+
     super.initState();
   }
 
-  @override
-  bool get wantKeepAlive => true;
-  onListRowTap(Course course) {
-    setState(() => courseProfileWidget =
-        CourseViewMore(course: course, key: ValueKey<Course>(course)));
-  }
+  // @override
+  // bool get wantKeepAlive => true;
+  // onListRowTap(Course course) {
+  //   setState(() => courseProfileWidget =
+  //       CourseViewMore(course: course, key: ValueKey<Course>(course)));
+  // }
 
-  void closeProfile() {
-    setState(() => courseProfileWidget = null);
-  }
+  // void closeProfile() {
+  //   setState(() => courseProfileWidget = null);
+  // }
 
   @override
   Widget build(BuildContext context) {
-    super.build(context);
     return Row(
       children: [
         Flexible(
@@ -63,56 +67,68 @@ class _CoursesPageState extends State<CoursesPage>
         const VerticalDivider(
           color: Colors.black87,
           thickness: 0.1,
-        ),
-        courseProfileWidget != null
-            ? Flexible(
-                flex: 1,
-                child: Stack(
-                  children: [
-                    courseProfileWidget!,
-                    Container(
-                      padding: const EdgeInsets.only(top: 16, right: 16),
-                      alignment: Alignment.topRight,
-                      child: IconButton(
-                          onPressed: closeProfile,
-                          icon: const Icon(Icons.close)),
-                    ),
-                  ],
-                ),
-              )
-            : Container(),
+        )
+        // ),
+        // courseProfileWidget != null
+        //     ? Flexible(
+        //         flex: 1,
+        //         child: Stack(
+        //           children: [
+        //             courseProfileWidget!,
+        //             Container(
+        //               padding: const EdgeInsets.only(top: 16, right: 16),
+        //               alignment: Alignment.topRight,
+        //               child: IconButton(
+        //                   onPressed: closeProfile,
+        //                   icon: const Icon(Icons.close)),
+        //             ),
+        //           ],
+        //         ),
+        //       )
+        // : Container(),
       ],
     );
   }
 
   Widget buildDataTable() {
-    return Expanded(
-      child: DataTable2(
-        showCheckboxColumn: false,
-        showBottomBorder: true,
-        horizontalMargin: 30,
-        isVerticalScrollBarVisible: true,
-        columns: const [
-          DataColumn2(label: Text('Title')),
-          DataColumn2(label: Text('Cost')),
-          DataColumn2(label: Text('')),
-          DataColumn2(label: Text('Option')),
-        ],
-        rows: courses.map((e) => buildRow(e)).toList(),
-      ),
-    );
+    return StreamBuilder(
+        stream: _courses,
+        builder: (context, snapshot) {
+          if (!snapshot.hasData) {
+            return const Expanded(
+              child: Center(
+                child: CircularProgressIndicator(),
+              ),
+            );
+          }
+
+          return Expanded(
+            child: DataTable2(
+              showCheckboxColumn: false,
+              showBottomBorder: true,
+              horizontalMargin: 30,
+              isVerticalScrollBarVisible: true,
+              columns: const [
+                DataColumn2(label: Text('Title')),
+                DataColumn2(label: Text('Cost')),
+                DataColumn2(label: Text('')),
+                DataColumn2(label: Text('Option')),
+              ],
+              rows: snapshot.data!.map((e) => buildRow(e)).toList(),
+            ),
+          );
+        });
   }
 
   DataRow2 buildRow(Course course) {
     return DataRow2(onSelectChanged: (selected) {}, cells: [
-      DataCell(Text(course.title)),
+      DataCell(Text(course.title.toString())),
       DataCell(Text(course.cost.toString())),
       const DataCell(Text('')),
       DataCell(Row(
         children: [
-          editButton(),
-          const Padding(padding: EdgeInsets.all(5)),
-          viewButton(course)
+          editButton(course),
+          viewButton(course),
         ],
       )),
     ]);
@@ -154,12 +170,11 @@ class _CoursesPageState extends State<CoursesPage>
     );
   }
 
-  
   Widget addDialog() {
     return AlertDialog(
       // shape: const RoundedRectangleBorder(
       //     borderRadius: BorderRadius.all(Radius.circular(30))),
-      contentPadding: EdgeInsets.only(left: 20, right: 30, top: 40),
+      contentPadding: const EdgeInsets.only(left: 20, right: 30, top: 40),
       title: Column(
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
@@ -173,7 +188,7 @@ class _CoursesPageState extends State<CoursesPage>
             ),
           ),
           const Text(
-            "Add a Program",
+            "Add a Course",
             style: TextStyle(
                 color: Colors.black87,
                 fontSize: 24,
@@ -185,7 +200,7 @@ class _CoursesPageState extends State<CoursesPage>
         flex: 2,
         child: SizedBox(
           width: 550,
-          height: MediaQuery.of(context).size.height * 0.4,
+          height: MediaQuery.of(context).size.height * 0.6,
           child: const Padding(
             padding: EdgeInsets.fromLTRB(0, 0, 0, 0),
             child: SingleChildScrollView(
@@ -203,14 +218,13 @@ class _CoursesPageState extends State<CoursesPage>
     );
   }
 
-
-  Widget editButton() {
+  Widget editButton(Course course) {
     return TextButton(
         onPressed: () {
           showDialog(
             context: context,
             builder: (context) {
-              return editDialog();
+              return editDialog(course);
             },
           );
         },
@@ -229,12 +243,11 @@ class _CoursesPageState extends State<CoursesPage>
         ));
   }
 
-
-  Widget editDialog() {
+  Widget editDialog(Course course) {
     return AlertDialog(
       // shape: const RoundedRectangleBorder(
       //     borderRadius: BorderRadius.all(Radius.circular(30))),
-      contentPadding: EdgeInsets.only(left: 20, right: 30, top: 40),
+      contentPadding: const EdgeInsets.only(left: 20, right: 30, top: 40),
       title: Column(
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
@@ -248,7 +261,7 @@ class _CoursesPageState extends State<CoursesPage>
             ),
           ),
           const Text(
-            "Edit a Program",
+            "Edit a Course",
             style: TextStyle(
                 color: Colors.black87,
                 fontSize: 24,
@@ -260,15 +273,15 @@ class _CoursesPageState extends State<CoursesPage>
         flex: 2,
         child: SizedBox(
           width: 550,
-          height: MediaQuery.of(context).size.height * 0.4,
-          child: const Padding(
-            padding: EdgeInsets.fromLTRB(0, 0, 0, 0),
+          height: MediaQuery.of(context).size.height * 0.6,
+          child: Padding(
+            padding: const EdgeInsets.fromLTRB(0, 0, 0, 0),
             child: SingleChildScrollView(
               child: Column(
                 mainAxisSize: MainAxisSize.min,
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
-                  CourseForm(),
+                  CourseForm(course: course),
                 ],
               ),
             ),
@@ -281,17 +294,12 @@ class _CoursesPageState extends State<CoursesPage>
   Widget viewButton(Course course) {
     return TextButton(
         onPressed: () {
-          onListRowTap(course);
-          // showDialog(
-          //   context: context,
-          //   builder: (context) {
-          //     return AlertDialog(
-          //       contentPadding: const EdgeInsets.all(0),
-          //       backgroundColor: Colors.transparent,
-          //       content: CourseViewMore(course: course),
-          //     );
-          //   },
-          // );
+          // var validRegisterObject;
+          Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (context) => CourseDetails(course: course)
+              ));
         },
         child: const Row(
           children: [

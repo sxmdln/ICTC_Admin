@@ -1,15 +1,32 @@
+import 'package:json_annotation/json_annotation.dart';
+
+part 'program.g.dart';
+
+@JsonSerializable(
+  includeIfNull: false
+)
 class Program {
-
-  int id;
+  final int? id;
+  
+  @JsonKey(name: "title")
   String title;
-  String description;
 
-  Program(
-    {
-      required this.id,
-      required this.title,
-      required this.description,
-    }
-  );
+  @JsonKey(name: "description")
+  String? description;
+
+  Program({
+    this.id,
+    required this.title,
+    this.description,
+  });
+
+  factory Program.fromJson(Map<String, dynamic> json) => _$ProgramFromJson(json);
+
+  Map<String, dynamic> toJson() => _$ProgramToJson(this);
+
+  @override
+  String toString() {
+    return title;
+  }
 
 }

@@ -1,42 +1,43 @@
 import 'package:ictc_admin/models/course.dart';
 import 'package:ictc_admin/models/expense.dart';
 import 'package:ictc_admin/models/program.dart';
-import 'package:ictc_admin/models/sale.dart';
+import 'package:ictc_admin/models/report.dart';
+import 'package:ictc_admin/models/payment.dart';
 import 'package:ictc_admin/models/trainee.dart';
 import 'package:ictc_admin/models/trainer.dart';
 
 class Seeds {
-  static List<Trainer> trainers = [
+  static final List<Trainer> _trainers = [
     Trainer(
         id: 1,
         firstName: "John",
         middleName: "Ignatius",
         lastName: "Doe",
-        emailAddress: "joidoe@exam.ple",
+        email: "joidoe@exam.ple",
         contactNumber: "09123456789"),
     Trainer(
         id: 2,
         firstName: "Jane",
         middleName: "Ignatius",
         lastName: "Doe",
-        emailAddress: "jaidoe@exam.ple",
+        email: "jaidoe@exam.ple",
         contactNumber: "09123456789"),
     Trainer(
         id: 3,
         firstName: "Jiggy",
         middleName: "Ignatius",
         lastName: "Bayola",
-        emailAddress: "jibayola@exam.ple",
+        email: "jibayola@exam.ple",
         contactNumber: "09123456789"),
   ];
 
-  static List<Trainee> trainees = [
+  static final List<Trainee> _trainees = [
     Trainee(
       id: 202010824,
       firstName: "Samantha",
       middleName: "Largo",
       lastName: "De Las Nieves",
-      emailAddress: "sdelasnieves@gbox.adnu.edu.ph",
+      email: "sdelasnieves@gbox.adnu.edu.ph",
       contactNumber: "09123456789",
     ),
     Trainee(
@@ -44,14 +45,16 @@ class Seeds {
       firstName: "Aaron",
       middleName: "Mangurali",
       lastName: "Serrano",
-      emailAddress: "aaserrano@gbox.adnu.edu.ph",
+      email: "aaserrano@gbox.adnu.edu.ph",
       contactNumber: "09123456789",
     ),
   ];
 
-  static List<Course> courses = [
+  static final List<Course> _courses = [
     Course(
       id: 1,
+      programId: -1,
+      trainerId: -1,
       title: 'Hacking Course',
       description: 'Lorem ipsum please enroll now',
       cost: 20,
@@ -61,7 +64,7 @@ class Seeds {
     ),
   ];
 
-  static List<Program> programs = [
+  static final List<Program> _programs = [
     Program(
       id: 1,
       title: 'Microcredential Program',
@@ -69,20 +72,52 @@ class Seeds {
     ),
   ];
 
-  static List<Sale> sales = [
-    Sale(
+  static final List<Payment> _payments = [
+    Payment(
       id: 1,
-      firstName: 'Samantha',
-      middleName: "Largo",
-      lastName: "De Las Nieves",
-      schedule: 'March 4, 2023',
-      totalStudents: 4,
-      saleTotal: 2000,
-      discountTotal: 200,
+      studentId: _trainees[0].id,
+      programId: _programs[0].id!,
+      courseId: _courses[0].id!,
+      discount: 250,
+      orDate: DateTime.utc(2024, 4, 1),
+      orNumber: 'OR2312312',
+      totalAmount: 2250.0,
+      approved: true,
     ),
   ];
 
-  static List<Expense> expenses = [
-    Expense(id: 1, name: 'Snacks', date: 'March 4, 2023', cost: 1100)
+  static final List<Expense> _expenses = [
+    Expense(
+      id: 1,
+      particulars: 'Foodpanda Snacks',
+      programId: _programs[0].id!,
+      courseId: _courses[0].id!,
+      orNumber: 'FOODPANDA1234',
+      orDate: DateTime.utc(2024, 4, 1),
+      amount: 1000,
+    )
   ];
+
+  static final List<Report> _reports = [
+  ];
+
+  static Stream<List<Trainer>> trainerStream() {
+    return Stream.value(_trainers);
+  }
+
+  static Stream<List<Payment>> paymentStream() {
+    return Stream.value(_payments);
+  }
+
+  static Stream<List<Expense>> expenseStream() {
+    return Stream.value(_expenses);
+  }
+
+  static Stream<List<Course>> courseStream() {
+    return Stream.value(_courses);
+  }
+
+  static Stream<List<Report>> reportStream() {
+    return Stream.value(_reports);
+  }
 }

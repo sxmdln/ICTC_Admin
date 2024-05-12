@@ -1,19 +1,39 @@
-import 'dart:developer';
-
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
+import 'package:ictc_admin/models/course.dart';
+import 'package:ictc_admin/models/trainer.dart';
+import 'package:supabase_flutter/supabase_flutter.dart';
 
 class TrainersForm extends StatefulWidget {
   const TrainersForm({super.key, this.trainer});
 
-  final Object? trainer;
+  final Trainer? trainer;
 
   @override
   State<TrainersForm> createState() => _TrainersFormState();
 }
 
 class _TrainersFormState extends State<TrainersForm> {
+  @override
+  void initState() {
+    super.initState();
+
+    print("trainer ${widget.trainer?.id}");
+
+    firstNameCon = TextEditingController(text: widget.trainer?.firstName);
+    lastNameCon = TextEditingController(text: widget.trainer?.lastName);
+    contactCon = TextEditingController(text: widget.trainer?.contactNumber);
+    emailCon = TextEditingController(text: widget.trainer?.email);
+    // TODO: set current course if this is called with a trainer
+    // selectedCourse = widget.trainer?.course;
+  }
+
+  Course? selectedCourse;
+
+  final formKey = GlobalKey<FormState>();
+  late TextEditingController firstNameCon, lastNameCon, contactCon, emailCon;
+
   @override
   Widget build(BuildContext context) {
     return Form(
@@ -60,6 +80,7 @@ class _TrainersFormState extends State<TrainersForm> {
             children: <Widget>[
               Flexible(
                 child: CupertinoTextFormFieldRow(
+                  controller: firstNameCon,
                   prefix: const Row(
                     children: [
                       Text("First Name",
@@ -97,6 +118,7 @@ class _TrainersFormState extends State<TrainersForm> {
               // LAST NAME
               Flexible(
                 child: CupertinoTextFormFieldRow(
+                  controller: lastNameCon,
                   prefix: const Row(
                     children: [
                       Text("Last Name",
@@ -135,6 +157,8 @@ class _TrainersFormState extends State<TrainersForm> {
 
           //EMAIL ADDRESS
           CupertinoTextFormFieldRow(
+            controller: emailCon,
+
             prefix: const Row(
               children: [
                 Text("Email Address",
@@ -171,6 +195,8 @@ class _TrainersFormState extends State<TrainersForm> {
           // CONTACT NUMBER
 
           CupertinoTextFormFieldRow(
+            controller: contactCon,
+
             prefix: const Row(
               children: [
                 Text("Contact Number",
@@ -204,11 +230,37 @@ class _TrainersFormState extends State<TrainersForm> {
             ),
           ),
 
-          // TODO: add a dropdown on picking a course for the trainer!
-          SizedBox(height: 20),
+          // FutureBuilder(
+          //     future: Supabase.instance.client
+          //         .from('course')
+          //         .select()
+          //         .withConverter(
+          //             (data) => data.map((e) => Course.fromJson(e)).toList()),
+          //     builder: (context, snapshot) {
+          //       if (!snapshot.hasData) {
+          //         return const CircularProgressIndicator();
+          //       }
+
+          //       return DropdownButton(
+          //         isExpanded: false,
+          //         isDense: false,
+          //         borderRadius: BorderRadius.circular(18),
+          //         disabledHint: const Text(
+          //           "No courses yet.",
+          //           style: TextStyle(fontSize: 14),
+          //         ),
+          //         onChanged: (course) =>
+          //             setState(() => selectedCourse = course),
+          //         value: selectedCourse,
+          //         items: snapshot.data
+          //             ?.map((e) => DropdownMenuItem(child: Text(e.title.toString())))
+          //             .toList(),
+          //       );
+          //     }),
+          
+          const SizedBox(height: 20),
           Row(
             children: [
-              // Expanded(child: SizedBox(child: cancelButton())),
               if (widget.trainer != null)
                 Expanded(
                   flex: 1,
@@ -236,7 +288,32 @@ class _TrainersFormState extends State<TrainersForm> {
           return Colors.green;
         }),
       ),
-      onPressed: () {},
+      onPressed: () {
+        final supabase = Supabase.instance.client;
+        Trainer trainer = Trainer(
+          id: widget.trainer?.id,
+          firstName: firstNameCon.text,
+          // TODO: middle name texteditingcontroller
+          // middleName: /* controller */,
+          lastName: lastNameCon.text,
+          email: emailCon.text,
+          contactNumber: contactCon.text,
+        );
+
+        supabase.from('trainer').upsert(trainer.toJson()).whenComplete(() {
+          ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+              content: Text("Successfully added trainer: ${widget.trainer!.toString()}."),
+              backgroundColor: Colors.green,
+            ));
+
+          Navigator.of(context).pop();
+        }).catchError((_) {
+          ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+              content: Text("Unsuccessful adding trainer. Please try again."),
+              backgroundColor: Colors.redAccent,
+            ));
+        });
+      },
       child: const Text(
         "Save",
         style: TextStyle(
@@ -253,10 +330,27 @@ class _TrainersFormState extends State<TrainersForm> {
             if (states.contains(MaterialState.pressed)) {
               return Colors.white70;
             }
-            return Color.fromARGB(255, 226, 226, 226);
+            return const Color.fromARGB(255, 226, 226, 226);
           }),
         ),
-        onPressed: () {},
+        onPressed: () {
+          final supabase = Supabase.instance.client;
+          final id = widget.trainer!.id!;
+
+          supabase.from('trainer').delete().eq('id', id).whenComplete(() {
+            ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+              content: Text("Successfully deleted trainer: ${widget.trainer!.toString()}."),
+              backgroundColor: Colors.green,
+            ));
+
+            Navigator.of(context).pop();
+          }).catchError((_) {
+            ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+              content: Text("Unsuccessful deleting trainer: ${widget.trainer!.toString()}. Please try again."),
+              backgroundColor: Colors.green,
+            ));
+          });
+        },
         child: const Text(
           "Delete",
           style: TextStyle(color: Colors.black87),

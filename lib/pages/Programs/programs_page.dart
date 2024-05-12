@@ -2,9 +2,9 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:data_table_2/data_table_2.dart';
 import 'package:ictc_admin/models/program.dart';
-import 'package:ictc_admin/models/seeds.dart';
 import 'package:ictc_admin/pages/programs/program_forms.dart';
 import 'package:ictc_admin/pages/programs/programs_viewMore.dart';
+import 'package:supabase_flutter/supabase_flutter.dart';
 
 class ProgramsPage extends StatefulWidget {
   const ProgramsPage({super.key});
@@ -16,12 +16,14 @@ class ProgramsPage extends StatefulWidget {
 class _ProgramsPageState extends State<ProgramsPage>
     with AutomaticKeepAliveClientMixin {
   ProgramViewMore? programProfileWidget;
-  late List<Program> programs;
+  late Stream<List<Program>> _programs;
 
   @override
   void initState() {
-    // TODO: implement initState
-    programs = Seeds.programs;
+    _programs = Supabase.instance.client.from('program').stream(primaryKey: [
+      'id'
+    ]).map((data) => data.map((e) => Program.fromJson(e)).toList());
+
     super.initState();
   }
 
@@ -85,20 +87,32 @@ class _ProgramsPageState extends State<ProgramsPage>
   }
 
   Widget buildDataTable() {
-    return Expanded(
-      child: DataTable2(
-        showCheckboxColumn: false,
-        showBottomBorder: true,
-        horizontalMargin: 30,
-        isVerticalScrollBarVisible: true,
-        columns: const [
-          DataColumn2(label: Text('Title')),
-          DataColumn2(label: Text('')),
-          DataColumn2(label: Text('Option')),
-        ],
-        rows: programs.map((e) => buildRow(e)).toList(),
-      ),
-    );
+    return StreamBuilder(
+        stream: _programs,
+        builder: (context, snapshot) {
+          if (!snapshot.hasData) {
+            return const Expanded(
+              child: Center(
+                child: CircularProgressIndicator(),
+              ),
+            );
+          }
+
+          return Expanded(
+            child: DataTable2(
+              showCheckboxColumn: false,
+              showBottomBorder: true,
+              horizontalMargin: 30,
+              isVerticalScrollBarVisible: true,
+              columns: const [
+                DataColumn2(label: Text('Title')),
+                DataColumn2(label: Text('')),
+                DataColumn2(label: Text('Option')),
+              ],
+              rows: snapshot.data!.map((e) => buildRow(e)).toList(),
+            ),
+          );
+        });
   }
 
   DataRow2 buildRow(Program program) {
@@ -107,7 +121,7 @@ class _ProgramsPageState extends State<ProgramsPage>
       const DataCell(Text('')),
       DataCell(Row(
         children: [
-          editButton(),
+          editButton(program),
           const Padding(padding: EdgeInsets.all(5)),
           viewButton(program)
         ],
@@ -155,7 +169,7 @@ class _ProgramsPageState extends State<ProgramsPage>
     return AlertDialog(
       // shape: const RoundedRectangleBorder(
       //     borderRadius: BorderRadius.all(Radius.circular(30))),
-      contentPadding: EdgeInsets.only(left: 20, right: 30, top: 40),
+      contentPadding: const EdgeInsets.only(left: 20, right: 30, top: 40),
       title: Column(
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
@@ -180,8 +194,8 @@ class _ProgramsPageState extends State<ProgramsPage>
       content: Flexible(
         flex: 2,
         child: SizedBox(
-          width: 550,
-          height: MediaQuery.of(context).size.height * 0.4,
+          width: 400,
+          height: MediaQuery.of(context).size.height * 0.28,
           child: const Padding(
             padding: EdgeInsets.fromLTRB(0, 0, 0, 0),
             child: SingleChildScrollView(
@@ -199,14 +213,13 @@ class _ProgramsPageState extends State<ProgramsPage>
     );
   }
 
-
-  Widget editButton() {
+  Widget editButton(Program program) {
     return TextButton(
         onPressed: () {
           showDialog(
             context: context,
             builder: (context) {
-              return editDialog();
+              return editDialog(program);
             },
           );
         },
@@ -225,11 +238,11 @@ class _ProgramsPageState extends State<ProgramsPage>
         ));
   }
 
-  Widget editDialog() {
+  Widget editDialog(Program program) {
     return AlertDialog(
       // shape: const RoundedRectangleBorder(
       //     borderRadius: BorderRadius.all(Radius.circular(30))),
-      contentPadding: EdgeInsets.only(left: 20, right: 30, top: 40),
+      contentPadding: const EdgeInsets.only(left: 20, right: 30, top: 40),
       title: Column(
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
@@ -254,16 +267,16 @@ class _ProgramsPageState extends State<ProgramsPage>
       content: Flexible(
         flex: 2,
         child: SizedBox(
-          width: 550,
-          height: MediaQuery.of(context).size.height * 0.4,
-          child: const Padding(
-            padding: EdgeInsets.fromLTRB(0, 0, 0, 0),
+          width: 400,
+          height: MediaQuery.of(context).size.height * 0.28,
+          child: Padding(
+            padding: const EdgeInsets.fromLTRB(0, 0, 0, 0),
             child: SingleChildScrollView(
               child: Column(
                 mainAxisSize: MainAxisSize.min,
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
-                  ProgramForm(),
+                  ProgramForm(program: program),
                 ],
               ),
             ),
