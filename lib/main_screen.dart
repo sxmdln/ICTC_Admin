@@ -1,12 +1,13 @@
 // import 'dart:async';
 // import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:ictc_admin/pages/courses/courses_page.dart';
 import 'package:ictc_admin/pages/dashboard/dashboard.dart';
 import 'package:ictc_admin/pages/finance/finance_page.dart';
 import 'package:ictc_admin/pages/programs/programs_page.dart';
 import 'package:ictc_admin/pages/trainers/trainers_page.dart';
 import 'package:ictc_admin/pages/trainees/trainees_page.dart';
+import 'package:ictc_admin/pages/Courses/courses_page.dart';
+import 'package:ictc_admin/pages/Vouchers/vouchers_page.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:html_unescape/html_unescape.dart';
 
@@ -49,6 +50,7 @@ class _MainScreenState extends State<MainScreen> {
       "Trainees",
       "Programs",
       "Courses",
+      "Vouchers",
     ];
 
     return pageNames[_selectedIndex];
@@ -62,6 +64,7 @@ class _MainScreenState extends State<MainScreen> {
       const TraineesPage(),
       const ProgramsPage(),
       const CoursesPage(),
+      const VouchersPage(),
     ];
 
     List<NavigationRailDestination> destinations = const [
@@ -165,6 +168,26 @@ class _MainScreenState extends State<MainScreen> {
           ),
         ),
       ),
+      NavigationRailDestination(
+        icon: Icon(
+          Icons.confirmation_num,
+          color: Colors.white,
+          size: 30,
+        ),
+        selectedIcon: Icon(
+          Icons.confirmation_num,
+          color: Colors.white,
+          size: 30,
+        ),
+        label: Text(
+          "Vouchers",
+          style: TextStyle(
+            fontSize: 16,
+            fontWeight: FontWeight.w400,
+            color: Colors.white,
+          ),
+        ),
+      ),
     ];
 
     return LayoutBuilder(
@@ -222,6 +245,8 @@ class _MainScreenState extends State<MainScreen> {
         return "program";
       case 4:
         return "course";
+      case 5:
+        return "voucher";
       default:
         return "";
     }
@@ -494,6 +519,7 @@ class _MainScreenState extends State<MainScreen> {
     );
   }
 }
+
 
 class ProfileDropdown extends StatefulWidget {
   const ProfileDropdown({
