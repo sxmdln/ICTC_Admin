@@ -30,13 +30,18 @@ class _TrainersPageState extends State<TrainersPage>
 //     items.removeWhere((item) => item.id == id);
 //   }
   late Stream<List<Trainer>> _trainers;
+  late List<Trainer> _allTrainers;
+  late List<Trainer> _filteredTrainers;
+  String _searchQuery = "";
 
   @override
   void initState() {
-    _trainers = Supabase.instance.client.from("trainer").stream(primaryKey: [
-      'id'
-    ]).map((data) => data.map((e) => Trainer.fromJson(e)).toList());
-
+    _trainers = Supabase.instance.client.from('trainer').stream(primaryKey: ['id']).map((data) {
+      final trainers = data.map((e) => Trainer.fromJson(e)).toList();
+      _allTrainers = trainers;
+      _filteredTrainers = trainers;
+      return trainers;
+    });
     super.initState();
   }
 
@@ -50,6 +55,20 @@ class _TrainersPageState extends State<TrainersPage>
   void closeProfile() {
     setState(() => trainerProfileWidget = null);
   }
+
+  void _filterTrainers(String query) {
+  final filtered = _allTrainers.where((trainee) {
+    final firstNameLower = trainee.firstName.toLowerCase();
+    final lastNameLower = trainee.lastName.toLowerCase();
+    final searchLower = query.toLowerCase();
+    return firstNameLower.contains(searchLower) || lastNameLower.contains(searchLower);
+  }).toList();
+
+  setState(() {
+    _searchQuery = query;
+    _filteredTrainers = filtered;
+  });
+}
 
   @override
   Widget build(BuildContext context) {
@@ -70,7 +89,8 @@ class _TrainersPageState extends State<TrainersPage>
                   children: [addButton()],
                 ),
               ),
-              buildDataTable(),
+              buildSearchBar(),
+              buildDataTable()
             ],
           ),
         ),
@@ -102,6 +122,24 @@ class _TrainersPageState extends State<TrainersPage>
     );
   }
 
+  
+  Widget buildSearchBar() {
+    return Padding(
+      padding: const EdgeInsets.all(8.0),
+      child: TextField(
+        decoration: InputDecoration(
+          hintText: "Search Trainer...",
+          prefixIcon: Icon(Icons.search),
+          border: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(8.0),
+          ),
+        ),
+        onChanged: (query) => _filterTrainers(query),
+      ),
+    );
+  }
+
+
   Widget buildDataTable() {
     return StreamBuilder(
         stream: _trainers,
@@ -130,7 +168,8 @@ class _TrainersPageState extends State<TrainersPage>
                   'Actions',
                 )),
               ],
-              rows: snapshot.data!.map((e) => buildRow(e)).toList(),
+              // rows: snapshot.data!.map((e) => buildRow(e)).toList(),
+              rows: _filteredTrainers.map((trainer) => buildRow(trainer)).toList(),
             ),
           );
         });

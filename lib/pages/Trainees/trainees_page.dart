@@ -57,7 +57,6 @@ void _filterTrainees(String query) {
 }
 
 
-
   @override
   Widget build(BuildContext context) {
     super.build(context);
