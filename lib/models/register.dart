@@ -29,4 +29,9 @@ class Register {
   factory Register.fromJson(Map<String, dynamic> json) => _$RegisterFromJson(json);
 
   Map<String, dynamic> toJson() => _$RegisterToJson(this);
+
+  @override
+  String toString() {
+    return '$studentId.firstName $studentId.lastName';
+  }
 }

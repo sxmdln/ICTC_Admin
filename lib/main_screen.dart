@@ -1,15 +1,15 @@
 // import 'dart:async';
 // import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:ictc_admin/pages/dashboard/dashboard.dart';
+import 'package:ictc_admin/pages/courses/courses_page.dart';
 import 'package:ictc_admin/pages/finance/finance_page.dart';
 import 'package:ictc_admin/pages/programs/programs_page.dart';
+import 'package:ictc_admin/pages/reports/reports_page.dart';
 import 'package:ictc_admin/pages/trainers/trainers_page.dart';
 import 'package:ictc_admin/pages/trainees/trainees_page.dart';
-import 'package:ictc_admin/pages/Courses/courses_page.dart';
+import 'package:ictc_admin/pages/courses/courses_page.dart';
 import 'package:ictc_admin/pages/Vouchers/vouchers_page.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
-import 'package:html_unescape/html_unescape.dart';
 
 class MainScreen extends StatefulWidget {
   const MainScreen({super.key});
@@ -45,12 +45,12 @@ class _MainScreenState extends State<MainScreen> {
 
   String getSearchName() {
     List<String> pageNames = const [
-      "Dashboard",
-      "Trainers",
-      "Trainees",
-      "Programs",
-      "Courses",
-      "Vouchers",
+      "Finances",
+      "List of Trainers",
+      "List of Trainees",
+      "List of Programs",
+      "List of Courses",
+      "List of Reports",
     ];
 
     return pageNames[_selectedIndex];
@@ -64,23 +64,23 @@ class _MainScreenState extends State<MainScreen> {
       const TraineesPage(),
       const ProgramsPage(),
       const CoursesPage(),
-      const VouchersPage(),
+      const ReportsPage(),
     ];
 
     List<NavigationRailDestination> destinations = const [
       NavigationRailDestination(
         icon: Icon(
-          Icons.home_outlined,
+          Icons.grid_view_outlined,
           color: Colors.white,
           size: 30,
         ),
         selectedIcon: Icon(
-          Icons.home_rounded,
+          Icons.grid_view_rounded,
           color: Colors.white,
           size: 30,
         ),
         label: Text(
-          "Reports",
+          "Finance",
           style: TextStyle(
             fontSize: 16,
             fontWeight: FontWeight.w400,
@@ -130,12 +130,12 @@ class _MainScreenState extends State<MainScreen> {
       ),
       NavigationRailDestination(
         icon: Icon(
-          Icons.grid_view_outlined,
+          Icons.playlist_add_check_circle_outlined,
           color: Colors.white,
           size: 30,
         ),
         selectedIcon: Icon(
-          Icons.grid_view_rounded,
+          Icons.playlist_add_check_circle_rounded,
           color: Colors.white,
           size: 30,
         ),
@@ -170,17 +170,17 @@ class _MainScreenState extends State<MainScreen> {
       ),
       NavigationRailDestination(
         icon: Icon(
-          Icons.confirmation_num,
+          Icons.table_chart_outlined,
           color: Colors.white,
           size: 30,
         ),
         selectedIcon: Icon(
-          Icons.confirmation_num,
+          Icons.table_chart_rounded,
           color: Colors.white,
           size: 30,
         ),
         label: Text(
-          "Vouchers",
+          "Reports",
           style: TextStyle(
             fontSize: 16,
             fontWeight: FontWeight.w400,
@@ -213,27 +213,9 @@ class _MainScreenState extends State<MainScreen> {
             ),
           );
         }
-
-        return Scaffold(
-          body: buildPageView(views),
-          bottomNavigationBar: BottomNavigationBar(
-            items: const [
-              BottomNavigationBarItem(icon: Icon(Icons.home), label: "Reports"),
-              BottomNavigationBarItem(
-                  icon: Icon(Icons.person), label: "Trainers"),
-              BottomNavigationBarItem(
-                  icon: Icon(Icons.group), label: "Students"),
-              BottomNavigationBarItem(
-                  icon: Icon(Icons.grid_view), label: "Programs"),
-              BottomNavigationBarItem(icon: Icon(Icons.book), label: "Courses"),
-            ],
-            onTap: onDestinationChanged,
-          ),
-        );
       },
     );
   }
-
 
   String getTableName() {
     switch (_selectedIndex) {
@@ -252,15 +234,12 @@ class _MainScreenState extends State<MainScreen> {
     }
   }
 
-
   Future<int> getCount(String tableName) async {
-
     final supabase = Supabase.instance.client;
     final count = await supabase.from(tableName).count();
-    
+
     return count;
   }
-
 
   Container buildBar(BuildContext context) {
     return Container(
@@ -306,7 +285,7 @@ class _MainScreenState extends State<MainScreen> {
                   child: const Row(
                     children: [
                       Text(
-                        "Welcome, Admin",
+                        "Finances",
                         style: TextStyle(
                             fontSize: 28,
                             fontWeight: FontWeight.w700,
@@ -315,89 +294,8 @@ class _MainScreenState extends State<MainScreen> {
                     ],
                   ),
                 ),
-          Row(
-            mainAxisSize: MainAxisSize.min,
-            mainAxisAlignment: MainAxisAlignment.center,
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: [
-              // buildSearchBar(context),
-              SizedBox(width: MediaQuery.of(context).size.width * 0.2),
-              Container(
-                padding: const EdgeInsets.all(8),
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(24),
-                ),
-                // child: Row(
-                //   mainAxisAlignment: MainAxisAlignment.center,
-                //   crossAxisAlignment: CrossAxisAlignment.center,
-                //   children: [
-                //     FilledButton.icon(
-                //       style: ButtonStyle(
-                //         enableFeedback: false,
-                //         splashFactory: NoSplash.splashFactory,
-                //         iconSize: MaterialStateProperty.all(23),
-                //         maximumSize: MaterialStateProperty.all(Size.fromWidth(
-                //             MediaQuery.of(context).size.height * 1)),
-                //         backgroundColor: MaterialStateProperty.all(
-                //           Color(0xfff1f5fb),
-                //         ),
-                //         elevation: MaterialStateProperty.all(0.5),
-                //       ),
-
-                //       label: const Text(
-                //         "Welcome, Admin",
-                //         style: TextStyle(color: Colors.black, fontSize: 14),
-                //       ),
-                //       icon: Icon(
-                //         CupertinoIcons.person_alt_circle,
-                //         color: Color(0xff19306B),
-                //       ),
-                //       // child: ,
-                //       onPressed:
-                // () {}, //TODO: Add a dropdown for profile settings: to change admin pass and user
-                //     ),
-                //   ],
-                // ),
-              ),
-              // ProfileDropdown(
-              //   onSettingsTap: state.openSettings,
-              // )
-            ],
-          )
         ]));
   }
-              
-  // Widget buildSearchBar(BuildContext context) {
-  //   const key = ValueKey("searchbar");
-  //   return AnimatedSwitcher(
-  //     key: key,
-  //     duration: const Duration(milliseconds: 350),
-  //     child: _selectedIndex != 0
-  //         ? SearchBar(
-  //             constraints: BoxConstraints(
-  //                 minWidth: 80.0,
-  //                 maxWidth: MediaQuery.of(context).size.width * 0.3,
-  //                 maxHeight: 70,
-  //                 minHeight: 60),
-  //             controller: searchController,
-  //             elevation: const MaterialStatePropertyAll(1),
-  //             leading: const Icon(Icons.search),
-  //             hintText: "Search ${getSearchName()}...",
-  //             textStyle: MaterialStatePropertyAll(
-  //                 Theme.of(context).textTheme.bodyMedium),
-  //             trailing: [
-  //               IconButton(
-  //                   splashRadius: 15,
-  //                   onPressed: () {
-  //                     searchController.clear();
-  //                   },
-  //                   icon: const Icon(Icons.clear))
-  //             ],
-  //           )
-  //         : Container(key: key),
-  //   );
-  // }
-  
 
   Widget buildCounter(BuildContext context, Future<int> count) {
     const key = ValueKey("counter");
@@ -410,14 +308,14 @@ class _MainScreenState extends State<MainScreen> {
         builder: (context, snapshot) {
           if (snapshot.hasData) {
             return snapshot.data != 0
-              ? Text(
+                ? Text(
                     snapshot.data.toString(),
                     style: const TextStyle(
                         fontSize: 28,
                         fontWeight: FontWeight.bold,
                         color: Colors.black26),
                   )
-              : Container(key: key);
+                : Container(key: key);
           } else {
             return Container(key: key);
           }
@@ -517,57 +415,5 @@ class _MainScreenState extends State<MainScreen> {
         children: views,
       ),
     );
-  }
-}
-
-
-class ProfileDropdown extends StatefulWidget {
-  const ProfileDropdown({
-    super.key,
-    required this.onSettingsTap,
-  });
-
-  final Function()? onSettingsTap;
-
-  @override
-  State<ProfileDropdown> createState() => _ProfileDropdownState();
-}
-
-class _ProfileDropdownState extends State<ProfileDropdown> {
-  @override
-  void initState() {
-    super.initState();
-  }
-
-  @override
-  void dispose() {
-    super.dispose();
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return Row(
-        mainAxisSize: MainAxisSize.min,
-        crossAxisAlignment: CrossAxisAlignment.center,
-        mainAxisAlignment: MainAxisAlignment.start,
-        children: <Widget>[
-          PopupMenuButton<String>(
-            offset: Offset.zero,
-            position: PopupMenuPosition.under,
-            icon: const Icon(Icons.arrow_drop_down, size: 25),
-            tooltip: 'Profile',
-            itemBuilder: (BuildContext context) {
-              return [
-                PopupMenuItem(
-                  onTap: widget.onSettingsTap,
-                  child: const Text(
-                    "Settings",
-                    style: TextStyle(fontWeight: FontWeight.w400, fontSize: 15),
-                  ),
-                ),
-              ];
-            },
-          ),
-        ]);
   }
 }

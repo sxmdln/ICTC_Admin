@@ -2,6 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:data_table_2/data_table_2.dart';
 import 'package:ictc_admin/models/course.dart';
+import 'package:ictc_admin/models/payment.dart';
 import 'package:ictc_admin/models/register.dart';
 import 'package:ictc_admin/pages/Courses/course_details.dart';
 import 'package:ictc_admin/pages/courses/course_viewMore.dart';
@@ -15,10 +16,10 @@ class CoursesPage extends StatefulWidget {
   State<CoursesPage> createState() => _CoursesPageState();
 }
 
-class _CoursesPageState extends State<CoursesPage>
-    with AutomaticKeepAliveClientMixin {
+class _CoursesPageState extends State<CoursesPage> {
   CourseViewMore? courseProfileWidget;
 
+  late Payment? payment;
   late Stream<List<Course>> _courses;
   late List<Course> _allCourses;
   late List<Course> _filteredCourses;
@@ -36,16 +37,16 @@ class _CoursesPageState extends State<CoursesPage>
     super.initState();
   }
 
-  @override
-  bool get wantKeepAlive => true;
-  onListRowTap(Course course) {
-    setState(() => courseProfileWidget =
-        CourseViewMore(course: course, key: ValueKey<Course>(course)));
-  }
+  // @override
+  // bool get wantKeepAlive => true;
+  // onListRowTap(Course course) {
+  //   setState(() => courseProfileWidget =
+  //       CourseViewMore(course: course, key: ValueKey<Course>(course)));
+  // }
 
-  void closeProfile() {
-    setState(() => courseProfileWidget = null);
-  }
+  // void closeProfile() {
+  //   setState(() => courseProfileWidget = null);
+  // }
 
     void _filterCourses(String query) {
     final filtered = _allCourses.where((courses) {
@@ -62,7 +63,6 @@ class _CoursesPageState extends State<CoursesPage>
 
   @override
   Widget build(BuildContext context) {
-    super.build(context);
     return Row(
       children: [
         Flexible(
@@ -87,24 +87,25 @@ class _CoursesPageState extends State<CoursesPage>
         const VerticalDivider(
           color: Colors.black87,
           thickness: 0.1,
-        ),
-        courseProfileWidget != null
-            ? Flexible(
-                flex: 1,
-                child: Stack(
-                  children: [
-                    courseProfileWidget!,
-                    Container(
-                      padding: const EdgeInsets.only(top: 16, right: 16),
-                      alignment: Alignment.topRight,
-                      child: IconButton(
-                          onPressed: closeProfile,
-                          icon: const Icon(Icons.close)),
-                    ),
-                  ],
-                ),
-              )
-            : Container(),
+        )
+        // ),
+        // courseProfileWidget != null
+        //     ? Flexible(
+        //         flex: 1,
+        //         child: Stack(
+        //           children: [
+        //             courseProfileWidget!,
+        //             Container(
+        //               padding: const EdgeInsets.only(top: 16, right: 16),
+        //               alignment: Alignment.topRight,
+        //               child: IconButton(
+        //                   onPressed: closeProfile,
+        //                   icon: const Icon(Icons.close)),
+        //             ),
+        //           ],
+        //         ),
+        //       )
+        // : Container(),
       ],
     );
   }
@@ -163,7 +164,8 @@ class _CoursesPageState extends State<CoursesPage>
       DataCell(Text(course.cost.toString())),
       const DataCell(Text('')),
       DataCell(Row(
-        children: [editButton(course),
+        children: [
+          editButton(course),
           viewButton(course),
         ],
       )),
@@ -236,7 +238,7 @@ class _CoursesPageState extends State<CoursesPage>
         flex: 2,
         child: SizedBox(
           width: 550,
-          height: MediaQuery.of(context).size.height * 0.4,
+          height: MediaQuery.of(context).size.height * 0.6,
           child: const Padding(
             padding: EdgeInsets.fromLTRB(0, 0, 0, 0),
             child: SingleChildScrollView(
@@ -309,7 +311,7 @@ class _CoursesPageState extends State<CoursesPage>
         flex: 2,
         child: SizedBox(
           width: 550,
-          height: MediaQuery.of(context).size.height * 0.4,
+          height: MediaQuery.of(context).size.height * 0.6,
           child: Padding(
             padding: const EdgeInsets.fromLTRB(0, 0, 0, 0),
             child: SingleChildScrollView(
@@ -317,9 +319,7 @@ class _CoursesPageState extends State<CoursesPage>
                 mainAxisSize: MainAxisSize.min,
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
-                  CourseForm(
-                    course: course,
-                  ),
+                  CourseForm(course: course),
                 ],
               ),
             ),

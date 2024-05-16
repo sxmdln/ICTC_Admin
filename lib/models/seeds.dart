@@ -1,8 +1,8 @@
 import 'package:ictc_admin/models/course.dart';
 import 'package:ictc_admin/models/expense.dart';
-import 'package:ictc_admin/models/finance.dart';
 import 'package:ictc_admin/models/program.dart';
-import 'package:ictc_admin/models/sale.dart';
+import 'package:ictc_admin/models/report.dart';
+import 'package:ictc_admin/models/payment.dart';
 import 'package:ictc_admin/models/trainee.dart';
 import 'package:ictc_admin/models/trainer.dart';
 
@@ -72,60 +72,52 @@ class Seeds {
     ),
   ];
 
-  static final List<Income> _incomes = [
-    Income(
+  static final List<Payment> _payments = [
+    Payment(
       id: 1,
-      firstName: 'Samantha',
-      middleName: "Largo",
-      lastName: "De Las Nieves",
-      schedule: 'March 4, 2023',
-      totalStudents: 4,
-      incomeTotal: 2000,
-      discountTotal: 200,
+      studentId: _trainees[0].id,
+      programId: _programs[0].id!,
+      courseId: _courses[0].id!,
+      discount: 250,
+      orDate: DateTime.utc(2024, 4, 1),
+      orNumber: 'OR2312312',
+      totalAmount: 2250.0,
+      approved: true,
     ),
   ];
-
-  static final List<Finance> _finances = [
-    Finance(
-      id: 1,
-      date: 'March',
-      detail: 'adasd',
-      program: 'GCE',
-      price: 1200,
-      quantity: 2,
-      total: 1,
-    ),
-    Finance(
-      id: 2,
-      date: 'December',
-      detail: 'Ulol',
-      program: 'Microcredentials',
-      price: 4200,
-      quantity: 3,
-      total: 100,
-    ),
-  ];
-
 
   static final List<Expense> _expenses = [
-    Expense(id: 1, name: 'Snacks', courseName: 'Microcredentials', date: 'March 4, 2023', cost: 1000)
+    Expense(
+      id: 1,
+      particulars: 'Foodpanda Snacks',
+      programId: _programs[0].id!,
+      courseId: _courses[0].id!,
+      orNumber: 'FOODPANDA1234',
+      orDate: DateTime.utc(2024, 4, 1),
+      amount: 1000,
+    )
+  ];
+
+  static final List<Report> _reports = [
   ];
 
   static Stream<List<Trainer>> trainerStream() {
     return Stream.value(_trainers);
   }
 
-  static Stream<List<Income>> incomeStream() {
-    return Stream.value(_incomes);
+  static Stream<List<Payment>> paymentStream() {
+    return Stream.value(_payments);
   }
 
   static Stream<List<Expense>> expenseStream() {
     return Stream.value(_expenses);
   }
+
   static Stream<List<Course>> courseStream() {
     return Stream.value(_courses);
   }
-  static Stream<List<Finance>> financeStream() {
-    return Stream.value(_finances);
+
+  static Stream<List<Report>> reportStream() {
+    return Stream.value(_reports);
   }
 }

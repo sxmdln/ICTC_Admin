@@ -14,25 +14,39 @@ class TraineeViewMore extends StatefulWidget {
 }
 
 class _TraineeViewMoreState extends State<TraineeViewMore> {
+  late final Future<List<Register>> courseStudents;
 
-late final Future<List<Register>> courseStudents;
+  Future<String?> getAvatarUrl() async {
+    try {
+      final path = '${widget.trainee.uuid}/avatar.png';
 
-Future<String> fetchCourseTitle(int courseId) async {
-  final response = await Supabase.instance.client
-      .from('course')
-      .select('title')
-      .eq('id', courseId)
-      .single();
+      print(path);
+      final url = await Supabase.instance.client.storage
+          .from('avatars')
+          .createSignedUrl(path, 60);
 
-  if (response.isEmpty) {
-    throw Exception('No course found with id: $courseId');
+      return url;
+    } catch (e) {
+      print(e);
+      return null;
+    }
   }
 
-  final title = response['title']?.toString();
-  print('Fetched course title for courseId $courseId: $title');
-  return title ?? 'Unknown Course';
-}
+  Future<String> fetchCourseTitle(int courseId) async {
+    final response = await Supabase.instance.client
+        .from('course')
+        .select('title')
+        .eq('id', courseId)
+        .single();
 
+    if (response.isEmpty) {
+      throw Exception('No course found with id: $courseId');
+    }
+
+    final title = response['title']?.toString();
+    print('Fetched course title for courseId $courseId: $title');
+    return title ?? 'Unknown Course';
+  }
 
   @override
   void initState() {
@@ -41,15 +55,14 @@ Future<String> fetchCourseTitle(int courseId) async {
         .select()
         .eq('student_id', widget.trainee.id!)
         .withConverter((data) {
-          print(data);
-          return data.map((e) => Register.fromJson(e)).toList();
-        });
+      print(data);
+      return data.map((e) => Register.fromJson(e)).toList();
+    });
 
     super.initState();
   }
 
-
-   @override
+  @override
   Widget build(BuildContext context) {
     return FutureBuilder<List<Register>>(
       future: courseStudents,
@@ -103,13 +116,31 @@ Future<String> fetchCourseTitle(int courseId) async {
             mainAxisAlignment: MainAxisAlignment.center,
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
-              const SizedBox(
+              SizedBox(
                 width: 200,
-                height: 120,
+                height: 200,
                 child: Center(
-                  child: CircleAvatar(
-                    backgroundColor: Color.fromARGB(255, 247, 247, 247),
-                    radius: 120,
+                  child: FutureBuilder(
+                    future: getAvatarUrl(),
+                    builder: (context, snapshot) {
+                      if (snapshot.connectionState == ConnectionState.waiting) {
+                        return const Center(
+                          child: CircularProgressIndicator(),
+                        );
+                      }
+
+                      final url = snapshot.data;
+                      print(url);
+                      return ClipOval(
+                          child: url != null
+                              ? Image.network(
+                                  url,
+                                  width: 200,
+                                  height: 200,
+                                  fit: BoxFit.cover,
+                                )
+                              : const Icon(Icons.person));
+                    },
                   ),
                 ),
               ),
@@ -204,7 +235,8 @@ Future<String> fetchCourseTitle(int courseId) async {
                                   fontWeight: FontWeight.w300,
                                 ),
                               ),
-                              Text(widget.trainee.contactNumber ?? 'No contact number'),
+                              Text(widget.trainee.contactNumber ??
+                                  'No contact number'),
                             ],
                           ),
                         ]),
@@ -219,98 +251,89 @@ Future<String> fetchCourseTitle(int courseId) async {
       // ),
     );
   }
-Widget buildCourses(List<Register> register) {
-  return Flexible(
-    flex: 8,
-    child: Container(
-      padding: const EdgeInsets.only(top: 0, left: 25, right: 25),
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.start,
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          const Text(
-            softWrap: true,
-            //name
-            "Courses",
-            style: TextStyle(
-                fontSize: 16,
-                color: Colors.black87,
-                fontWeight: FontWeight.w600),
-          ),
-          const SizedBox(
-            height: 15,
-          ),
-          Expanded(
-            flex: 2,
-            child: ListView.builder(
-              itemBuilder: (context, index) {
-                final registerItem = register[index];
 
-                return FutureBuilder<String>(
-                  future: fetchCourseTitle(registerItem.courseId),
-                  builder: (context, snapshot) {
-                    if (snapshot.connectionState == ConnectionState.waiting) {
-                      return Center(child: const CircularProgressIndicator());
-                    } else if (snapshot.hasError) {
-                      return Text('Error in future builder string: ${snapshot.error}');
-                    } else {
-                      return traineeCourseCard(snapshot.data!);
-                    }
-                  },
-                );
-
-              },
-              itemCount: register.length,
+  Widget buildCourses(List<Register> register) {
+    return Flexible(
+      flex: 8,
+      child: Container(
+        padding: const EdgeInsets.only(top: 0, left: 25, right: 25),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.start,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            const Text(
+              softWrap: true,
+              //name
+              "Courses",
+              style: TextStyle(
+                  fontSize: 16,
+                  color: Colors.black87,
+                  fontWeight: FontWeight.w600),
             ),
-          ),
-        ],
+            const SizedBox(
+              height: 15,
+            ),
+            Expanded(
+              flex: 2,
+              child: ListView.builder(
+                itemBuilder: (context, index) {
+                  final registerItem = register[index];
+
+                  return FutureBuilder<String>(
+                    future: fetchCourseTitle(registerItem.courseId),
+                    builder: (context, snapshot) {
+                      if (snapshot.connectionState == ConnectionState.waiting) {
+                        return const Center(child: const CircularProgressIndicator());
+                      } else if (snapshot.hasError) {
+                        return Text(
+                            'Error in future builder string: ${snapshot.error}');
+                      } else {
+                        return traineeCourseCard(snapshot.data!);
+                      }
+                    },
+                  );
+                },
+                itemCount: register.length,
+              ),
+            ),
+          ],
+        ),
       ),
-    ),
-  );
-}
+    );
+  }
 
-
-Widget traineeCourseCard(String courseTitle) {
-  return Container(
-    margin: const EdgeInsets.only(bottom: 2),
-    padding: const EdgeInsets.all(0),
-    child: SizedBox(
-      width: 240,
-      height: 60,
-      child: Card(
-        elevation: 0.5,
-        shape: RoundedRectangleBorder(
-          side: BorderSide(color: Colors.black12),
-          borderRadius: BorderRadius.all(Radius.circular(10))),
-        color: Color.fromARGB(255, 247, 247, 247),
-        child: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: [
-              Text(
-                courseTitle,
-                style: const TextStyle(
-                  fontSize: 14,
-                  fontWeight: FontWeight.w500,
-                  color: Colors.black,
+  Widget traineeCourseCard(String courseTitle) {
+    return Container(
+      margin: const EdgeInsets.only(bottom: 2),
+      padding: const EdgeInsets.all(0),
+      child: SizedBox(
+        width: 240,
+        height: 60,
+        child: Card(
+          elevation: 0.5,
+          shape: const RoundedRectangleBorder(
+              side: BorderSide(color: Colors.black12),
+              borderRadius: BorderRadius.all(Radius.circular(10))),
+          color: Color.fromARGB(255, 247, 247, 247),
+          child: Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                Text(
+                  courseTitle,
+                  style: const TextStyle(
+                    fontSize: 14,
+                    fontWeight: FontWeight.w500,
+                    color: Colors.black,
+                  ),
                 ),
-              ),
-              Text(
-                "courseSchedule",
-                style: const TextStyle(
-                  fontSize: 12,
-                  color: Colors.black54,
-                  fontWeight: FontWeight.w300),
-              ),
-            ],
+              ],
+            ),
           ),
         ),
       ),
-    ),
-  );
-}
-
-
+    );
+  }
 }

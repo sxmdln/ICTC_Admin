@@ -3,6 +3,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:ictc_admin/models/course.dart';
 import 'package:ictc_admin/models/register.dart';
+import 'package:intl/intl.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:html_unescape/html_unescape.dart';
 import 'package:toggle_switch/toggle_switch.dart';
@@ -26,7 +27,7 @@ class _CourseDetailsState extends State<CourseDetails> {
         .select()
         .eq('course_id', widget.course.id!)
         .withConverter((data) {
-          print(data);
+      print(data);
       return data.map((e) => Register.fromJson(e)).toList();
     });
 
@@ -54,7 +55,7 @@ class _CourseDetailsState extends State<CourseDetails> {
       children: [
         Center(
           child: Container(
-            margin: EdgeInsets.symmetric(vertical: 40),
+            margin: const EdgeInsets.symmetric(vertical: 40),
             child: Column(
               children: [
                 Text(
@@ -64,7 +65,7 @@ class _CourseDetailsState extends State<CourseDetails> {
                       fontSize: 45,
                       fontWeight: FontWeight.w600),
                 ),
-                SizedBox(
+                const SizedBox(
                   height: 14,
                 ),
                 Row(
@@ -79,7 +80,7 @@ class _CourseDetailsState extends State<CourseDetails> {
                           fontWeight: FontWeight.w400),
                     ),
                     Text(
-                      "| ${widget.course.duration.toString()}",
+                      "| ${widget.course.endDate!.difference(widget.course.startDate!).inDays} days (${widget.course.endDate!.difference(widget.course.startDate!).inHours} hours)",
                       style: const TextStyle(
                           color: Colors.white,
                           fontSize: 18,
@@ -87,64 +88,70 @@ class _CourseDetailsState extends State<CourseDetails> {
                     ),
                   ],
                 ),
-                SizedBox(
+                const SizedBox(
                   height: 8,
                 ),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
-                    Text(
-                      "${widget.course.schedule} ",
-                      style: const TextStyle(
-                          color: Colors.white,
-                          fontSize: 18,
-                          fontWeight: FontWeight.w400),
+                    Chip(
+                      backgroundColor: Colors.white,
+                      surfaceTintColor: Colors.white,
+                      label: Text(
+                        "Schedule: ${DateFormat.yMMMMd().format(widget.course.startDate!)} - ${DateFormat.yMMMMd().format(widget.course.endDate!)} ",
+                        style: const TextStyle(
+                            color: Color(0xff153faa),
+                            fontSize: 14,
+                            fontWeight: FontWeight.w400),
+                      ),
                     ),
-                    Text(
-                      "| ${widget.course.venue.toString()}",
-                      style: const TextStyle(
-                          color: Colors.white,
-                          fontSize: 18,
-                          fontWeight: FontWeight.w400),
+                    const SizedBox(
+                      width: 12,
                     ),
-                  ],
-                ),
-                SizedBox(
-                  height: 8,
-                ),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  children: [
-                    Text(
-                      "Description: ${HtmlUnescape().convert("${widget.course.description}")}",
-                      style: const TextStyle(
-                        color: Colors.white,
-                        fontSize: 18,
-                        fontWeight: FontWeight.w400,
+                    Chip(
+                      backgroundColor: Colors.white,
+                      surfaceTintColor: Colors.white,
+                      label: Text(
+                        "Venue: ${widget.course.venue}",
+                        style: const TextStyle(
+                            color: Color(0xff153faa),
+                            fontSize: 14,
+                            fontWeight: FontWeight.w400),
                       ),
                     ),
                   ],
+                ),
+                const SizedBox(
+                  height: 12,
+                ),
+                SizedBox(
+                  width: 800,
+                  height: 100,
+                  child: Center(
+                    child: Text(
+                      "${widget.course.description}",
+                      style: const TextStyle(
+                        color: Colors.white60,
+                        fontSize: 12,
+                        fontWeight: FontWeight.w400,
+                      ),
+                    ),
+                  ),
                 ),
               ],
             ),
           ),
         ),
         const SizedBox(height: 16),
-
         Expanded(
-          child: 
-          FutureBuilder<List<Register>>(
+          child: FutureBuilder<List<Register>>(
             future: courseStudents,
             builder: (context, snapshot) {
-
               if (snapshot.connectionState == ConnectionState.waiting) {
-                return Center(child: CircularProgressIndicator());
-
+                return const Center(child: CircularProgressIndicator());
               } else if (snapshot.hasError) {
                 return Center(child: Text('Error: ${snapshot.error}'));
-
               } else if (snapshot.data!.isEmpty) {
                 return const Center(
                   child: Text(
@@ -155,7 +162,6 @@ class _CourseDetailsState extends State<CourseDetails> {
                     ),
                   ),
                 );
-                
               } else {
                 return Container(
                   color: const Color(0xfff1f5fb),
@@ -178,7 +184,6 @@ class _CourseDetailsState extends State<CourseDetails> {
             },
           ),
         ),
-
       ],
     );
   }
@@ -204,7 +209,7 @@ class _CourseDetailsState extends State<CourseDetails> {
             }),
             builder: (BuildContext context, AsyncSnapshot<String> snapshot) {
               if (snapshot.connectionState == ConnectionState.waiting) {
-                return CircularProgressIndicator();
+                return const CircularProgressIndicator();
               } else if (snapshot.hasError) {
                 return Text('Error: ${snapshot.error}');
               } else {
@@ -225,7 +230,7 @@ class _CourseDetailsState extends State<CourseDetails> {
           }),
           builder: (BuildContext context, AsyncSnapshot<String> snapshot) {
             if (snapshot.connectionState == ConnectionState.waiting) {
-              return CircularProgressIndicator();
+              return const CircularProgressIndicator();
             } else if (snapshot.hasError) {
               return Text('Error: ${snapshot.error}');
             } else {
@@ -237,7 +242,10 @@ class _CourseDetailsState extends State<CourseDetails> {
           ToggleSwitch(
             minWidth: 90.0,
             cornerRadius: 20.0,
-            activeBgColors: [[Colors.green[800]!], [Colors.red[800]!]],
+            activeBgColors: [
+              [Colors.green[800]!],
+              [Colors.red[800]!]
+            ],
             activeFgColor: Colors.white,
             inactiveBgColor: Colors.grey,
             inactiveFgColor: Colors.white,
@@ -245,13 +253,14 @@ class _CourseDetailsState extends State<CourseDetails> {
             totalSwitches: 2,
             labels: const ['Complete', 'Pending'],
             radiusStyle: true,
-
             onToggle: (index) {
               setState(() {
                 register.status = index == 0;
               });
 
-              final updatedData = {'is_approved': register.status}; // Update column name if needed
+              final updatedData = {
+                'is_approved': register.status
+              }; // Update column name if needed
 
               Supabase.instance.client
                   .from('registration')
@@ -265,14 +274,9 @@ class _CourseDetailsState extends State<CourseDetails> {
                 print('Error updating status: $error');
               });
             },
-
-
           ),
         ),
       ],
     );
-}
-
-
-
+  }
 }

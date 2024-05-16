@@ -21,8 +21,12 @@ class Course {
   String? duration;
   String? schedule;
   String? venue;
-  String? startDate;
-  String? endDate;
+  
+  @JsonKey(name: 'start_date')
+  DateTime? startDate;
+
+  @JsonKey(name: 'end_date')
+  DateTime? endDate;
 
   var students;
 
@@ -43,4 +47,9 @@ class Course {
   factory Course.fromJson(Map<String, dynamic> json) => _$CourseFromJson(json);
 
   Map<String, dynamic> toJson() => _$CourseToJson(this);
+
+  @override
+  String toString() {
+    return title;
+  }
 }

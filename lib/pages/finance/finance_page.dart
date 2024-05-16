@@ -1,17 +1,14 @@
 import 'dart:async';
-
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:ictc_admin/models/expense.dart';
-import 'package:ictc_admin/models/finance.dart';
-import 'package:ictc_admin/models/sale.dart';
+import 'package:ictc_admin/models/payment.dart';
 import 'package:ictc_admin/models/seeds.dart';
 import 'package:ictc_admin/pages/finance/forms/expenses_form.dart';
 import 'package:ictc_admin/pages/finance/tables/expense.dart';
-import 'package:ictc_admin/pages/finance/tables/finance.dart';
-import 'package:ictc_admin/pages/finance/tables/income.dart';
-import 'package:ictc_admin/pages/finance/forms/sales_form.dart';
-import 'package:pluto_grid/pluto_grid.dart';
+import 'package:ictc_admin/pages/finance/tables/payment.dart';
+import 'package:ictc_admin/pages/finance/forms/payment_form.dart';
+
 
 class FinancePage extends StatefulWidget {
   const FinancePage({Key? key}) : super(key: key);
@@ -26,14 +23,12 @@ class _FinancePageState extends State<FinancePage>
   @override
   bool get wantKeepAlive => true;
 
-  late Stream<List<Finance>> _finances;
-  late Stream<List<Income>> _incomes;
+  late Stream<List<Payment>> _payments;
   late Stream<List<Expense>> _expenses;
 
   @override
   void initState() {
-    _finances = Seeds.financeStream();
-    _incomes = Seeds.incomeStream();
+    _payments = Seeds.paymentStream();
     _expenses = Seeds.expenseStream();
 
     super.initState();
@@ -58,9 +53,8 @@ class _FinancePageState extends State<FinancePage>
             title: const TabBar(
               overlayColor: MaterialStatePropertyAll(Color(0xfff1f5fb)),
               tabs: [
-                Tab(text: 'Finance'),
                 Tab(text: 'Income'),
-                Tab(text: 'Expense'),
+                Tab(text: 'Expenses'),
               ],
             ),
           ),
@@ -72,8 +66,7 @@ class _FinancePageState extends State<FinancePage>
                   physics: NeverScrollableScrollPhysics(),
                   viewportFraction: 0.9,
                   children: [
-                    FinanceTable(),
-                    IncomeTable(),
+                   PaymentTable(),
                     ExpenseTable(),
                   ],
                 ),
@@ -103,7 +96,7 @@ class _FinancePageState extends State<FinancePage>
             showDialog(
               context: context,
               builder: (context) {
-                return addSaleDialog();
+                return addPaymentDialog();
               },
             );
           },
@@ -113,13 +106,13 @@ class _FinancePageState extends State<FinancePage>
   }
 
   //BUTTONS
-  Widget editSaleButton() {
+  Widget editPaymentButton(Payment payment) {
     return TextButton(
         onPressed: () {
           showDialog(
             context: context,
             builder: (context) {
-              return editSaleDialog();
+              return editPaymentDialog(payment);
             },
           );
         },
@@ -138,7 +131,7 @@ class _FinancePageState extends State<FinancePage>
         ));
   }
 
-  Widget editSaleDialog() {
+  Widget editPaymentDialog(Payment payment) {
     return AlertDialog(
       // shape: const RoundedRectangleBorder(
       //     borderRadius: BorderRadius.all(Radius.circular(30))),
@@ -156,7 +149,7 @@ class _FinancePageState extends State<FinancePage>
             ),
           ),
           const Text(
-            "Edit a Sale",
+            "Edit a Payment",
             style: TextStyle(
                 color: Colors.black87,
                 fontSize: 24,
@@ -169,14 +162,14 @@ class _FinancePageState extends State<FinancePage>
         child: SizedBox(
           width: 380,
           height: MediaQuery.of(context).size.height * 0.4,
-          child: const Padding(
-            padding: EdgeInsets.fromLTRB(0, 0, 0, 0),
+          child:  Padding(
+            padding: const EdgeInsets.fromLTRB(0, 0, 0, 0),
             child: SingleChildScrollView(
               child: Column(
                 mainAxisSize: MainAxisSize.min,
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
-                  SalesForm(sale: true),
+                  PaymentForm(payment: payment),
                 ],
               ),
             ),
@@ -186,7 +179,7 @@ class _FinancePageState extends State<FinancePage>
     );
   }
 
-  Widget addSaleButton() {
+  Widget addPaymentButton() {
     return ElevatedButton(
       style: ButtonStyle(
           backgroundColor:
@@ -199,7 +192,7 @@ class _FinancePageState extends State<FinancePage>
         showDialog(
           context: context,
           builder: (context) {
-            return addSaleDialog();
+            return addPaymentDialog();
           },
         );
       },
@@ -226,7 +219,7 @@ class _FinancePageState extends State<FinancePage>
     );
   }
 
-  Widget addSaleDialog() {
+  Widget addPaymentDialog() {
     return AlertDialog(
       // shape: const RoundedRectangleBorder(
       //     borderRadius: BorderRadius.all(Radius.circular(30))),
@@ -264,7 +257,7 @@ class _FinancePageState extends State<FinancePage>
                 mainAxisSize: MainAxisSize.min,
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
-                  SalesForm(),
+                  PaymentForm(),
                 ],
               ),
             ),
@@ -276,13 +269,13 @@ class _FinancePageState extends State<FinancePage>
 
   // BUTTONS (Expenses)
 
-  Widget editExpenseButton() {
+  Widget editExpenseButton(Expense expense) {
     return TextButton(
         onPressed: () {
           showDialog(
             context: context,
             builder: (context) {
-              return editExpenseDialog();
+              return editExpenseDialog(expense);
             },
           );
         },
@@ -301,7 +294,7 @@ class _FinancePageState extends State<FinancePage>
         ));
   }
 
-  Widget editExpenseDialog() {
+  Widget editExpenseDialog(Expense expense) {
     return AlertDialog(
       // shape: const RoundedRectangleBorder(
       //     borderRadius: BorderRadius.all(Radius.circular(30))),
@@ -332,14 +325,14 @@ class _FinancePageState extends State<FinancePage>
         child: SizedBox(
           width: 380,
           height: MediaQuery.of(context).size.height * 0.3,
-          child: const Padding(
-            padding: EdgeInsets.fromLTRB(0, 0, 0, 0),
+          child: Padding(
+            padding: const EdgeInsets.fromLTRB(0, 0, 0, 0),
             child: SingleChildScrollView(
               child: Column(
                 mainAxisSize: MainAxisSize.min,
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
-                  ExpensesForm(expense: true),
+                  ExpensesForm(expense: expense),
                 ],
               ),
             ),

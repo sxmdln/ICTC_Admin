@@ -4,17 +4,6 @@ import 'package:flutter/material.dart';
 
 import 'package:ictc_admin/supabase_options.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
-// import 'package:responsive_builder/responsive_builder.dart';
-// import 'package:firebase_core/firebase_core.dart';
-// import 'firebase_options.dart';
-
-// void main() async {
-//   await Firebase.initializeApp(
-//     options: DefaultFirebaseOptions.currentPlatform,
-//   );
-
-//   runApp(const ICTCApp());
-// }
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -45,26 +34,6 @@ class ICTCApp extends StatelessWidget {
             onPrimaryContainer: const Color(0xff153faa),
             onSecondaryContainer: Colors.white),
         textTheme: const TextTheme(
-          // displayLarge: TextStyle(
-          //     fontSize: 64, fontWeight: FontWeight.w800, color: Colors.white),
-          // titleLarge: TextStyle(
-          //     fontSize: 64,
-          //     fontWeight: FontWeight.w800,
-          //     color: Color(0xffF9CE69)),
-          // labelMedium: TextStyle(
-          //     fontSize: 20, fontWeight: FontWeight.w300, color: Colors.white),
-          // displayMedium: TextStyle(
-          //     fontSize: 40, fontWeight: FontWeight.w800, color: Colors.white),
-          // titleMedium: TextStyle(
-          //     fontSize: 40,
-          //     fontWeight: FontWeight.w800,
-          //     color: Color(0xffF9CE69)),
-          // labelSmall: TextStyle(
-          //     fontSize: 12, fontWeight: FontWeight.w300, color: Colors.white),
-          // bodyLarge: TextStyle(
-          //     fontSize: 12,
-          //     fontWeight: FontWeight.w600,
-          //     color: Color(0xff153faa)),
           bodyMedium: TextStyle(
               fontSize: 14, fontWeight: FontWeight.w400, color: Colors.black),
         ),
@@ -101,13 +70,6 @@ class ICTCApp extends StatelessWidget {
         ),
         useMaterial3: false,
       ),
-      // routes: {
-      //   '/dashboard': (context) => const DashboardPage(),
-      //   '/programs': (context) => const ProgramsPage(),
-      //   '/courses': (context) => const CoursesPage(),
-      //   '/home': (context) => const MainScreen(),
-      //   '/login': (context) => const LoginPage(),
-      // },
       home: const AuthGate(),
       debugShowCheckedModeBanner: false,
     );
