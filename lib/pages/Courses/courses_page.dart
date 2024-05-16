@@ -20,13 +20,19 @@ class _CoursesPageState extends State<CoursesPage>
   CourseViewMore? courseProfileWidget;
 
   late Stream<List<Course>> _courses;
+  late List<Course> _allCourses;
+  late List<Course> _filteredCourses;
+  String _searchQuery = "";
+
 
   @override
   void initState() {
-    _courses = Supabase.instance.client.from('course').stream(primaryKey: [
-      'id'
-    ]).map((data) => data.map((e) => Course.fromJson(e)).toList());
-
+    _courses = Supabase.instance.client.from('course').stream(primaryKey: ['id']).map((data) {
+      final courses = data.map((e) => Course.fromJson(e)).toList();
+      _allCourses = courses;
+      _filteredCourses = courses;
+      return courses;
+    });
     super.initState();
   }
 
@@ -39,6 +45,19 @@ class _CoursesPageState extends State<CoursesPage>
 
   void closeProfile() {
     setState(() => courseProfileWidget = null);
+  }
+
+    void _filterCourses(String query) {
+    final filtered = _allCourses.where((courses) {
+      final titleLower = courses.title.toLowerCase();
+      final searchLower = query.toLowerCase();
+      return titleLower.contains(searchLower);
+    }).toList();
+
+    setState(() {
+      _searchQuery = query;
+      _filteredCourses = filtered;
+    });
   }
 
   @override
@@ -60,6 +79,7 @@ class _CoursesPageState extends State<CoursesPage>
                   children: [addButton()],
                 ),
               ),
+              buildSearchBar(),
               buildDataTable(),
             ],
           ),
@@ -89,6 +109,23 @@ class _CoursesPageState extends State<CoursesPage>
     );
   }
 
+    Widget buildSearchBar() {
+    return Padding(
+      padding: const EdgeInsets.all(8.0),
+      child: TextField(
+        decoration: InputDecoration(
+          hintText: "Search Courses...",
+          prefixIcon: Icon(Icons.search),
+          border: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(8.0),
+          ),
+        ),
+        onChanged: (query) => _filterCourses(query),
+      ),
+    );
+  }
+
+
   Widget buildDataTable() {
     return StreamBuilder(
         stream: _courses,
@@ -113,7 +150,8 @@ class _CoursesPageState extends State<CoursesPage>
                 DataColumn2(label: Text('')),
                 DataColumn2(label: Text('Option')),
               ],
-              rows: snapshot.data!.map((e) => buildRow(e)).toList(),
+              rows: _filteredCourses.map((course) => buildRow(course)).toList(),
+              // rows: snapshot.data!.map((e) => buildRow(e)).toList(),
             ),
           );
         });

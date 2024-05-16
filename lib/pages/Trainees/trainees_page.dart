@@ -16,24 +16,20 @@ class _TraineesPageState extends State<TraineesPage>
   TraineeViewMore? traineeProfileWidget;
 
   late Stream<List<Trainee>> _trainees;
+  late List<Trainee> _allTrainees;
+  late List<Trainee> _filteredTrainees;
+  String _searchQuery = "";
 
   @override
   void initState() {
-    _trainees = Supabase.instance.client.from("student").stream(primaryKey: [
-      'id'
-    ]).map((data) => data.map((e) => Trainee.fromJson(e)).toList());
-
-    Supabase.instance.client
-        .from("student")
-        .select()
-        .withConverter((data) => data.map(
-              (e) => Trainee.fromJson(e),
-            ))
-        .then((value) => print(value));
-
+    _trainees = Supabase.instance.client.from('student').stream(primaryKey: ['id']).map((data) {
+      final trainees = data.map((e) => Trainee.fromJson(e)).toList();
+      _allTrainees = trainees;
+      _filteredTrainees = trainees;
+      return trainees;
+    });
     super.initState();
   }
-
   @override
   bool get wantKeepAlive => true;
 
@@ -45,6 +41,22 @@ class _TraineesPageState extends State<TraineesPage>
   void closeProfile() {
     setState(() => traineeProfileWidget = null);
   }
+
+void _filterTrainees(String query) {
+  final filtered = _allTrainees.where((trainee) {
+    final firstNameLower = trainee.firstName.toLowerCase();
+    final lastNameLower = trainee.lastName.toLowerCase();
+    final searchLower = query.toLowerCase();
+    return firstNameLower.contains(searchLower) || lastNameLower.contains(searchLower);
+  }).toList();
+
+  setState(() {
+    _searchQuery = query;
+    _filteredTrainees = filtered;
+  });
+}
+
+
 
   @override
   Widget build(BuildContext context) {
@@ -65,6 +77,7 @@ class _TraineesPageState extends State<TraineesPage>
                   children: [SizedBox(height: 25)],
                 ),
               ),
+              buildSearchBar(),
               buildDataTable(),
             ],
           ),
@@ -97,6 +110,24 @@ class _TraineesPageState extends State<TraineesPage>
     );
   }
 
+  
+  Widget buildSearchBar() {
+    return Padding(
+      padding: const EdgeInsets.all(8.0),
+      child: TextField(
+        decoration: InputDecoration(
+          hintText: "Search Trainee...",
+          prefixIcon: Icon(Icons.search),
+          border: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(8.0),
+          ),
+        ),
+        onChanged: (query) => _filterTrainees(query),
+      ),
+    );
+  }
+
+
   Widget buildDataTable() {
     return StreamBuilder(
         stream: _trainees,
@@ -117,11 +148,12 @@ class _TraineesPageState extends State<TraineesPage>
               isVerticalScrollBarVisible: true,
               columns: const [
                 DataColumn2(label: Text('Name')),
-                // DataColumn2(label: Text('Attended Programs')),
+                // DataColumn2(label: Text('Attended Trainees')),
                 DataColumn2(label: Text('')),
                 DataColumn2(label: Text('Option')),
               ],
-              rows: snapshot.data!.map((e) => buildRow(e)).toList(),
+              // rows: snapshot.data!.map((e) => buildRow(e)).toList(),
+              rows: _filteredTrainees.map((trainee) => buildRow(trainee)).toList(),
             ),
           );
         });

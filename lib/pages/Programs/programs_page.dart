@@ -6,6 +6,14 @@ import 'package:ictc_admin/pages/programs/program_forms.dart';
 import 'package:ictc_admin/pages/programs/programs_viewMore.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
+import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
+import 'package:data_table_2/data_table_2.dart';
+import 'package:ictc_admin/models/program.dart';
+import 'package:ictc_admin/pages/programs/program_forms.dart';
+import 'package:ictc_admin/pages/programs/programs_viewMore.dart';
+import 'package:supabase_flutter/supabase_flutter.dart';
+
 class ProgramsPage extends StatefulWidget {
   const ProgramsPage({super.key});
 
@@ -13,29 +21,46 @@ class ProgramsPage extends StatefulWidget {
   State<ProgramsPage> createState() => _ProgramsPageState();
 }
 
-class _ProgramsPageState extends State<ProgramsPage>
-    with AutomaticKeepAliveClientMixin {
+class _ProgramsPageState extends State<ProgramsPage> with AutomaticKeepAliveClientMixin {
   ProgramViewMore? programProfileWidget;
   late Stream<List<Program>> _programs;
+  late List<Program> _allPrograms;
+  late List<Program> _filteredPrograms;
+  String _searchQuery = "";
 
   @override
   void initState() {
-    _programs = Supabase.instance.client.from('program').stream(primaryKey: [
-      'id'
-    ]).map((data) => data.map((e) => Program.fromJson(e)).toList());
-
+    _programs = Supabase.instance.client.from('program').stream(primaryKey: ['id']).map((data) {
+      final programs = data.map((e) => Program.fromJson(e)).toList();
+      _allPrograms = programs;
+      _filteredPrograms = programs;
+      return programs;
+    });
     super.initState();
   }
 
   @override
   bool get wantKeepAlive => true;
+
   onListRowTap(Program program) {
-    setState(() => programProfileWidget =
-        ProgramViewMore(program: program, key: ValueKey<Program>(program)));
+    setState(() => programProfileWidget = ProgramViewMore(program: program, key: ValueKey<Program>(program)));
   }
 
   void closeProfile() {
     setState(() => programProfileWidget = null);
+  }
+
+  void _filterPrograms(String query) {
+    final filtered = _allPrograms.where((program) {
+      final titleLower = program.title.toLowerCase();
+      final searchLower = query.toLowerCase();
+      return titleLower.contains(searchLower);
+    }).toList();
+
+    setState(() {
+      _searchQuery = query;
+      _filteredPrograms = filtered;
+    });
   }
 
   @override
@@ -49,7 +74,6 @@ class _ProgramsPageState extends State<ProgramsPage>
             mainAxisAlignment: MainAxisAlignment.end,
             children: [
               Container(
-                // margin: EdgeInsets.symmetric(horizontal: 100),
                 padding: const EdgeInsets.only(right: 5, bottom: 8),
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.end,
@@ -57,6 +81,7 @@ class _ProgramsPageState extends State<ProgramsPage>
                   children: [addButton()],
                 ),
               ),
+              buildSearchBar(),
               buildDataTable(),
             ],
           ),
@@ -86,6 +111,22 @@ class _ProgramsPageState extends State<ProgramsPage>
     );
   }
 
+  Widget buildSearchBar() {
+    return Padding(
+      padding: const EdgeInsets.all(8.0),
+      child: TextField(
+        decoration: InputDecoration(
+          hintText: "Search Programs...",
+          prefixIcon: Icon(Icons.search),
+          border: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(8.0),
+          ),
+        ),
+        onChanged: (query) => _filterPrograms(query),
+      ),
+    );
+  }
+
   Widget buildDataTable() {
     return StreamBuilder(
         stream: _programs,
@@ -109,7 +150,7 @@ class _ProgramsPageState extends State<ProgramsPage>
                 DataColumn2(label: Text('')),
                 DataColumn2(label: Text('Option')),
               ],
-              rows: snapshot.data!.map((e) => buildRow(e)).toList(),
+              rows: _filteredPrograms.map((program) => buildRow(program)).toList(),
             ),
           );
         });
@@ -141,11 +182,9 @@ class _ProgramsPageState extends State<ProgramsPage>
           },
         );
       },
-      // materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
-      // shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10.0)),
       child: Container(
         constraints: const BoxConstraints(
-            maxWidth: 160, minHeight: 36.0), // min sizes for Material buttons
+            maxWidth: 160, minHeight: 36.0),
         alignment: Alignment.center,
         child:
             const Row(crossAxisAlignment: CrossAxisAlignment.center, children: [
@@ -167,8 +206,6 @@ class _ProgramsPageState extends State<ProgramsPage>
 
   Widget addDialog() {
     return AlertDialog(
-      // shape: const RoundedRectangleBorder(
-      //     borderRadius: BorderRadius.all(Radius.circular(30))),
       contentPadding: const EdgeInsets.only(left: 20, right: 30, top: 40),
       title: Column(
         crossAxisAlignment: CrossAxisAlignment.center,
@@ -240,8 +277,6 @@ class _ProgramsPageState extends State<ProgramsPage>
 
   Widget editDialog(Program program) {
     return AlertDialog(
-      // shape: const RoundedRectangleBorder(
-      //     borderRadius: BorderRadius.all(Radius.circular(30))),
       contentPadding: const EdgeInsets.only(left: 20, right: 30, top: 40),
       title: Column(
         crossAxisAlignment: CrossAxisAlignment.center,
