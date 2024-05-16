@@ -81,7 +81,7 @@ class _ReportDetailsState extends State<ReportDetails> {
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
                     Text(
-                      "Net Worth: P${widget.netIncome} ",
+                      "Net Income: P${widget.netIncome} ",
                       style: const TextStyle(
                           color: Colors.white,
                           fontSize: 18,
@@ -113,7 +113,7 @@ class _ReportDetailsState extends State<ReportDetails> {
                 DataColumn(label: Text('Out')),
                 DataColumn(label: Text('Balance')),
               ],
-              rows: [],
+              rows: [], 
               // rows: widget.report.students?.isNotEmpty == true
               //     ? widget.report.students!
               //         .map((student) => buildRow(student))

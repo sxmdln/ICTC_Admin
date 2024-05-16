@@ -461,8 +461,8 @@ class _CourseFormState extends State<CourseForm> {
           duration: durationCon.text,
           schedule: scheduleCon.text,
           venue: venueCon.text,
-          startDate: DateFormat('yyyy-MM-dd').parse(startDateCon!),
-          endDate: DateFormat('yyyy-MM-dd').parse(endDateCon!),
+          startDate: DateFormat.yMMMMd('en_US').parse(startDateCon!),
+          endDate: DateFormat.yMMMMd('en_US').parse(endDateCon!),
         );
 
         print(course.toJson());
