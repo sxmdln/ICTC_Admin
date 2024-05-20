@@ -15,7 +15,6 @@ import 'package:supabase_flutter/supabase_flutter.dart';
 class ExpenseTable extends StatefulWidget {
   const ExpenseTable({super.key});
 
-
   @override
   State<ExpenseTable> createState() => _ExpenseTableState();
 }
@@ -34,12 +33,23 @@ class _ExpenseTableState extends State<ExpenseTable> {
   }
 
   Future<List<PlutoRow>> _fetchRows(List<Expense> expenses) async {
-    final List<PlutoRow> rows = [];
+    final futures = expenses.map((e) async {
+      // Fetch program, and course in parallel
+      final programFuture = e.program;
+      final courseFuture = e.course;
 
-    for (Expense e in expenses) {
-      rows.add(buildOutRow(
-          expense: e, program: await e.program, course: await e.course));
-    }
+      // Await all of them together
+      final program = await programFuture;
+      final course = await courseFuture;
+
+      return buildOutRow(
+        expense: e,
+        program: program,
+        course: course,
+      );
+    }).toList();
+
+    final List<PlutoRow> rows = await Future.wait(futures);
 
     return rows;
   }
@@ -90,7 +100,6 @@ class _ExpenseTableState extends State<ExpenseTable> {
       width: 90,
       enableDropToResize: false,
     ),
-    
     PlutoColumn(
       title: 'Program Name',
       field: 'progName',
@@ -127,7 +136,8 @@ class _ExpenseTableState extends State<ExpenseTable> {
       enableFilterMenuItem: false,
       type: PlutoColumnType.number(
         negative: false,
-          format: 'P#,###',),
+        format: 'P#,###',
+      ),
       textAlign: PlutoColumnTextAlign.right,
       titleTextAlign: PlutoColumnTextAlign.center,
       backgroundColor: Colors.red.withOpacity(0.1),
@@ -226,22 +236,22 @@ class _ExpenseTableState extends State<ExpenseTable> {
               builder: (context, snapshot) {
                 if (snapshot.connectionState == ConnectionState.waiting) {
                   return const Expanded(
-                        child: Column(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: <Widget>[
-                            CircularProgressIndicator.adaptive(
-                                valueColor: AlwaysStoppedAnimation<Color>(
-                                    Color(0xff153faa))),
-                            SizedBox(
-                              height: 23,
-                            ),
-                            Text(
-                              'Please wait...',
-                              style: TextStyle(fontSize: 12),
-                            ),
-                          ],
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: <Widget>[
+                        CircularProgressIndicator.adaptive(
+                            valueColor: AlwaysStoppedAnimation<Color>(
+                                Color(0xff153faa))),
+                        SizedBox(
+                          height: 23,
                         ),
-                      );
+                        Text(
+                          'Please wait...',
+                          style: TextStyle(fontSize: 12),
+                        ),
+                      ],
+                    ),
+                  );
                 }
 
                 if (snapshot.data!.isEmpty) {
