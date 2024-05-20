@@ -174,7 +174,11 @@ class _CourseDetailsState extends State<CourseDetails> {
                       columns: const [
                         DataColumn(label: Text('Student Name')),
                         DataColumn(label: Text('Email')),
-                        DataColumn(label: Text('Status')),
+                        DataColumn(label: Text('Payment Status')),
+                        DataColumn(label: Text('Evaluation Status')), // TODO: New ongoing and pending boolean for evalStatus
+                        DataColumn(label: Text('Certificate Status')), //TODO: Query if paymentStatus == true && evalStatus == true, then certificateStatus = true
+
+
                       ],
                       rows: snapshot.data!
                           .map((register) => buildRow(register))
@@ -273,6 +277,82 @@ class _CourseDetailsState extends State<CourseDetails> {
                 // Handle update error
                 print('Error updating status: $error');
               });
+            },
+          ),
+        ),
+        DataCell(
+          ToggleSwitch(
+            minWidth: 90.0,
+            cornerRadius: 20.0,
+            activeBgColors: [
+              [Colors.green[800]!],
+              [Colors.red[800]!]
+            ],
+            activeFgColor: Colors.white,
+            inactiveBgColor: Colors.grey,
+            inactiveFgColor: Colors.white,
+            initialLabelIndex: register.status ? 0 : 1,
+            totalSwitches: 2,
+            labels: const ['Complete', 'Pending'],
+            radiusStyle: true,
+            onToggle: (index) {
+              // setState(() {
+              //   register.status = index == 0;
+              // });
+
+              // final updatedData = {
+              //   'is_approved': register.status
+              // }; // Update column name if needed
+
+              // Supabase.instance.client
+              //     .from('registration')
+              //     .update(updatedData)
+              //     .eq('id', register.id as Object)
+              //     .then((_) {
+              //   // Update succeeded
+              //   print('Status updated successfully');
+              // }).catchError((error) {
+              //   // Handle update error
+              //   print('Error updating status: $error');
+              // });
+            },
+          ),
+        ),
+        DataCell(
+          ToggleSwitch(
+            minWidth: 90.0,
+            cornerRadius: 20.0,
+            activeBgColors: [
+              [Colors.green[800]!],
+              [Colors.red[800]!]
+            ],
+            activeFgColor: Colors.white,
+            inactiveBgColor: Colors.grey,
+            inactiveFgColor: Colors.white,
+            initialLabelIndex: register.status ? 0 : 1,
+            totalSwitches: 2,
+            labels: const ['Complete', 'Pending'],
+            radiusStyle: true,
+            onToggle: (index) {
+              // setState(() {
+              //   register.status = index == 0;
+              // });
+
+              // final updatedData = {
+              //   'is_approved': register.status
+              // }; // Update column name if needed
+
+              // Supabase.instance.client
+              //     .from('registration')
+              //     .update(updatedData)
+              //     .eq('id', register.id as Object)
+              //     .then((_) {
+              //   // Update succeeded
+              //   print('Status updated successfully');
+              // }).catchError((error) {
+              //   // Handle update error
+              //   print('Error updating status: $error');
+              // });
             },
           ),
         ),
