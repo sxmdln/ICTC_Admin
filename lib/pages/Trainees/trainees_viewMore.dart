@@ -1,4 +1,5 @@
 import 'package:data_table_2/data_table_2.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:ictc_admin/models/trainee.dart';
 import 'package:ictc_admin/models/register.dart';
@@ -312,15 +313,17 @@ class _TraineeViewMoreState extends State<TraineeViewMore> {
         child: Card(
           elevation: 0.5,
           shape: const RoundedRectangleBorder(
-              side: BorderSide(color: Colors.black12),
+              side: BorderSide(color: Colors.white70),
               borderRadius: BorderRadius.all(Radius.circular(10))),
-          color: Color.fromARGB(255, 247, 247, 247),
+          color: Colors.white,surfaceTintColor: Colors.white,
           child: Padding(
             padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
             child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              mainAxisAlignment: MainAxisAlignment.start,
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
+                Icon(CupertinoIcons.book, color: Colors.black, size: 20,),
+                SizedBox(width:15),
                 Text(
                   courseTitle,
                   style: const TextStyle(

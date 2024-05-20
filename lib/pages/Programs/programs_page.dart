@@ -21,7 +21,8 @@ class ProgramsPage extends StatefulWidget {
   State<ProgramsPage> createState() => _ProgramsPageState();
 }
 
-class _ProgramsPageState extends State<ProgramsPage> with AutomaticKeepAliveClientMixin {
+class _ProgramsPageState extends State<ProgramsPage>
+    with AutomaticKeepAliveClientMixin {
   ProgramViewMore? programProfileWidget;
   late Stream<List<Program>> _programs;
   late List<Program> _allPrograms;
@@ -30,7 +31,9 @@ class _ProgramsPageState extends State<ProgramsPage> with AutomaticKeepAliveClie
 
   @override
   void initState() {
-    _programs = Supabase.instance.client.from('program').stream(primaryKey: ['id']).map((data) {
+    _programs = Supabase.instance.client
+        .from('program')
+        .stream(primaryKey: ['id']).map((data) {
       final programs = data.map((e) => Program.fromJson(e)).toList();
       _allPrograms = programs;
       _filteredPrograms = programs;
@@ -43,7 +46,8 @@ class _ProgramsPageState extends State<ProgramsPage> with AutomaticKeepAliveClie
   bool get wantKeepAlive => true;
 
   onListRowTap(Program program) {
-    setState(() => programProfileWidget = ProgramViewMore(program: program, key: ValueKey<Program>(program)));
+    setState(() => programProfileWidget =
+        ProgramViewMore(program: program, key: ValueKey<Program>(program)));
   }
 
   void closeProfile() {
@@ -74,14 +78,13 @@ class _ProgramsPageState extends State<ProgramsPage> with AutomaticKeepAliveClie
             mainAxisAlignment: MainAxisAlignment.end,
             children: [
               Container(
-                padding: const EdgeInsets.only(right: 5, bottom: 8),
+                padding: EdgeInsets.only(right: 5, bottom: 8),
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.end,
                   crossAxisAlignment: CrossAxisAlignment.center,
-                  children: [addButton()],
+                  children: [buildSearchBar(), addButton()],
                 ),
               ),
-              buildSearchBar(),
               buildDataTable(),
             ],
           ),
@@ -114,15 +117,33 @@ class _ProgramsPageState extends State<ProgramsPage> with AutomaticKeepAliveClie
   Widget buildSearchBar() {
     return Padding(
       padding: const EdgeInsets.all(8.0),
-      child: TextField(
-        decoration: InputDecoration(
-          hintText: "Search Programs...",
-          prefixIcon: Icon(Icons.search),
-          border: OutlineInputBorder(
-            borderRadius: BorderRadius.circular(8.0),
+      child: SizedBox(
+        width: 350,
+        height: 40,
+        child: TextField(
+          decoration: InputDecoration(
+            filled: true,
+            fillColor: Colors.white,
+            border: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(8),
+              borderSide: BorderSide.none,
+            ),
+            hintText: "Search a Program...",
+            hintStyle: const TextStyle(
+                color: Colors.black87,
+                fontSize: 14,
+                fontWeight: FontWeight.w400,
+                letterSpacing: 0.5,
+                height: 0,
+                textBaseline: TextBaseline.alphabetic),
+            prefixIcon: const Icon(
+              CupertinoIcons.search,
+              size: 16,
+            ),
+            prefixIconColor: Colors.black,
           ),
+          onChanged: (query) => _filterPrograms(query),
         ),
-        onChanged: (query) => _filterPrograms(query),
       ),
     );
   }
@@ -142,6 +163,14 @@ class _ProgramsPageState extends State<ProgramsPage> with AutomaticKeepAliveClie
           return Expanded(
             child: DataTable2(
               showCheckboxColumn: false,
+              sortAscending: false,
+              empty: Column(
+                children: [
+                  Icon(CupertinoIcons.question_circle,
+                      size: 50, color: Colors.grey),
+                  Text('Add a program to get started!'),
+                ],
+              ),
               showBottomBorder: true,
               horizontalMargin: 30,
               isVerticalScrollBarVisible: true,
@@ -150,7 +179,9 @@ class _ProgramsPageState extends State<ProgramsPage> with AutomaticKeepAliveClie
                 DataColumn2(label: Text('')),
                 DataColumn2(label: Text('Option')),
               ],
-              rows: _filteredPrograms.map((program) => buildRow(program)).toList(),
+              rows: _filteredPrograms
+                  .map((program) => buildRow(program))
+                  .toList(),
             ),
           );
         });
@@ -183,8 +214,7 @@ class _ProgramsPageState extends State<ProgramsPage> with AutomaticKeepAliveClie
         );
       },
       child: Container(
-        constraints: const BoxConstraints(
-            maxWidth: 160, minHeight: 36.0),
+        constraints: const BoxConstraints(maxWidth: 160, minHeight: 36.0),
         alignment: Alignment.center,
         child:
             const Row(crossAxisAlignment: CrossAxisAlignment.center, children: [

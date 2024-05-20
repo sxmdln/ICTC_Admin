@@ -42,7 +42,6 @@ class _ReportTableState extends State<ReportTable> {
       body: Expanded(
           child: Column(
         children: [
-          Row(),
           buildDataTable(),
         ],
       )),
@@ -109,8 +108,6 @@ class _ReportTableState extends State<ReportTable> {
 
   PlutoRow buildRow(Map<String, dynamic> json) {
     final jsonDate = DateTime.parse(json['month_date']);
-
-    print("creating row for this json: $json");
 
     return PlutoRow(
       cells: {

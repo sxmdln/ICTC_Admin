@@ -104,6 +104,7 @@ class _ExpenseTableState extends State<ExpenseTable> {
       title: 'Program Name',
       field: 'progName',
       readOnly: true,
+      filterHintText: 'Search Program',
       type: PlutoColumnType.text(),
       textAlign: PlutoColumnTextAlign.left,
       titleTextAlign: PlutoColumnTextAlign.center,
@@ -113,6 +114,7 @@ class _ExpenseTableState extends State<ExpenseTable> {
       field: 'courseName',
       readOnly: true,
       type: PlutoColumnType.text(),
+      filterHintText: 'Search Course',
       textAlign: PlutoColumnTextAlign.right,
       titleTextAlign: PlutoColumnTextAlign.center,
       minWidth: 100,
@@ -122,6 +124,7 @@ class _ExpenseTableState extends State<ExpenseTable> {
       title: 'Particulars',
       field: 'particulars',
       readOnly: true,
+      filterHintText: 'Search Particulars',
       type: PlutoColumnType.text(),
       textAlign: PlutoColumnTextAlign.center,
       titleTextAlign: PlutoColumnTextAlign.center,
@@ -170,13 +173,15 @@ class _ExpenseTableState extends State<ExpenseTable> {
       field: 'orDate',
       readOnly: true,
       type: PlutoColumnType.date(format: 'yMMMMd'),
+      filterHintText: 'Search OR Date',
       textAlign: PlutoColumnTextAlign.right,
-      titleTextAlign: PlutoColumnTextAlign.right,
+      titleTextAlign: PlutoColumnTextAlign.center,
     ),
     PlutoColumn(
       title: 'OR Number',
       field: 'orNumber',
       readOnly: true,
+      filterHintText: 'Search OR Number',
       type: PlutoColumnType.text(),
       textAlign: PlutoColumnTextAlign.right,
       titleTextAlign: PlutoColumnTextAlign.center,
@@ -294,6 +299,7 @@ class _ExpenseTableState extends State<ExpenseTable> {
                     }
 
                     return PlutoGrid(
+                      mode: PlutoGridMode.readOnly,
                         key: const ValueKey('expense'),
                         columns: outColumns,
                         rows: snapshot.data!,

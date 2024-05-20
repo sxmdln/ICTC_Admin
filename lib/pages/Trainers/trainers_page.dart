@@ -1,3 +1,5 @@
+import 'dart:ui';
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:data_table_2/data_table_2.dart';
@@ -36,7 +38,9 @@ class _TrainersPageState extends State<TrainersPage>
 
   @override
   void initState() {
-    _trainers = Supabase.instance.client.from('trainer').stream(primaryKey: ['id']).map((data) {
+    _trainers = Supabase.instance.client
+        .from('trainer')
+        .stream(primaryKey: ['id']).map((data) {
       final trainers = data.map((e) => Trainer.fromJson(e)).toList();
       _allTrainers = trainers;
       _filteredTrainers = trainers;
@@ -57,18 +61,19 @@ class _TrainersPageState extends State<TrainersPage>
   }
 
   void _filterTrainers(String query) {
-  final filtered = _allTrainers.where((trainee) {
-    final firstNameLower = trainee.firstName.toLowerCase();
-    final lastNameLower = trainee.lastName.toLowerCase();
-    final searchLower = query.toLowerCase();
-    return firstNameLower.contains(searchLower) || lastNameLower.contains(searchLower);
-  }).toList();
+    final filtered = _allTrainers.where((trainee) {
+      final firstNameLower = trainee.firstName.toLowerCase();
+      final lastNameLower = trainee.lastName.toLowerCase();
+      final searchLower = query.toLowerCase();
+      return firstNameLower.contains(searchLower) ||
+          lastNameLower.contains(searchLower);
+    }).toList();
 
-  setState(() {
-    _searchQuery = query;
-    _filteredTrainers = filtered;
-  });
-}
+    setState(() {
+      _searchQuery = query;
+      _filteredTrainers = filtered;
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -86,10 +91,12 @@ class _TrainersPageState extends State<TrainersPage>
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.end,
                   crossAxisAlignment: CrossAxisAlignment.center,
-                  children: [addButton()],
+                  children: [
+                    buildSearchBar(),
+                    addButton()],
                 ),
               ),
-              buildSearchBar(),
+              
               buildDataTable()
             ],
           ),
@@ -122,23 +129,37 @@ class _TrainersPageState extends State<TrainersPage>
     );
   }
 
-  
   Widget buildSearchBar() {
     return Padding(
       padding: const EdgeInsets.all(8.0),
-      child: TextField(
-        decoration: InputDecoration(
-          hintText: "Search Trainer...",
-          prefixIcon: Icon(Icons.search),
-          border: OutlineInputBorder(
-            borderRadius: BorderRadius.circular(8.0),
+      child: SizedBox(
+        width:350,
+        height: 40,
+        child: TextField(
+          decoration: InputDecoration(
+            filled: true,
+            fillColor: Colors.white,
+            border: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(8),
+              borderSide: BorderSide.none,
+            ),
+            hintText: "Search a Trainer...",
+            hintStyle: const TextStyle(
+                color: Colors.black87,
+                fontSize: 14,
+                fontWeight: FontWeight.w400,
+                letterSpacing: 0.5,
+                height: 0,
+                textBaseline: TextBaseline.alphabetic
+                ),
+            prefixIcon: const Icon(CupertinoIcons.search, size: 16,),
+            prefixIconColor: Colors.black,
           ),
+          onChanged: (query) => _filterTrainers(query),
         ),
-        onChanged: (query) => _filterTrainers(query),
       ),
     );
   }
-
 
   Widget buildDataTable() {
     return StreamBuilder(
@@ -154,9 +175,15 @@ class _TrainersPageState extends State<TrainersPage>
 
           return Expanded(
             child: DataTable2(
+              sortAscending: false,
               showCheckboxColumn: false,
               showBottomBorder: true,
-              horizontalMargin: 30,
+              horizontalMargin: 30,empty: Column(
+                children: [
+                  Icon(CupertinoIcons.question_circle, size: 50, color: Colors.grey),
+                  Text('Add a trainers to get started!'),
+                ],
+              ),
               isVerticalScrollBarVisible: true,
               columns: const [
                 DataColumn2(
@@ -169,7 +196,9 @@ class _TrainersPageState extends State<TrainersPage>
                 )),
               ],
               // rows: snapshot.data!.map((e) => buildRow(e)).toList(),
-              rows: _filteredTrainers.map((trainer) => buildRow(trainer)).toList(),
+              rows: _filteredTrainers
+                  .map((trainer) => buildRow(trainer))
+                  .toList(),
             ),
           );
         });

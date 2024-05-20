@@ -38,6 +38,7 @@ class ICTCApp extends StatelessWidget {
               fontSize: 14, fontWeight: FontWeight.w400, color: Colors.black),
         ),
         dataTableTheme: DataTableThemeData(
+          dividerThickness: 0.5,
           headingRowColor: MaterialStateColor.resolveWith((states) {
             // If the button is pressed, return size 40, otherwise 20
             if (states.contains(MaterialState.hovered)) {

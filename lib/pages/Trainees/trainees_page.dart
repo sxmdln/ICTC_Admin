@@ -1,3 +1,4 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:data_table_2/data_table_2.dart';
 import 'package:ictc_admin/models/trainee.dart';
@@ -22,7 +23,9 @@ class _TraineesPageState extends State<TraineesPage>
 
   @override
   void initState() {
-    _trainees = Supabase.instance.client.from('student').stream(primaryKey: ['id']).map((data) {
+    _trainees = Supabase.instance.client
+        .from('student')
+        .stream(primaryKey: ['id']).map((data) {
       final trainees = data.map((e) => Trainee.fromJson(e)).toList();
       _allTrainees = trainees;
       _filteredTrainees = trainees;
@@ -30,6 +33,7 @@ class _TraineesPageState extends State<TraineesPage>
     });
     super.initState();
   }
+
   @override
   bool get wantKeepAlive => true;
 
@@ -42,20 +46,20 @@ class _TraineesPageState extends State<TraineesPage>
     setState(() => traineeProfileWidget = null);
   }
 
-void _filterTrainees(String query) {
-  final filtered = _allTrainees.where((trainee) {
-    final firstNameLower = trainee.firstName.toLowerCase();
-    final lastNameLower = trainee.lastName.toLowerCase();
-    final searchLower = query.toLowerCase();
-    return firstNameLower.contains(searchLower) || lastNameLower.contains(searchLower);
-  }).toList();
+  void _filterTrainees(String query) {
+    final filtered = _allTrainees.where((trainee) {
+      final firstNameLower = trainee.firstName.toLowerCase();
+      final lastNameLower = trainee.lastName.toLowerCase();
+      final searchLower = query.toLowerCase();
+      return firstNameLower.contains(searchLower) ||
+          lastNameLower.contains(searchLower);
+    }).toList();
 
-  setState(() {
-    _searchQuery = query;
-    _filteredTrainees = filtered;
-  });
-}
-
+    setState(() {
+      _searchQuery = query;
+      _filteredTrainees = filtered;
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -70,13 +74,14 @@ void _filterTrainees(String query) {
               Container(
                 // margin: EdgeInsets.symmetric(horizontal: 100),
                 padding: const EdgeInsets.only(right: 5, bottom: 8),
-                child: const Row(
+                child: Row(
                   mainAxisAlignment: MainAxisAlignment.end,
                   crossAxisAlignment: CrossAxisAlignment.center,
-                  children: [SizedBox(height: 25)],
+                  children: [
+                    buildSearchBar(),
+                  ],
                 ),
               ),
-              buildSearchBar(),
               buildDataTable(),
             ],
           ),
@@ -109,23 +114,39 @@ void _filterTrainees(String query) {
     );
   }
 
-  
   Widget buildSearchBar() {
     return Padding(
       padding: const EdgeInsets.all(8.0),
-      child: TextField(
-        decoration: InputDecoration(
-          hintText: "Search Trainee...",
-          prefixIcon: Icon(Icons.search),
-          border: OutlineInputBorder(
-            borderRadius: BorderRadius.circular(8.0),
+      child: SizedBox(
+        width: 350,
+        height: 40,
+        child: TextField(
+          decoration: InputDecoration(
+            filled: true,
+            fillColor: Colors.white,
+            border: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(8),
+              borderSide: BorderSide.none,
+            ),
+            hintText: "Search a Trainee...",
+            hintStyle: const TextStyle(
+                color: Colors.black87,
+                fontSize: 14,
+                fontWeight: FontWeight.w400,
+                letterSpacing: 0.5,
+                height: 0,
+                textBaseline: TextBaseline.alphabetic),
+            prefixIcon: const Icon(
+              CupertinoIcons.search,
+              size: 16,
+            ),
+            prefixIconColor: Colors.black,
           ),
+          onChanged: (query) => _filterTrainees(query),
         ),
-        onChanged: (query) => _filterTrainees(query),
       ),
     );
   }
-
 
   Widget buildDataTable() {
     return StreamBuilder(
@@ -142,6 +163,12 @@ void _filterTrainees(String query) {
           return Expanded(
             child: DataTable2(
               showCheckboxColumn: false,
+              sortAscending: false,empty: Column(
+                children: [
+                  Icon(CupertinoIcons.question_circle, size: 50, color: Colors.grey),
+                  Text('Add a trainees to get started!'),
+                ],
+              ),
               showBottomBorder: true,
               horizontalMargin: 30,
               isVerticalScrollBarVisible: true,
@@ -152,7 +179,9 @@ void _filterTrainees(String query) {
                 DataColumn2(label: Text('Option')),
               ],
               // rows: snapshot.data!.map((e) => buildRow(e)).toList(),
-              rows: _filteredTrainees.map((trainee) => buildRow(trainee)).toList(),
+              rows: _filteredTrainees
+                  .map((trainee) => buildRow(trainee))
+                  .toList(),
             ),
           );
         });

@@ -538,7 +538,7 @@ class _PaymentFormState extends State<PaymentForm> {
             orNumber: orNumberCon.text,
             discount: double.parse(discountCon.text),
             totalAmount: double.parse(totalAmountCon.text),
-            approved: false,
+            approved: true,
             courseId: selectedCourse!.id!,
             studentId: selectedTrainee!.id,
             programId: selectedProgram!.id!,
@@ -576,7 +576,22 @@ class _PaymentFormState extends State<PaymentForm> {
             return const Color.fromARGB(255, 226, 226, 226);
           }),
         ),
-        onPressed: () {},
+        onPressed: () {
+
+            final supabase = Supabase.instance.client;
+          final id = widget.payment!.id!;
+
+          supabase.from('payment').delete().eq('id', id).whenComplete(() {
+            ScaffoldMessenger.of(context).showSnackBar(
+                const SnackBar(content: Text("Delete successful!")));
+
+            Navigator.of(context).pop();
+          }).catchError((_) {
+            ScaffoldMessenger.of(context).showSnackBar(
+                const SnackBar(content: Text("An error occured.")));
+          });
+
+        },
         child: const Text(
           "Delete",
           style: TextStyle(color: Colors.black87),

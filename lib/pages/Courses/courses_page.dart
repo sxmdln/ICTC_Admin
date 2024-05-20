@@ -7,6 +7,7 @@ import 'package:ictc_admin/models/register.dart';
 import 'package:ictc_admin/pages/Courses/course_details.dart';
 import 'package:ictc_admin/pages/courses/course_viewMore.dart';
 import 'package:ictc_admin/pages/courses/course_forms.dart';
+import 'package:intl/intl.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
 class CoursesPage extends StatefulWidget {
@@ -35,6 +36,18 @@ class _CoursesPageState extends State<CoursesPage> {
       return courses;
     });
     super.initState();
+  }
+  Future<int> fetchNumberOfPreRegisters(int courseId) async {
+    print('fetching number of pre-registers');
+    final response = await Supabase.instance.client
+        .from('registration')
+        .select('id')
+        .eq('course_id', courseId)
+        .count();
+
+    print(response);
+
+    return response.count;
   }
 
   // @override
@@ -76,10 +89,12 @@ class _CoursesPageState extends State<CoursesPage> {
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.end,
                   crossAxisAlignment: CrossAxisAlignment.center,
-                  children: [addButton()],
+                  children: [
+                    buildSearchBar(),
+                    addButton()],
                 ),
               ),
-              buildSearchBar(),
+              
               buildDataTable(),
             ],
           ),
@@ -110,18 +125,34 @@ class _CoursesPageState extends State<CoursesPage> {
     );
   }
 
-    Widget buildSearchBar() {
+  Widget buildSearchBar() {
     return Padding(
       padding: const EdgeInsets.all(8.0),
-      child: TextField(
-        decoration: InputDecoration(
-          hintText: "Search Courses...",
-          prefixIcon: Icon(Icons.search),
-          border: OutlineInputBorder(
-            borderRadius: BorderRadius.circular(8.0),
+      child: SizedBox(
+        width:350,
+        height: 40,
+        child: TextField(
+          decoration: InputDecoration(
+            filled: true,
+            fillColor: Colors.white,
+            border: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(8),
+              borderSide: BorderSide.none,
+            ),
+            hintText: "Search a Course...",
+            hintStyle: const TextStyle(
+                color: Colors.black87,
+                fontSize: 14,
+                fontWeight: FontWeight.w400,
+                letterSpacing: 0.5,
+                height: 0,
+                textBaseline: TextBaseline.alphabetic
+                ),
+            prefixIcon: const Icon(CupertinoIcons.search, size: 16,),
+            prefixIconColor: Colors.black,
           ),
+          onChanged: (query) => _filterCourses(query),
         ),
-        onChanged: (query) => _filterCourses(query),
       ),
     );
   }
@@ -141,8 +172,15 @@ class _CoursesPageState extends State<CoursesPage> {
 
           return Expanded(
             child: DataTable2(
+              empty: Column(
+                children: [
+                  Icon(CupertinoIcons.question_circle, size: 50, color: Colors.grey),
+                  Text('Add a course to get started!'),
+                ],
+              ),
               showCheckboxColumn: false,
               showBottomBorder: true,
+              sortAscending: false,
               horizontalMargin: 30,
               isVerticalScrollBarVisible: true,
               columns: const [
@@ -152,7 +190,6 @@ class _CoursesPageState extends State<CoursesPage> {
                 DataColumn2(label: Text('End Date')),
                 DataColumn2(label: Text('Total Students')),
 
-                DataColumn2(label: Text('')),
                 DataColumn2(label: Text('Option')),
               ],
               rows: _filteredCourses.map((course) => buildRow(course)).toList(),
@@ -166,11 +203,32 @@ class _CoursesPageState extends State<CoursesPage> {
     return DataRow2(onSelectChanged: (selected) {}, cells: [
       DataCell(Text(course.title.toString())),
       DataCell(Text(course.cost.toString())),
-      DataCell(Text(course.startDate.toString())),
-      DataCell(Text(course.endDate.toString())),
-      DataCell(Text(course.duration.toString())),
+      DataCell(Text("${DateFormat.yMMMMd().format(course.startDate!)}")),
+      DataCell(Text("${DateFormat.yMMMMd().format(course.endDate!)}")),
+      DataCell(FutureBuilder(
+                      future: fetchNumberOfPreRegisters(course.id!),
+                      builder: (context, snapshot) {
+                        if (snapshot.connectionState ==
+                            ConnectionState.waiting) {
+                          return const SizedBox(
+                            width:12,  
+                              child: LinearProgressIndicator(
+                            valueColor: AlwaysStoppedAnimation<Color>(
+                                Color(0xff153faa)),
+                          ));
+                        }
 
-      const DataCell(Text('')),
+                        return Text(
+                          snapshot.data.toString(),
+                          style: const TextStyle(
+                              color: Colors.black,
+                              fontWeight: FontWeight.w400,
+                              fontSize: 15,
+                              fontFamily: 'Archivo'),
+                        );
+                      },
+                    ),),
+
       DataCell(Row(
         children: [
           editButton(course),

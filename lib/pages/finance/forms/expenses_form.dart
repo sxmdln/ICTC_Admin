@@ -346,11 +346,11 @@ class _ExpensesFormState extends State<ExpensesForm> {
           Row(
             children: [
               // Expanded(child: SizedBox(child: cancelButton())),
-              if (widget.expense != null)
-                Expanded(
-                  flex: 1,
-                  child: SizedBox(child: deleteButton()),
-                ),
+              // if (widget.expense != null)
+              //   Expanded(
+              //     flex: 1,
+              //     child: SizedBox(child: deleteButton()),
+              //   ),
               const SizedBox(width: 10),
               Expanded(
                 flex: 1,

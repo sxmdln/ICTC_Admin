@@ -166,19 +166,33 @@ class _CourseDetailsState extends State<CourseDetails> {
                 return Container(
                   color: const Color(0xfff1f5fb),
                   child: DataTable2(
+                      dataRowColor: MaterialStateProperty.resolveWith<Color>(
+                          (Set<MaterialState> states) {
+                        if (states.contains(MaterialState.selected)) {
+                          return Theme.of(context)
+                              .colorScheme
+                              .primary
+                              .withOpacity(0.08);
+                        }
+                        return Colors.white;
+                      }),
                       showCheckboxColumn: false,
+                      sortAscending: false,
                       bottomMargin: 90,
                       isVerticalScrollBarVisible: true,
+                      
                       minWidth: 600,
                       horizontalMargin: 100,
                       columns: const [
                         DataColumn(label: Text('Student Name')),
                         DataColumn(label: Text('Email')),
                         DataColumn(label: Text('Payment Status')),
-                        DataColumn(label: Text('Evaluation Status')), // TODO: New ongoing and pending boolean for evalStatus
-                        DataColumn(label: Text('Certificate Status')), //TODO: Query if paymentStatus == true && evalStatus == true, then certificateStatus = true
-
-
+                        DataColumn(
+                            label: Text(
+                                'Evaluation Status')), // TODO: New ongoing and pending boolean for evalStatus
+                        DataColumn(
+                            label: Text(
+                                'Certificate Status')), //TODO: Query if paymentStatus == true && evalStatus == true, then certificateStatus = true
                       ],
                       rows: snapshot.data!
                           .map((register) => buildRow(register))
@@ -247,15 +261,16 @@ class _CourseDetailsState extends State<CourseDetails> {
             minWidth: 90.0,
             cornerRadius: 20.0,
             activeBgColors: [
-              [Colors.green[800]!],
-              [Colors.red[800]!]
+              [Color(0xff008744)!],
+              [Color(0xffffa700)!]
             ],
             activeFgColor: Colors.white,
-            inactiveBgColor: Colors.grey,
-            inactiveFgColor: Colors.white,
+            inactiveBgColor: Colors.white,
+            inactiveFgColor: Color(0xff153faa).withOpacity(0.5),
             initialLabelIndex: register.status ? 0 : 1,
             totalSwitches: 2,
-            labels: const ['Complete', 'Pending'],
+            labels: ['', ''],
+            icons: [Icons.check, Icons.close],
             radiusStyle: true,
             onToggle: (index) {
               setState(() {
@@ -285,15 +300,16 @@ class _CourseDetailsState extends State<CourseDetails> {
             minWidth: 90.0,
             cornerRadius: 20.0,
             activeBgColors: [
-              [Colors.green[800]!],
-              [Colors.red[800]!]
+              [Color(0xff008744)!],
+              [Color(0xffffa700)!]
             ],
             activeFgColor: Colors.white,
-            inactiveBgColor: Colors.grey,
-            inactiveFgColor: Colors.white,
+            inactiveBgColor: Colors.white,
+            inactiveFgColor: Color(0xff153faa).withOpacity(0.5),
             initialLabelIndex: register.status ? 0 : 1,
             totalSwitches: 2,
-            labels: const ['Complete', 'Pending'],
+            labels: ['', ''],
+            icons: [Icons.check, Icons.close],
             radiusStyle: true,
             onToggle: (index) {
               // setState(() {
@@ -323,15 +339,16 @@ class _CourseDetailsState extends State<CourseDetails> {
             minWidth: 90.0,
             cornerRadius: 20.0,
             activeBgColors: [
-              [Colors.green[800]!],
-              [Colors.red[800]!]
+              [Color(0xff008744)!],
+              [Color(0xffffa700)!]
             ],
             activeFgColor: Colors.white,
-            inactiveBgColor: Colors.grey,
-            inactiveFgColor: Colors.white,
+            inactiveBgColor: Colors.white,
+            inactiveFgColor: Color(0xff153faa).withOpacity(0.5),
             initialLabelIndex: register.status ? 0 : 1,
             totalSwitches: 2,
-            labels: const ['Complete', 'Pending'],
+            labels: ['', ''],
+            icons: [Icons.check, Icons.close],
             radiusStyle: true,
             onToggle: (index) {
               // setState(() {
