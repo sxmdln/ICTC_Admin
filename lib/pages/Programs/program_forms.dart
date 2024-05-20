@@ -159,14 +159,16 @@ class _ProgramFormState extends State<ProgramForm> {
 
         print(program.toJson());
 
-        supabase.from('program').upsert(program.toJson()).whenComplete(() {
+        supabase.from('program').upsert(program.toJson()).then((_) {
           ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-              content: Text("Successfully added program: ${widget.program!.id!}."),
+              content: Text("Successfully added program: ${program.title}."),
               backgroundColor: Colors.green,
             ));
 
           Navigator.of(context).pop();
-        }).catchError((_) {
+        }).onError((err, st) {
+          print(err);
+          print(st);
           ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
               content: Text("Unsuccessful adding program. Please try again."),
               backgroundColor: Colors.redAccent,
@@ -199,7 +201,7 @@ class _ProgramFormState extends State<ProgramForm> {
           final id = widget.program!.id!;
           
 
-          supabase.from('program').delete().eq('id', id).whenComplete(() {
+          supabase.from('program').delete().eq('id', id).then((_) {
             ScaffoldMessenger.of(context).showSnackBar(
               SnackBar(
                 content: Text("Successfully deleted program ${widget.program!.toString()}."),
@@ -208,7 +210,8 @@ class _ProgramFormState extends State<ProgramForm> {
             );
 
             Navigator.of(context).pop();
-          }).catchError((_) {
+          }).onError((err, st) {
+            print(err.toString());
             ScaffoldMessenger.of(context).showSnackBar(SnackBar(
               content: Text("Error deleting program: ${widget.program!.toString()}. Please try again."),
               backgroundColor: Colors.redAccent,

@@ -32,6 +32,8 @@ class _PaymentFormState extends State<PaymentForm> {
       totalAmountCon,
       approvedCon;
 
+  late DateTime? selectedDate;
+
   @override
   void dispose() {
     super.dispose();
@@ -41,6 +43,7 @@ class _PaymentFormState extends State<PaymentForm> {
   void initState() {
     super.initState();
 
+    selectedDate = widget.payment?.orDate;
     orDateCon = TextEditingController(
         text: widget.payment?.orDate != null
             ? DateFormat.yMMMMd().format(widget.payment!.orDate)
@@ -96,7 +99,10 @@ class _PaymentFormState extends State<PaymentForm> {
       initialDate: DateTime.now(),
     );
     if (pickedDate == null) return;
-    orDateCon.text = DateFormat.yMMMMd().format(pickedDate);
+    setState(() {
+      selectedDate = pickedDate;
+      orDateCon.text = DateFormat.yMMMMd().format(pickedDate);
+    });
   }
 
 // PROGRAMS
@@ -114,6 +120,7 @@ class _PaymentFormState extends State<PaymentForm> {
 
 // TRAINEES
   Future<List<Trainee>> fetchTrainees({String? filter}) async {
+    // TODO: optimize this query
     if (selectedCourse == null) return [];
 
     final supabase = Supabase.instance.client;
@@ -527,7 +534,7 @@ class _PaymentFormState extends State<PaymentForm> {
         if (formKey.currentState!.validate()) {
           final payment = Payment(
             id: widget.payment?.id,
-            orDate: DateTime.parse(orDateCon.text),
+            orDate: selectedDate!,
             orNumber: orNumberCon.text,
             discount: double.parse(discountCon.text),
             totalAmount: double.parse(totalAmountCon.text),

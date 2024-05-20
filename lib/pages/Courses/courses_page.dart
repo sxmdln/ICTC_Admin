@@ -148,6 +148,10 @@ class _CoursesPageState extends State<CoursesPage> {
               columns: const [
                 DataColumn2(label: Text('Title')),
                 DataColumn2(label: Text('Cost')),
+                DataColumn2(label: Text('Start Date')),
+                DataColumn2(label: Text('End Date')),
+                DataColumn2(label: Text('Total Students')),
+
                 DataColumn2(label: Text('')),
                 DataColumn2(label: Text('Option')),
               ],
@@ -162,6 +166,10 @@ class _CoursesPageState extends State<CoursesPage> {
     return DataRow2(onSelectChanged: (selected) {}, cells: [
       DataCell(Text(course.title.toString())),
       DataCell(Text(course.cost.toString())),
+      DataCell(Text(course.startDate.toString())),
+      DataCell(Text(course.endDate.toString())),
+      DataCell(Text(course.duration.toString())),
+
       const DataCell(Text('')),
       DataCell(Row(
         children: [
