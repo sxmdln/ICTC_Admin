@@ -8,6 +8,7 @@ import 'package:intl/intl.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:dropdown_search/dropdown_search.dart';
 import 'package:syncfusion_flutter_datepicker/datepicker.dart';
+import 'package:file_picker/file_picker.dart';
 
 class CourseForm extends StatefulWidget {
   const CourseForm({super.key, this.course});
@@ -19,6 +20,24 @@ class CourseForm extends StatefulWidget {
 }
 
 class _CourseFormState extends State<CourseForm> {
+  late Future<String?> avatarUrl = getImageUrl();
+
+  Future<String?> getImageUrl([String? path]) async {
+    try {
+      final url = await Supabase.instance.client.storage
+          .from('images')
+          .createSignedUrl('${widget.course?.id}/image.png', 60);
+      return url;
+    } catch (e) {
+      return null;
+    }
+  }
+
+  // String getImageUrl(String path) {
+  //   final supa = Supabase.instance.client;
+  //   return supa.storage.from('images').getPublicUrl(path).data!;
+  // }
+
   final formKey = GlobalKey<FormState>();
   final DateRangePickerController dateRangeController =
       DateRangePickerController();
@@ -32,6 +51,7 @@ class _CourseFormState extends State<CourseForm> {
       venueCon;
 
   late String? startDateCon, endDateCon;
+  // late String avatarUrl;
 
   @override
   void initState() {
@@ -292,6 +312,101 @@ class _CourseFormState extends State<CourseForm> {
                 ),
                 borderRadius: BorderRadius.circular(10),
               ),
+            ),
+          ),
+          Material(
+            color: Colors.black12,
+            child: InkWell(
+              splashColor: Colors.black26,
+              onTap: () async {
+                // Select an image
+                final result = await FilePicker.platform.pickFiles(
+                    type: FileType.custom, allowedExtensions: ['png']);
+
+                if (result == null || result.files.isEmpty) {
+                  return;
+                }
+
+                final file = result.files.first;
+                final bytes = file.bytes;
+                final extension = file.extension;
+
+                if (bytes == null || extension == null) {
+                  return;
+                }
+
+                // Upload image to Supabase
+                final supa = Supabase.instance.client;
+                final path = "${widget.course?.id}/image.$extension";
+
+                await supa.storage
+                    .from('images')
+                    .uploadBinary(path, bytes,
+                        fileOptions: const FileOptions(upsert: true))
+                    .whenComplete(() {
+                  ScaffoldMessenger.of(context).showSnackBar(
+                      const SnackBar(content: Text("Image uploaded successfully!")));
+
+                  setState(() {
+                    avatarUrl = getImageUrl(path);
+                  });
+                });
+              },
+              child: Container(
+                color: Colors.transparent,
+                height: 40,
+                width: MediaQuery.of(context).size.width * 0.2,
+                child: const Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    Text(
+                      "Upload Image",
+                      style: TextStyle(
+                          fontSize: 12,
+                          fontWeight: FontWeight.w600,
+                          color: Colors.black),
+                    ),
+                  ],
+                ),
+              ),
+            ),
+          ),
+          Container(
+            // IMAGE
+            margin: EdgeInsets.only(bottom: 10),
+            width: MediaQuery.of(context).size.width * 0.2,
+            height: 360,
+            decoration: BoxDecoration(
+              color: Colors.white,
+              border: Border.all(color: Colors.black12),
+            ),
+            child: FutureBuilder<String?>(
+              future: avatarUrl,
+              builder: (context, snapshot) {
+                if (snapshot.connectionState == ConnectionState.waiting) {
+                  return Center(child: CircularProgressIndicator());
+                }
+
+                if (snapshot.hasData && snapshot.data!.isNotEmpty) {
+                  final url = snapshot.data!;
+                  return Image.network(
+                    url,
+                    fit: BoxFit.cover,
+                  );
+                }
+
+                return const Center(
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Icon(Icons.error_outline_rounded),
+                      SizedBox(width: 5),
+                      Text('Add a picture.'),
+                    ],
+                  ),
+                );
+              },
             ),
           ),
           Flexible(
