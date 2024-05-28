@@ -304,7 +304,7 @@ class _CoursesPageState extends State<CoursesPage> {
         flex: 2,
         child: SizedBox(
           width: 550,
-          height: MediaQuery.of(context).size.height * 0.6,
+          height: MediaQuery.of(context).size.height * 0.9,
           child: const Padding(
             padding: EdgeInsets.fromLTRB(0, 0, 0, 0),
             child: SingleChildScrollView(
@@ -377,7 +377,7 @@ class _CoursesPageState extends State<CoursesPage> {
         flex: 2,
         child: SizedBox(
           width: 550,
-          height: MediaQuery.of(context).size.height * 0.6,
+          height: MediaQuery.of(context).size.height * 0.9,
           child: Padding(
             padding: const EdgeInsets.fromLTRB(0, 0, 0, 0),
             child: SingleChildScrollView(
