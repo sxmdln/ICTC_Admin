@@ -379,7 +379,7 @@ class _ExpensesFormState extends State<ExpensesForm> {
             id: widget.expense?.id,
             programId: selectedProgram!.id!,
             courseId: selectedCourse!.id!,
-            orDate: DateTime.parse(orDateCon.text),
+            orDate: DateFormat.yMMMMd().parse(orDateCon.text), 
             orNumber: orNumberCon.text,
             particulars: particularsCon.text,
             amount: double.parse(amountCon.text),

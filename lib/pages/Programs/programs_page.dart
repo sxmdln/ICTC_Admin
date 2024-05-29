@@ -262,7 +262,7 @@ class _ProgramsPageState extends State<ProgramsPage>
         flex: 2,
         child: SizedBox(
           width: 400,
-          height: MediaQuery.of(context).size.height * 0.28,
+          height: MediaQuery.of(context).size.height * 0.5,
           child: const Padding(
             padding: EdgeInsets.fromLTRB(0, 0, 0, 0),
             child: SingleChildScrollView(
@@ -333,7 +333,7 @@ class _ProgramsPageState extends State<ProgramsPage>
         flex: 2,
         child: SizedBox(
           width: 400,
-          height: MediaQuery.of(context).size.height * 0.28,
+          height: MediaQuery.of(context).size.height * 0.5,
           child: Padding(
             padding: const EdgeInsets.fromLTRB(0, 0, 0, 0),
             child: SingleChildScrollView(
