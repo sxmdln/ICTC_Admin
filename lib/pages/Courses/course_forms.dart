@@ -33,10 +33,6 @@ class _CourseFormState extends State<CourseForm> {
     }
   }
 
-  // String getImageUrl(String path) {
-  //   final supa = Supabase.instance.client;
-  //   return supa.storage.from('images').getPublicUrl(path).data!;
-  // }
 
   final formKey = GlobalKey<FormState>();
   final DateRangePickerController dateRangeController =
@@ -51,7 +47,6 @@ class _CourseFormState extends State<CourseForm> {
       venueCon;
 
   late String? startDateCon, endDateCon;
-  // late String avatarUrl;
 
   @override
   void initState() {
@@ -409,7 +404,7 @@ class _CourseFormState extends State<CourseForm> {
               ),
             ),
           ),
-          
+
           Flexible(
             child: CupertinoTextFormFieldRow(
               controller: durationCon,
@@ -633,26 +628,4 @@ class _CourseFormState extends State<CourseForm> {
           style: TextStyle(color: Colors.black87),
         ));
   }
-
-  // startDate({required BuildContext context}) async {
-  //   DateTime? pickedStartDate = await showDatePicker(
-  //     context: context,
-  //     lastDate: DateTime.now(),
-  //     firstDate: DateTime(2024),
-  //     initialDate: DateTime.now(),
-  //   );
-  //   if (pickedStartDate == null) return;
-  //   startDateCon = DateFormat('yyyy-MM-dd').format(pickedStartDate);
-  // }
-
-  // endDate({required BuildContext context}) async {
-  //   DateTime? pickedEndDate = await showDatePicker(
-  //     context: context,
-  //     lastDate: DateTime.now(),
-  //     firstDate: DateTime(2024),
-  //     initialDate: DateTime.now(),
-  //   );
-  //   if (pickedEndDate == null) return;
-  //   endDateCon.text = DateFormat('yyyy-MM-dd').format(pickedEndDate);
-  // }
 }

@@ -5,7 +5,6 @@ import 'package:ictc_admin/models/program.dart';
 import 'package:ictc_admin/pages/programs/program_forms.dart';
 import 'package:ictc_admin/pages/programs/programs_viewMore.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
-
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:data_table_2/data_table_2.dart';
@@ -13,6 +12,7 @@ import 'package:ictc_admin/models/program.dart';
 import 'package:ictc_admin/pages/programs/program_forms.dart';
 import 'package:ictc_admin/pages/programs/programs_viewMore.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
+
 
 class ProgramsPage extends StatefulWidget {
   const ProgramsPage({super.key});
@@ -39,6 +39,7 @@ class _ProgramsPageState extends State<ProgramsPage>
       _filteredPrograms = programs;
       return programs;
     });
+
     super.initState();
   }
 

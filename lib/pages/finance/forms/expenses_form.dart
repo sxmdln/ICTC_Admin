@@ -351,6 +351,7 @@ class _ExpensesFormState extends State<ExpensesForm> {
               //     flex: 1,
               //     child: SizedBox(child: deleteButton()),
               //   ),
+
               const SizedBox(width: 10),
               Expanded(
                 flex: 1,

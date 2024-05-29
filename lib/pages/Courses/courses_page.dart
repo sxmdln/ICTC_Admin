@@ -103,24 +103,6 @@ class _CoursesPageState extends State<CoursesPage> {
           color: Colors.black87,
           thickness: 0.1,
         )
-        // ),
-        // courseProfileWidget != null
-        //     ? Flexible(
-        //         flex: 1,
-        //         child: Stack(
-        //           children: [
-        //             courseProfileWidget!,
-        //             Container(
-        //               padding: const EdgeInsets.only(top: 16, right: 16),
-        //               alignment: Alignment.topRight,
-        //               child: IconButton(
-        //                   onPressed: closeProfile,
-        //                   icon: const Icon(Icons.close)),
-        //             ),
-        //           ],
-        //         ),
-        //       )
-        // : Container(),
       ],
     );
   }

@@ -1,5 +1,3 @@
-// import 'dart:async';
-// import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:ictc_admin/pages/courses/courses_page.dart';
 import 'package:ictc_admin/pages/dashboard/dashboard_page.dart';
@@ -73,7 +71,7 @@ class _MainScreenState extends State<MainScreen> {
     List<NavigationRailDestination> destinations = const [
       NavigationRailDestination(
         icon: Icon(
-          Icons.home_outlined,
+          Icons.grid_view_outlined,
           color: Colors.white,
           size: 30,
         ),
@@ -83,7 +81,7 @@ class _MainScreenState extends State<MainScreen> {
           size: 30,
         ),
         label: Text(
-          "Dashboard",
+          "Finance",
           style: TextStyle(
             fontSize: 16,
             fontWeight: FontWeight.w400,
@@ -440,5 +438,4 @@ class _MainScreenState extends State<MainScreen> {
     );
   }
 
-  
 }

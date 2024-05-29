@@ -53,6 +53,7 @@ class _PaymentTableState extends State<PaymentTable> {
 
     final rows = await Future.wait(futures);
 
+
     return rows;
   }
 
@@ -298,7 +299,9 @@ class _PaymentTableState extends State<PaymentTable> {
       enableEditingMode: false,
     ),
     PlutoColumn(
+
       title: 'Trainee Name',
+
       field: 'name',
       readOnly: true,
       type: PlutoColumnType.text(),
@@ -319,6 +322,7 @@ class _PaymentTableState extends State<PaymentTable> {
         negative: false,
         format: 'P#,###',
       ),
+
       textAlign: PlutoColumnTextAlign.right,
       titleTextAlign: PlutoColumnTextAlign.center,
       enableEditingMode: false,

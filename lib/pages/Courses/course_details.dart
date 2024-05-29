@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:ictc_admin/models/course.dart';
 import 'package:ictc_admin/models/register.dart';
 import 'package:intl/intl.dart';
+
 import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:html_unescape/html_unescape.dart';
 import 'package:toggle_switch/toggle_switch.dart';
@@ -27,7 +28,6 @@ class _CourseDetailsState extends State<CourseDetails> {
         .select()
         .eq('course_id', widget.course.id!)
         .withConverter((data) {
-      print(data);
       return data.map((e) => Register.fromJson(e)).toList();
     });
 
@@ -66,6 +66,7 @@ class _CourseDetailsState extends State<CourseDetails> {
                       fontWeight: FontWeight.w600),
                 ),
                 const SizedBox(
+
                   height: 14,
                 ),
                 Row(
@@ -95,6 +96,7 @@ class _CourseDetailsState extends State<CourseDetails> {
                   mainAxisAlignment: MainAxisAlignment.center,
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
+
                     Chip(
                       backgroundColor: Colors.white,
                       surfaceTintColor: Colors.white,
@@ -151,17 +153,17 @@ class _CourseDetailsState extends State<CourseDetails> {
               if (snapshot.connectionState == ConnectionState.waiting) {
                 return const Center(child: CircularProgressIndicator());
               } else if (snapshot.hasError) {
-                return Center(child: Text('Error: ${snapshot.error}'));
+                  return Center(child: Text('Error: ${snapshot.error}'));
               } else if (snapshot.data!.isEmpty) {
-                return const Center(
-                  child: Text(
-                    'No students in this course',
-                    style: TextStyle(
-                      color: Colors.white,
-                      fontWeight: FontWeight.bold,
+                  return const Center(
+                    child: Text(
+                      'No students in this course',
+                      style: TextStyle(
+                        color: Colors.white,
+                        fontWeight: FontWeight.bold,
+                      ),
                     ),
-                  ),
-                );
+                  );
               } else {
                 return Container(
                   color: const Color(0xfff1f5fb),
@@ -180,7 +182,6 @@ class _CourseDetailsState extends State<CourseDetails> {
                       sortAscending: false,
                       bottomMargin: 90,
                       isVerticalScrollBarVisible: true,
-                      
                       minWidth: 600,
                       horizontalMargin: 100,
                       columns: const [
@@ -249,6 +250,7 @@ class _CourseDetailsState extends State<CourseDetails> {
           builder: (BuildContext context, AsyncSnapshot<String> snapshot) {
             if (snapshot.connectionState == ConnectionState.waiting) {
               return const CircularProgressIndicator();
+
             } else if (snapshot.hasError) {
               return Text('Error: ${snapshot.error}');
             } else {

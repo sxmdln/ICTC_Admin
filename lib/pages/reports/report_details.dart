@@ -81,6 +81,7 @@ class _ReportDetailsState extends State<ReportDetails> {
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
                     Text(
+
                       "Net Income: P${widget.netIncome} ",
                       style: const TextStyle(
                           color: Colors.white,

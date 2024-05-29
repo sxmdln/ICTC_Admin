@@ -51,6 +51,7 @@ class _ExpenseTableState extends State<ExpenseTable> {
 
     final List<PlutoRow> rows = await Future.wait(futures);
 
+
     return rows;
   }
 
@@ -104,7 +105,9 @@ class _ExpenseTableState extends State<ExpenseTable> {
       title: 'Program Name',
       field: 'progName',
       readOnly: true,
+
       filterHintText: 'Search Program',
+
       type: PlutoColumnType.text(),
       textAlign: PlutoColumnTextAlign.left,
       titleTextAlign: PlutoColumnTextAlign.center,
@@ -258,7 +261,7 @@ class _ExpenseTableState extends State<ExpenseTable> {
                     ),
                   );
                 }
-
+                
                 if (snapshot.data!.isEmpty) {
                   return const Expanded(
                       child: Center(
@@ -300,6 +303,7 @@ class _ExpenseTableState extends State<ExpenseTable> {
 
                     return PlutoGrid(
                       mode: PlutoGridMode.readOnly,
+
                         key: const ValueKey('expense'),
                         columns: outColumns,
                         rows: snapshot.data!,

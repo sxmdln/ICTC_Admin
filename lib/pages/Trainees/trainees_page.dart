@@ -31,6 +31,7 @@ class _TraineesPageState extends State<TraineesPage>
       _filteredTrainees = trainees;
       return trainees;
     });
+
     super.initState();
   }
 

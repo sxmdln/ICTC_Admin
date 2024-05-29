@@ -18,19 +18,6 @@ class TrainersPage extends StatefulWidget {
 class _TrainersPageState extends State<TrainersPage>
     with AutomaticKeepAliveClientMixin {
   TrainerViewMore? trainerProfileWidget;
-// // CRUD operations
-//   void addItem(Item item) {
-//     items.add(item);
-//   }
-//   void updateItem(Item newItem) {
-//     final index = items.indexWhere((item) => item.id == newItem.id);
-//     if (index != -1) {
-//       items[index] = newItem;
-//     }
-//   }
-//   void deleteItem(int id) {
-//     items.removeWhere((item) => item.id == id);
-//   }
   late Stream<List<Trainer>> _trainers;
   late List<Trainer> _allTrainers;
   late List<Trainer> _filteredTrainers;
@@ -46,6 +33,7 @@ class _TrainersPageState extends State<TrainersPage>
       _filteredTrainers = trainers;
       return trainers;
     });
+
     super.initState();
   }
 
@@ -159,6 +147,7 @@ class _TrainersPageState extends State<TrainersPage>
         ),
       ),
     );
+
   }
 
   Widget buildDataTable() {

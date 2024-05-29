@@ -244,6 +244,7 @@ class _TrainerViewMoreState extends State<TrainerViewMore> {
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
                 Row(
+
                   children: [
                     Icon(
                       CupertinoIcons.book,

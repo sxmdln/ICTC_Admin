@@ -28,5 +28,6 @@ Map<String, dynamic> _$RegisterToJson(Register instance) {
   val['course_id'] = instance.courseId;
   val['is_approved'] = instance.status;
   writeNotNull('payment_status', instance.paymentStatus);
+
   return val;
 }

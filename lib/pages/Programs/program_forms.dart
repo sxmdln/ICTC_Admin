@@ -5,12 +5,14 @@ import 'package:ictc_admin/models/program.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
 class ProgramForm extends StatefulWidget {
+
   const ProgramForm({super.key, this.program});
 
   final Program? program;
 
   @override
   State<ProgramForm> createState() => _ProgramFormState();
+
 }
 
 class _ProgramFormState extends State<ProgramForm> {
@@ -36,6 +38,7 @@ class _ProgramFormState extends State<ProgramForm> {
     progTitleCon = TextEditingController(text: widget.program?.title);
     progDescriptionCon =
         TextEditingController(text: widget.program?.description);
+
   }
 
   final formKey = GlobalKey<FormState>();
@@ -286,8 +289,9 @@ class _ProgramFormState extends State<ProgramForm> {
         ),
       ),
     );
-  }
 
+  }
+  
   Widget deleteButton() {
     return ElevatedButton(
         style: ButtonStyle(
@@ -301,7 +305,7 @@ class _ProgramFormState extends State<ProgramForm> {
         onPressed: () {
           final supabase = Supabase.instance.client;
           final id = widget.program!.id!;
-
+          
           supabase.from('program').delete().eq('id', id).then((_) {
             ScaffoldMessenger.of(context).showSnackBar(
               SnackBar(
@@ -311,6 +315,7 @@ class _ProgramFormState extends State<ProgramForm> {
             );
 
             Navigator.of(context).pop();
+
           }).onError((err, st) {
             print(err.toString());
             ScaffoldMessenger.of(context).showSnackBar(SnackBar(
