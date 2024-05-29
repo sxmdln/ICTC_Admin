@@ -17,13 +17,15 @@ class Register {
   @JsonKey(name: 'is_approved')
   bool status;
 
+  @JsonKey(name: 'payment_status')
+  bool? paymentStatus;
 
   Register({
     this.id,
     required this.studentId,
     required this.courseId,
     required this.status,
-
+    this.paymentStatus
   });
 
   factory Register.fromJson(Map<String, dynamic> json) => _$RegisterFromJson(json);

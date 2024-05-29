@@ -34,6 +34,7 @@ dependencies:
   async: ^2.11.0
   toggle_switch: ^2.3.0
   syncfusion_flutter_datepicker: ^25.1.42
+  file_picker: ^8.0.3
 
 dev_dependencies:
   flutter_test:

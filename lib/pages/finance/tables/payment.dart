@@ -32,15 +32,27 @@ class _PaymentTableState extends State<PaymentTable> {
   }
 
   Future<List<PlutoRow>> _fetchRows(List<Payment> payments) async {
-    final List<PlutoRow> rows = [];
+    final futures = payments.map((p) async {
+      // Fetch student, program, and course in parallel
+      final studentFuture = p.student;
+      final programFuture = p.program;
+      final courseFuture = p.course;
 
-    for (Payment p in payments) {
-      rows.add(buildInRow(
-          payment: p,
-          student: await p.student,
-          program: await p.program,
-          course: await p.course));
-    }
+      // Await all of them together
+      final student = await studentFuture;
+      final program = await programFuture;
+      final course = await courseFuture;
+
+      return buildInRow(
+        payment: p,
+        student: student,
+        program: program,
+        course: course,
+      );
+    }).toList();
+
+    final rows = await Future.wait(futures);
+
 
     return rows;
   }
@@ -287,7 +299,9 @@ class _PaymentTableState extends State<PaymentTable> {
       enableEditingMode: false,
     ),
     PlutoColumn(
-      title: 'Name',
+
+      title: 'Trainee Name',
+
       field: 'name',
       readOnly: true,
       type: PlutoColumnType.text(),
@@ -306,7 +320,9 @@ class _PaymentTableState extends State<PaymentTable> {
       enableFilterMenuItem: false,
       type: PlutoColumnType.number(
         negative: false,
-          format: 'P#,###',),
+        format: 'P#,###',
+      ),
+
       textAlign: PlutoColumnTextAlign.right,
       titleTextAlign: PlutoColumnTextAlign.center,
       enableEditingMode: false,
@@ -321,7 +337,7 @@ class _PaymentTableState extends State<PaymentTable> {
         color: Colors.white,
       ),
       enableFilterMenuItem: false,
-       footerRenderer: (rendererContext) {
+      footerRenderer: (rendererContext) {
         return PlutoAggregateColumnFooter(
           rendererContext: rendererContext,
           type: PlutoAggregateColumnType.sum,
@@ -414,6 +430,7 @@ class _PaymentTableState extends State<PaymentTable> {
       readOnly: true,
       filterHintText: 'Search by date',
       type: PlutoColumnType.date(format: 'yMMMMd'),
+      textAlign: PlutoColumnTextAlign.right,
       titleTextAlign: PlutoColumnTextAlign.center,
       enableEditingMode: false,
     ),
@@ -423,6 +440,7 @@ class _PaymentTableState extends State<PaymentTable> {
       field: 'orNumber',
       readOnly: true,
       type: PlutoColumnType.text(),
+      textAlign: PlutoColumnTextAlign.right,
       titleTextAlign: PlutoColumnTextAlign.center,
       enableEditingMode: false,
     ),
@@ -485,22 +503,22 @@ class _PaymentTableState extends State<PaymentTable> {
             builder: (context, snapshot) {
               if (snapshot.connectionState == ConnectionState.waiting) {
                 return const Expanded(
-                        child: Column(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: <Widget>[
-                            CircularProgressIndicator.adaptive(
-                                valueColor: AlwaysStoppedAnimation<Color>(
-                                    Color(0xff153faa))),
-                            SizedBox(
-                              height: 23,
-                            ),
-                            Text(
-                              'Please wait...',
-                              style: TextStyle(fontSize: 12),
-                            ),
-                          ],
-                        ),
-                      );
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: <Widget>[
+                      CircularProgressIndicator.adaptive(
+                          valueColor:
+                              AlwaysStoppedAnimation<Color>(Color(0xff153faa))),
+                      SizedBox(
+                        height: 23,
+                      ),
+                      Text(
+                        'Please wait...',
+                        style: TextStyle(fontSize: 12),
+                      ),
+                    ],
+                  ),
+                );
               }
 
               if (snapshot.data!.isEmpty) {

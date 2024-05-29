@@ -11,6 +11,7 @@ Register _$RegisterFromJson(Map<String, dynamic> json) => Register(
       studentId: json['student_id'] as int,
       courseId: json['course_id'] as int,
       status: json['is_approved'] as bool,
+      paymentStatus: json['payment_status'] as bool?,
     );
 
 Map<String, dynamic> _$RegisterToJson(Register instance) {
@@ -26,5 +27,7 @@ Map<String, dynamic> _$RegisterToJson(Register instance) {
   val['student_id'] = instance.studentId;
   val['course_id'] = instance.courseId;
   val['is_approved'] = instance.status;
+  writeNotNull('payment_status', instance.paymentStatus);
+
   return val;
 }

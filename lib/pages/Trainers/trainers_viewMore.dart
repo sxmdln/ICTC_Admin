@@ -1,3 +1,4 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:ictc_admin/models/trainer.dart';
 import 'package:ictc_admin/models/course.dart';
@@ -13,7 +14,6 @@ class TrainerViewMore extends StatefulWidget {
 }
 
 class _TrainerViewMoreState extends State<TrainerViewMore> {
-
   late final Future<List<Course>> programCourses;
 
   @override
@@ -37,30 +37,32 @@ class _TrainerViewMoreState extends State<TrainerViewMore> {
             child: CircularProgressIndicator(),
           );
         }
-      return Container(
-        margin: const EdgeInsets.only(bottom: 20, top: 33.5, right: 12),
-        decoration: const BoxDecoration(
-          // border: Border(bottom: BorderSide(width: 1)),
-          // color: Color(0xfff1f5fb),
-          borderRadius: BorderRadius.all(Radius.circular(24)),
-          color: Colors.white,
-        ),
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            trainerHeader(),
-            const SizedBox(height: 8),
-            const Divider(thickness: 0.5, color: Colors.black87),
-            const SizedBox(height: 8),
-            if (snapshot.hasData) buildCourses(snapshot.data!)
-              else const CircularProgressIndicator(),
-            const Spacer(
-              flex: 2,
-            ),
-          ],
-        ),
-      );
+        return Container(
+          margin: const EdgeInsets.only(bottom: 20, top: 33.5, right: 12),
+          decoration: const BoxDecoration(
+            // border: Border(bottom: BorderSide(width: 1)),
+            // color: Color(0xfff1f5fb),
+            borderRadius: BorderRadius.all(Radius.circular(24)),
+            color: Colors.white,
+          ),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              trainerHeader(),
+              const SizedBox(height: 8),
+              const Divider(thickness: 0.5, color: Colors.black87),
+              const SizedBox(height: 8),
+              if (snapshot.hasData)
+                buildCourses(snapshot.data!)
+              else
+                const CircularProgressIndicator(),
+              const Spacer(
+                flex: 2,
+              ),
+            ],
+          ),
+        );
       },
     );
   }
@@ -83,20 +85,6 @@ class _TrainerViewMoreState extends State<TrainerViewMore> {
             mainAxisAlignment: MainAxisAlignment.center,
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
-              const SizedBox(
-                width: 200,
-                height: 120,
-                child: Center(
-                  child: CircleAvatar(
-                    backgroundColor: Color.fromARGB(255, 247, 247, 247),
-                    radius: 120,
-                  ),
-                ),
-              ),
-              const SizedBox(
-                //spacing
-                height: 12,
-              ),
               Text(
                 softWrap: true,
                 //name
@@ -198,7 +186,7 @@ class _TrainerViewMoreState extends State<TrainerViewMore> {
       // ),
     );
   }
-    
+
   Widget buildCourses(List<Course> courses) {
     return Flexible(
       flex: 8,
@@ -236,42 +224,56 @@ class _TrainerViewMoreState extends State<TrainerViewMore> {
   }
 
   Widget trainerCourseCard(Course course) {
-    return Padding(
+    return Container(
+      margin: const EdgeInsets.only(bottom: 2),
       padding: const EdgeInsets.all(0),
       child: SizedBox(
-          width: 240,
-          height: 60,
-          child: Card(
-              elevation: 0.5,
-              shape: const RoundedRectangleBorder(
-                  side: BorderSide(color: Colors.black12),
-                  borderRadius: BorderRadius.all(Radius.circular(10))),
-              color: const Color.fromARGB(255, 247, 247, 247),
-              child: Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  crossAxisAlignment: CrossAxisAlignment.center,
+        width: 240,
+        height: 60,
+        child: Card(
+          elevation: 0.5,
+          shape: const RoundedRectangleBorder(
+              side: BorderSide(color: Colors.white70),
+              borderRadius: BorderRadius.all(Radius.circular(10))),
+          color: Colors.white,
+          surfaceTintColor: Colors.white,
+          child: Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                Row(
+
                   children: [
+                    Icon(
+                      CupertinoIcons.book,
+                      color: Colors.black,
+                      size: 20,
+                    ),
+                    SizedBox(width: 15),
                     Text(
-                      course.title, 
+                      course.title,
                       style: const TextStyle(
                         fontSize: 14,
                         fontWeight: FontWeight.w500,
                         color: Colors.black,
                       ),
                     ),
-                    const SizedBox(height: 5),
-                    Text(
-                      course.schedule ?? "Not set",
-                      style: const TextStyle(
-                          fontSize: 12,
-                          color: Colors.black54,
-                          fontWeight: FontWeight.w300),
-                    ),
                   ],
                 ),
-              ))),
+                Text(
+                  course.schedule ?? "Not set",
+                  style: const TextStyle(
+                      fontSize: 12,
+                      color: Colors.black54,
+                      fontWeight: FontWeight.w300),
+                ),
+              ],
+            ),
+          ),
+        ),
+      ),
     );
   }
 }

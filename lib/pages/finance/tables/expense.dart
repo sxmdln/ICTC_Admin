@@ -15,7 +15,6 @@ import 'package:supabase_flutter/supabase_flutter.dart';
 class ExpenseTable extends StatefulWidget {
   const ExpenseTable({super.key});
 
-
   @override
   State<ExpenseTable> createState() => _ExpenseTableState();
 }
@@ -34,12 +33,24 @@ class _ExpenseTableState extends State<ExpenseTable> {
   }
 
   Future<List<PlutoRow>> _fetchRows(List<Expense> expenses) async {
-    final List<PlutoRow> rows = [];
+    final futures = expenses.map((e) async {
+      // Fetch program, and course in parallel
+      final programFuture = e.program;
+      final courseFuture = e.course;
 
-    for (Expense e in expenses) {
-      rows.add(buildOutRow(
-          expense: e, program: await e.program, course: await e.course));
-    }
+      // Await all of them together
+      final program = await programFuture;
+      final course = await courseFuture;
+
+      return buildOutRow(
+        expense: e,
+        program: program,
+        course: course,
+      );
+    }).toList();
+
+    final List<PlutoRow> rows = await Future.wait(futures);
+
 
     return rows;
   }
@@ -90,11 +101,13 @@ class _ExpenseTableState extends State<ExpenseTable> {
       width: 90,
       enableDropToResize: false,
     ),
-    
     PlutoColumn(
       title: 'Program Name',
       field: 'progName',
       readOnly: true,
+
+      filterHintText: 'Search Program',
+
       type: PlutoColumnType.text(),
       textAlign: PlutoColumnTextAlign.left,
       titleTextAlign: PlutoColumnTextAlign.center,
@@ -104,6 +117,7 @@ class _ExpenseTableState extends State<ExpenseTable> {
       field: 'courseName',
       readOnly: true,
       type: PlutoColumnType.text(),
+      filterHintText: 'Search Course',
       textAlign: PlutoColumnTextAlign.right,
       titleTextAlign: PlutoColumnTextAlign.center,
       minWidth: 100,
@@ -113,6 +127,7 @@ class _ExpenseTableState extends State<ExpenseTable> {
       title: 'Particulars',
       field: 'particulars',
       readOnly: true,
+      filterHintText: 'Search Particulars',
       type: PlutoColumnType.text(),
       textAlign: PlutoColumnTextAlign.center,
       titleTextAlign: PlutoColumnTextAlign.center,
@@ -127,7 +142,8 @@ class _ExpenseTableState extends State<ExpenseTable> {
       enableFilterMenuItem: false,
       type: PlutoColumnType.number(
         negative: false,
-          format: 'P#,###',),
+        format: 'P#,###',
+      ),
       textAlign: PlutoColumnTextAlign.right,
       titleTextAlign: PlutoColumnTextAlign.center,
       backgroundColor: Colors.red.withOpacity(0.1),
@@ -160,13 +176,15 @@ class _ExpenseTableState extends State<ExpenseTable> {
       field: 'orDate',
       readOnly: true,
       type: PlutoColumnType.date(format: 'yMMMMd'),
+      filterHintText: 'Search OR Date',
       textAlign: PlutoColumnTextAlign.right,
-      titleTextAlign: PlutoColumnTextAlign.right,
+      titleTextAlign: PlutoColumnTextAlign.center,
     ),
     PlutoColumn(
       title: 'OR Number',
       field: 'orNumber',
       readOnly: true,
+      filterHintText: 'Search OR Number',
       type: PlutoColumnType.text(),
       textAlign: PlutoColumnTextAlign.right,
       titleTextAlign: PlutoColumnTextAlign.center,
@@ -226,24 +244,24 @@ class _ExpenseTableState extends State<ExpenseTable> {
               builder: (context, snapshot) {
                 if (snapshot.connectionState == ConnectionState.waiting) {
                   return const Expanded(
-                        child: Column(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: <Widget>[
-                            CircularProgressIndicator.adaptive(
-                                valueColor: AlwaysStoppedAnimation<Color>(
-                                    Color(0xff153faa))),
-                            SizedBox(
-                              height: 23,
-                            ),
-                            Text(
-                              'Please wait...',
-                              style: TextStyle(fontSize: 12),
-                            ),
-                          ],
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: <Widget>[
+                        CircularProgressIndicator.adaptive(
+                            valueColor: AlwaysStoppedAnimation<Color>(
+                                Color(0xff153faa))),
+                        SizedBox(
+                          height: 23,
                         ),
-                      );
+                        Text(
+                          'Please wait...',
+                          style: TextStyle(fontSize: 12),
+                        ),
+                      ],
+                    ),
+                  );
                 }
-
+                
                 if (snapshot.data!.isEmpty) {
                   return const Expanded(
                       child: Center(
@@ -284,6 +302,8 @@ class _ExpenseTableState extends State<ExpenseTable> {
                     }
 
                     return PlutoGrid(
+                      mode: PlutoGridMode.readOnly,
+
                         key: const ValueKey('expense'),
                         columns: outColumns,
                         rows: snapshot.data!,

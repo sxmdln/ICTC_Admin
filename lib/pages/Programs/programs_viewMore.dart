@@ -97,16 +97,16 @@ class _ProgramViewMoreState extends State<ProgramViewMore> {
                             ),
                           ],
                         ),
-                        Padding(
-                          padding: const EdgeInsets.only(top: 20),
-                          child: AspectRatio(
-                            aspectRatio: 6 / 1,
-                            child: Image.asset(
-                              'assets/images/program1.png',
-                              fit: BoxFit.fitWidth,
-                            ),
-                          ),
-                        ),
+                        // Padding(
+                        //   padding: const EdgeInsets.only(top: 20),
+                        //   child: AspectRatio(
+                        //     aspectRatio: 6 / 1,
+                        //     child: Image.asset(
+                        //       'assets/images/program1.png',
+                        //       fit: BoxFit.fitWidth,
+                        //     ),
+                        //   ),
+                        // ),
                       ],
                     )),
               ),

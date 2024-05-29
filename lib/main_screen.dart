@@ -1,12 +1,13 @@
-// import 'dart:async';
-// import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:ictc_admin/pages/courses/courses_page.dart';
+import 'package:ictc_admin/pages/dashboard/dashboard_page.dart';
 import 'package:ictc_admin/pages/finance/finance_page.dart';
 import 'package:ictc_admin/pages/programs/programs_page.dart';
 import 'package:ictc_admin/pages/reports/reports_page.dart';
 import 'package:ictc_admin/pages/trainers/trainers_page.dart';
 import 'package:ictc_admin/pages/trainees/trainees_page.dart';
+import 'package:ictc_admin/pages/courses/courses_page.dart';
+import 'package:ictc_admin/pages/Vouchers/vouchers_page.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
 class MainScreen extends StatefulWidget {
@@ -43,6 +44,7 @@ class _MainScreenState extends State<MainScreen> {
 
   String getSearchName() {
     List<String> pageNames = const [
+      "Dashboard",
       "Finances",
       "List of Trainers",
       "List of Trainees",
@@ -57,6 +59,7 @@ class _MainScreenState extends State<MainScreen> {
   @override
   Widget build(BuildContext context) {
     List<Widget> views = [
+      const DashboardPage(),
       const FinancePage(),
       const TrainersPage(),
       const TraineesPage(),
@@ -66,6 +69,26 @@ class _MainScreenState extends State<MainScreen> {
     ];
 
     List<NavigationRailDestination> destinations = const [
+      NavigationRailDestination(
+        icon: Icon(
+          Icons.grid_view_outlined,
+          color: Colors.white,
+          size: 30,
+        ),
+        selectedIcon: Icon(
+          Icons.home_filled,
+          color: Colors.white,
+          size: 30,
+        ),
+        label: Text(
+          "Finance",
+          style: TextStyle(
+            fontSize: 16,
+            fontWeight: FontWeight.w400,
+            color: Colors.white,
+          ),
+        ),
+      ),
       NavigationRailDestination(
         icon: Icon(
           Icons.grid_view_outlined,
@@ -218,12 +241,14 @@ class _MainScreenState extends State<MainScreen> {
   String getTableName() {
     switch (_selectedIndex) {
       case 1:
-        return "trainer";
+        return "";
       case 2:
-        return "student";
+        return "trainer";
       case 3:
-        return "program";
+        return "student";
       case 4:
+        return "program";
+      case 5:
         return "course";
       default:
         return "";
@@ -281,7 +306,7 @@ class _MainScreenState extends State<MainScreen> {
                   child: const Row(
                     children: [
                       Text(
-                        "Finances",
+                        "",
                         style: TextStyle(
                             fontSize: 28,
                             fontWeight: FontWeight.w700,
@@ -412,4 +437,5 @@ class _MainScreenState extends State<MainScreen> {
       ),
     );
   }
+
 }
