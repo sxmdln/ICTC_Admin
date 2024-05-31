@@ -1,16 +1,16 @@
-# ictc_admin
+# ICTC_ADMIN
 
-A new Flutter project.
+The Admin side of the website provides administrators with CRUD (Create, Read,
+Update, Delete) functionalities for managing programs, courses, and trainers. Each program
+encompasses multiple courses, and information about trainers, including their name, details,
+courses taught, associated programs, and fees. Additionally, administrators have access to a
+reports page that delivers insights into sales, finances, and other data pertinent to the training and
+courses offered by ICTC.
 
-## Getting Started
+## Tools Used
 
-This project is a starting point for a Flutter application.
+**Flutter**
+Used for building the frontend of the website, ensuring a responsive and interactive user interface.
 
-A few resources to get you started if this is your first Flutter project:
-
-- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
-
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+**Supabase**
+Used for managing the backend, including user authentication and database management.
